@@ -1,0 +1,41 @@
+
+.logger {
+    border: 1px solid #888;
+    background-color: #eee;
+    border-radius: 5px;
+    box-sizing: border-box;
+    display: inline-block;
+    max-height: 222px;
+    overflow-y: auto;
+    margin-bottom: 45px;
+    width: 100%;
+}
+ol {
+    display: inline-block;
+    margin: 0;
+    
+    li {
+        border-bottom: 1px solid #ddd;
+
+        span {
+    
+            ::ng-deep .off-screen {
+                display: block;
+                float: left;
+                height: 0;
+                overflow: hidden;
+                text-indent: -99999px;
+                width: 0;
+            }
+            ::ng-deep .fa {
+                padding: 0 3px;
+            }
+            ::ng-deep .address {
+                display: inline-block;
+                span {
+                    display: block;
+                }
+            }
+        }
+    }
+}

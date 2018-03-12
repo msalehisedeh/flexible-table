@@ -1,0 +1,75 @@
+import { OnChanges, OnInit, OnDestroy } from '@angular/core';
+import { InToPipe } from 'into-pipes';
+import { DropEvent } from 'drag-enabled';
+export interface FlexibleTableHeader {
+    key: string;
+    value: string;
+    present: boolean;
+    width?: string;
+    format?: string;
+    dragable?: boolean;
+    sortable?: boolean;
+    ascending?: boolean;
+    descending?: boolean;
+}
+export declare class FlexibleTableComponent implements OnInit, OnChanges, OnDestroy {
+    private intoPipe;
+    private registeredHeaders;
+    showConfigurationView: boolean;
+    dragging: boolean;
+    vocabulary: {
+        configureTable: string;
+        configureColumns: string;
+        clickSort: string;
+        setSize: string;
+        firstPage: string;
+        lastPage: string;
+        previousPage: string;
+    };
+    caption: string;
+    action: string;
+    actionKeys: any;
+    tableClass: string;
+    headers: any[];
+    items: any[];
+    pageInfo: any;
+    tableInfo: any;
+    configurable: boolean;
+    enableIndexing: boolean;
+    rowDetailer: any;
+    expandable: any;
+    expandIf: boolean;
+    rowDetailerHeaders: any;
+    private onaction;
+    private onconfigurationchange;
+    private table;
+    private pager;
+    constructor(intoPipe: InToPipe);
+    private findColumnWithID(id);
+    private swapColumns(sourceID, destinationID);
+    private getColumnIndex(id);
+    private itemValue(item, hpath);
+    private sort(header, icon);
+    ngOnInit(): void;
+    ngOnChanges(changes: any): void;
+    ngOnDestroy(): void;
+    toggleConfigurationView(): void;
+    reconfigure(item: any): void;
+    headerColumnElements(): any;
+    headerById(id: any): any;
+    columnsCount(): number;
+    keydown(event: any, item: any): void;
+    offScreenMessage(item: any): string;
+    cellContent(item: any, header: any): any;
+    rowDetailerContext(item: any): {
+        data: any;
+        tableInfo: any;
+        headers: any;
+    };
+    actionClick(event: any, item: any): boolean;
+    dragEnabled(medium: FlexibleTableHeader): boolean;
+    dropEnabled(event: DropEvent): any;
+    onDragStart(event: any): void;
+    onDragEnd(event: any): void;
+    onDrop(event: DropEvent): void;
+}

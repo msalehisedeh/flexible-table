@@ -1,0 +1,100 @@
+
+<div class="flexible-table">
+    <div class="confinguration" *ngIf="configurable">
+        <div class="shim"
+            [style.display]="showConfigurationView ? 'block':'none'"
+            (click)="toggleConfigurationView()"></div>
+        <a #conf
+            [attr.tabindex]="0"
+            (keydown)="keydown($event, conf)"
+            (click)="toggleConfigurationView()">
+            <span class="icon fa fa-gear" aria-hidden="true"></span>
+            <span class="off-screen" [textContent]="vocabulary.configureTable"></span>
+        </a>
+        <ul role="list" [style.display]="showConfigurationView ? 'block':'none'">
+            <p [textContent]="vocabulary.configureColumns"></p>
+            <li  *ngFor="let header of headers" role="listitem">
+                <label for="{{header.key ? header.key+'c':'c'}}">
+                    <input type="checkbox" #checkbox
+                           [id]="header.key ? header.key+'c':'c'"
+                           [value]="header.key"
+                           [checked]="header.present"
+                           (click)="reconfigure(checkbox)" />
+                    <span [textContent]="header.value"></span>
+                </label>
+            </li>
+        </ul>
+    </div>
+    <table [class]="tableClass" #flexible>
+        <caption *ngIf="caption" [textContent]="caption"></caption>
+        <thead>
+            <tr>
+                <th scope="col" *ngIf="enableIndexing" id="indexable" class="indexable"></th>
+                <ng-template ngFor let-header [ngForOf]="headers">
+                    <th scope="col" *ngIf="header.present"
+                        [dragEnabled]="dragEnabled.bind(this)"
+                        [dropEnabled]="dropEnabled.bind(this)"
+                        [medium]="header"
+                        (onDragStart)="onDragStart($event)"
+                        (onDragEnd)="onDragEnd($event)"
+                        (onDrop)="onDrop($event)"
+                        [id]="header.key"
+                        [attr.width]="header.width ? header.width : null" 
+                        [attr.tabindex]="header.sortable ? 0 : -1"
+						(keydown)="keydown($event, th)" (click)="sort(header, icon)">
+                        <span *ngIf="header.sortable" class="off-screen"  [textContent]="vocabulary.clickSort"></span>
+                        <span class="title"
+                              [class.dragable]="header.dragable"
+                              [textContent]="header.value"></span>
+                        <span class="icon fa" #icon
+                              [class.fa-sort]="header.sortable"
+                              [class.fa-sort-asc]="header.assending"
+                              [class.fa-sort-desc]="header.desending"></span>
+                    </th>
+                </ng-template>
+                <th scope="col" *ngIf="action" id="actionable" class="actionable"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-template ngFor let-item [ngForOf]="items" let-i="index">
+                <tr *ngIf="(!pager || (pager && pager.info && i>=pager.info.from && i<=pager.info.to))"
+                    (click)="actionClick($event, item)"
+                    [class.pointer]="action"
+                    [class.expanded]="item.expanded"
+                    [class.odd]="i%2">
+                    <td scope="row" class="index" *ngIf="enableIndexing">{{i + 1}}</td>
+                    <ng-template ngFor let-header [ngForOf]="headers">
+                        <td scope="row" 
+                            *ngIf="header.present" 
+                            [attr.data-label]="header.value" 
+                            [innerHTML]="cellContent(item, header)"></td>
+                    </ng-template>
+                    <td scope="row" *ngIf="action">
+                        <a class="actionable"
+                            *ngIf="expandable(item, true)"
+                            tabindex="0"
+                            role="button"
+                            style="cursor:pointer"
+                            [class.expanded]="item.expanded" #clicker
+                            (keydown)="keydown($event, clicker)" (click)="actionClick($event, item)">
+                            <span
+                                class="icon fa"
+                                [class.fa-angle-right]="!rowDetailer"
+                                [class.fa-minus-square-o]="rowDetailer && item.expanded"
+                                [class.fa-plus-square-o]="rowDetailer && !item.expanded"
+                                aria-hidden="true"></span>
+                            <span class="off-screen" [textContent]="offScreenMessage(item)"></span>
+                        </a>
+                    </td>
+                </tr>
+                <tr *ngIf="(!pager || (pager && pager.info && i>=pager.info.from && i<=pager.info.to)) && rowDetailer && item.expanded" class="detail" [class.odd]="i%2">
+                    <td scope="row" class="index" *ngIf="enableIndexing"></td>
+                    <td [attr.colspan]="columnsCount()">
+                        <ng-container [ngTemplateOutlet]="rowDetailer" [ngTemplateOutletContext]="rowDetailerContext(item)"></ng-container>
+                    </td>
+                </tr>
+            </ng-template>
+        </tbody>
+    </table>
+</div>
+<table-pagination [info]="pageInfo" [vocabulary]="vocabulary" #pager></table-pagination>

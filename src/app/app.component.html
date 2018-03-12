@@ -1,0 +1,43 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1>
+    Welcome to {{ title }}!
+  </h1>
+</div>
+
+<flexible-table 
+      *ngIf="users" 
+      caption="total records found {{users.length}}" 
+      action="View details of %name% where ID is %id%"
+      actionKeys="%name%,%id%"
+      [headers]="usersHeader" 
+      [items]="users" 
+      [pageInfo]="pageInfo"
+      dragColumns="true" 
+      enableIndexing="true"
+      actionable="true"
+      configurable="true"
+      [rowDetailer]="detailer"
+      [expandable]="allowExpanding"
+      (onconfigurationchange)="onconfigurationchange($event)"
+      (onaction)="onaction($event)"></flexible-table>
+
+<ng-template #detailer let-detail="data">
+  <div class="custom-class">
+    <h3>Detail information about row {{detail.id}}</h3>
+    <ol>
+      <li>id: {{detail.id}}</li>
+      <li>name: {{detail.name}}</li>
+      <li>username: {{detail.username}}</li>
+      <li>email: <span [innerHTML]="detail.email | into:'email'"></span></li>
+      <li>address: <span [innerHTML]="detail.address | into:'address'"></span></li>
+      <li>phone: {{detail.phone}}</li>
+      <li>website: <span [innerHTML]="detail.website | into:'link'"></span></li>
+      <li>company: {{detail.company.name}}</li>
+    </ol>
+  </div>
+</ng-template>
+    
+<ul class="logger">
+  <li *ngFor="let x of events" [textContent]="x | json"></li>
+</ul>
