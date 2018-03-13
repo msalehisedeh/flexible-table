@@ -1,0 +1,54 @@
+:host {
+    box-sizing: border-box;
+    padding: 2px;
+    position: absolute;
+    right: 8px;
+    top: 18px;
+
+    a {
+        display: block;
+        padding: 0;
+        cursor: pointer;
+        z-index: 5;
+
+        .icon {
+            color: #00925b;
+        }
+        .off-screen {
+            display: block;
+            text-indent: -9999px;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+        }
+    }
+    .shim {
+        background-color: rgba(255, 255, 255, 0.2);
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 2;
+    }
+    ul {
+        background-color: #fff;
+        border: 1px solid #999;
+        border-radius: 4px;
+        display: block;
+        list-style: none;
+        max-height: 300px;
+        margin: 2px 0;
+        min-width: 200px;
+        overflow-y: auto;
+        position: absolute;
+        padding: 15px;
+        right: 0px;
+        box-shadow: 6px 8px 6px -6px #1b1b1b;
+        z-index: 5;
+
+        li {
+          white-space: nowrap;
+        }
+    }
+}

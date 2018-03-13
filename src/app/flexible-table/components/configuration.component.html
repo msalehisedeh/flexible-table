@@ -1,0 +1,24 @@
+
+<div class="shim"
+    [style.display]="showConfigurationView ? 'block':'none'"
+    (click)="showConfigurationView = !showConfigurationView"></div>
+<a  [attr.tabindex]="0"
+    (keyup)="keyup($event)"
+    (click)="showConfigurationView = !showConfigurationView">
+    <span class="icon fa fa-gear" aria-hidden="true"></span>
+    <span class="off-screen" [textContent]="action"></span>
+</a>
+<ul role="list" [style.display]="showConfigurationView ? 'block':'none'">
+    <p [textContent]="title"></p>
+    <li  *ngFor="let header of headers" role="listitem">
+        <label for="{{header.key ? header.key+'c':'c'}}">
+            <input type="checkbox" #checkbox
+                    [id]="header.key ? header.key+'c':'c'"
+                    [value]="header.key"
+                    [checked]="header.present"
+                    (keyup)="keyup($event)"
+                    (click)="reconfigure(checkbox, header)" />
+            <span [textContent]="header.value"></span>
+        </label>
+    </li>
+</ul>

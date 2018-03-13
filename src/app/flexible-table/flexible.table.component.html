@@ -1,30 +1,12 @@
 
 <div class="flexible-table">
-    <div class="confinguration" *ngIf="configurable">
-        <div class="shim"
-            [style.display]="showConfigurationView ? 'block':'none'"
-            (click)="toggleConfigurationView()"></div>
-        <a #conf
-            [attr.tabindex]="0"
-            (keydown)="keydown($event, conf)"
-            (click)="toggleConfigurationView()">
-            <span class="icon fa fa-gear" aria-hidden="true"></span>
-            <span class="off-screen" [textContent]="vocabulary.configureTable"></span>
-        </a>
-        <ul role="list" [style.display]="showConfigurationView ? 'block':'none'">
-            <p [textContent]="vocabulary.configureColumns"></p>
-            <li  *ngFor="let header of headers" role="listitem">
-                <label for="{{header.key ? header.key+'c':'c'}}">
-                    <input type="checkbox" #checkbox
-                           [id]="header.key ? header.key+'c':'c'"
-                           [value]="header.key"
-                           [checked]="header.present"
-                           (click)="reconfigure(checkbox)" />
-                    <span [textContent]="header.value"></span>
-                </label>
-            </li>
-        </ul>
-    </div>
+    <table-configuration
+        *ngIf="configurable" 
+        [headers]="headers" 
+        [title]="vocabulary.configureColumns" 
+        [action]="vocabulary.configureTable"
+        (onchange)="reconfigure($event)"></table-configuration>
+
     <table [class]="tableClass" #flexible>
         <caption *ngIf="caption" [textContent]="caption"></caption>
         <thead>

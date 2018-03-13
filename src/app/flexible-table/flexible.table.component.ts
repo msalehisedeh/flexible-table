@@ -10,16 +10,12 @@ import {
 	Output,
 	ViewChild,
 	ViewContainerRef,
-	OnChanges,
 	OnInit,
-	OnDestroy,
 	EventEmitter
 } from '@angular/core';
 
 import {InToPipe} from 'into-pipes';
-
-import { DropEvent } from 'drag-enabled';
-import {TablePaginationComponent} from './table.pagination.component';
+import { DropEvent, DragEvent } from 'drag-enabled';
 
 export interface FlexibleTableHeader {
 	key: string,
@@ -29,6 +25,9 @@ export interface FlexibleTableHeader {
 	format?: string,
 	dragable?: boolean
 	sortable?: boolean,
+	class?:string,
+	lockable?:boolean,
+	locked?:boolean,
 	ascending?: boolean,
 	descending?: boolean
 }
@@ -38,9 +37,8 @@ export interface FlexibleTableHeader {
 	templateUrl: './flexible.table.component.html',
 	styleUrls: ['./flexible.table.component.scss']
 })
-export class FlexibleTableComponent implements OnInit, OnChanges, OnDestroy {
+export class FlexibleTableComponent implements OnInit {
 	private registeredHeaders = [];
-    showConfigurationView = false;
     dragging = false;
 
     @Input("vocabulary")
@@ -103,7 +101,6 @@ export class FlexibleTableComponent implements OnInit, OnChanges, OnDestroy {
 	private onconfigurationchange = new EventEmitter();
 
 	@ViewChild('flexible', {read: ViewContainerRef}) private table: ViewContainerRef;
-    @ViewChild('pager') private pager: TablePaginationComponent;
 
     constructor(private intoPipe: InToPipe) {}
 
@@ -226,19 +223,8 @@ export class FlexibleTableComponent implements OnInit, OnChanges, OnDestroy {
 		}
 	}
 
-	ngOnChanges(changes: any) {
-	}
-
-	ngOnDestroy() {
-	}
-
-	toggleConfigurationView() {
-		this.showConfigurationView = !this.showConfigurationView;
-	}
-
-	reconfigure(item) {
-        this.headerById(item.value).present = item.checked;
-		this.onconfigurationchange.emit(this.headers);
+	reconfigure(event) {
+		this.onconfigurationchange.emit(event);
 	}
 
     headerColumnElements() {
@@ -314,19 +300,19 @@ export class FlexibleTableComponent implements OnInit, OnChanges, OnDestroy {
 	}
 
 
-	dragEnabled(medium: FlexibleTableHeader) {
-		return medium.dragable;
+	dragEnabled(event: DragEvent) {
+		return event.medium.dragable;
 	}
 	dropEnabled(event: DropEvent) {
-		return event.destination.dragable;
+		return event.destination.medium.dragable;
 	}
-	onDragStart(event){
+	onDragStart(event: DragEvent){
 //        this.dragging = true;
 	}
-	onDragEnd(event){
+	onDragEnd(event: DragEvent){
  //       this.dragging = false;
 	}
 	onDrop(event:DropEvent){
-		this.swapColumns(event.source.key, event.destination.key);
+		this.swapColumns(event.source.medium.key, event.destination.medium.key);
 	}
 }

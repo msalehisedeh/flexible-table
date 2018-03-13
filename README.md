@@ -10,8 +10,12 @@ just to get your data displayed the way you wanted?
 The following are available functionalities presented in this version. 
 
 ```
+MODULE:
+  FlexibleTableModule
+
 DEPENDENCIES: 
 	"font-awesome": "^4.7.0",
+	"drag-enabled": "^0.0.1",
 	"into-pipes": "^0.1.0"
 ```
 ## Formatting the table cell content.
@@ -41,22 +45,22 @@ We are using "into-pipes" library. to see available formatting options, please f
 |action              |off-screen message to be displayed if click on a row results in an action. If supplied, action column will be displayed and will take effect on user click                   |
 |actionKeys          |parameters to feed the action.  parameters should exist in headers mapping.            |
 |tableClass          |class name to be assigned to the table.     |
-|headers             |mapping of items to be displayed as headers including instructions on formatting, dragging, ...                               |
+|headers             |mapping of items to be displayed as headers including insturctions on formatting, dragging, ...                               |
 |items               |items to be displayed                       |
-|pageInfo            |pagination information. If is not supplied, pagination will not take place.            |
+|pageInfo            |pagination information. If is not supplied, paggination will not take place.            |
 |tableInfo           |Information about component owning the table. this information will be passed to the component that will display when a row is expanded.                                |
-|configurable        |flag to allow hiding/displaying of specific headers.                                    |
+|configurable        |flag to allow hidding/displaying of specific headers.                                    |
 |enableIndexing      |flag to display index of rows.              |
 |rowDetailer         |reference to template that should be displayed when a row is expanded.           |
-|expandable          |function in component that owns the table which determines in a specific row is expandable. This function is called twice with a flag argument. If flag is false, call is to determine if action icon should be displayed on row. otherwise is to give before expansion opportunity to the owner to perform possible operation before expansion on the table take effect.        |
+|expandable          |function in component that owns the table which determines in a specific row is expandable. This function is called twice with a flag argument. If flag is false, call is to determine if action icon should be displayed on row. othwerwise is to give before expanssion opportunity to the owner to perform possible operation before expanssion on the table take effect.        |
 |expandIf            |flag to override calling of expandable function.                                   |
-|rowDetailerHeaders  |If the expanding row should be displayed in another table inside, then this attribute will be passed to the expansion template.  |
+|rowDetailerHeaders  |If the expanding row should be displayed in another table inside, then this attribute will be passed to the expanssion template.  |
 
 ## Events
 | Event                |Description                                     |
 |----------------------|------------------------------------------------|
 |onaction              |Will be published on a click action of a row    |
-|onconfigurationchange |Will be called when user selects to hide/display some of headers on configuration pop-up          |
+|onconfigurationchange |Will be called when user selects to hide/unhide some of headers on configuration popup          |
 
 ## How to do it?
 It is very simple. You have a JSON data to display and you want to allow user to configure columns, plus having ability to paginate, and sort/drag specific columns.
@@ -132,6 +136,7 @@ Now you need to set the table tag in your HTML content:
       [headers]="usersHeader" 
       [items]="users" 
       [pageInfo]="pageInfo"
+      dragColumns="true" 
       enableIndexing="true"
       actionable="true"
       configurable="true"
@@ -146,10 +151,10 @@ Now you need to set the table tag in your HTML content:
       <li>id: {{detail.id}}</li>
       <li>name: {{detail.name}}</li>
       <li>username: {{detail.username}}</li>
-      <li>email: {{detail.email}}</li>
-      <li>address: {{detail.address}}</li>
+      <li>email: {{detail.email | into:'email'}}</li>
+      <li>address: {{detail.address | into:'address'}}</li>
       <li>phone: {{detail.phone}}</li>
-      <li>website: {{detail.website | into:link}}</li>
+      <li>website: {{detail.website | into:'link'}}</li>
       <li>company: {{detail.company.name}}</li>
     </ol>
   </div>

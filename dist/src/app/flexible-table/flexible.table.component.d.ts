@@ -1,6 +1,6 @@
-import { OnChanges, OnInit, OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { InToPipe } from 'into-pipes';
-import { DropEvent } from 'drag-enabled';
+import { DropEvent, DragEvent } from 'drag-enabled';
 export interface FlexibleTableHeader {
     key: string;
     value: string;
@@ -9,13 +9,15 @@ export interface FlexibleTableHeader {
     format?: string;
     dragable?: boolean;
     sortable?: boolean;
+    class?: string;
+    lockable?: boolean;
+    locked?: boolean;
     ascending?: boolean;
     descending?: boolean;
 }
-export declare class FlexibleTableComponent implements OnInit, OnChanges, OnDestroy {
+export declare class FlexibleTableComponent implements OnInit {
     private intoPipe;
     private registeredHeaders;
-    showConfigurationView: boolean;
     dragging: boolean;
     vocabulary: {
         configureTable: string;
@@ -43,7 +45,6 @@ export declare class FlexibleTableComponent implements OnInit, OnChanges, OnDest
     private onaction;
     private onconfigurationchange;
     private table;
-    private pager;
     constructor(intoPipe: InToPipe);
     private findColumnWithID(id);
     private swapColumns(sourceID, destinationID);
@@ -51,10 +52,7 @@ export declare class FlexibleTableComponent implements OnInit, OnChanges, OnDest
     private itemValue(item, hpath);
     private sort(header, icon);
     ngOnInit(): void;
-    ngOnChanges(changes: any): void;
-    ngOnDestroy(): void;
-    toggleConfigurationView(): void;
-    reconfigure(item: any): void;
+    reconfigure(event: any): void;
     headerColumnElements(): any;
     headerById(id: any): any;
     columnsCount(): number;
@@ -67,9 +65,9 @@ export declare class FlexibleTableComponent implements OnInit, OnChanges, OnDest
         headers: any;
     };
     actionClick(event: any, item: any): boolean;
-    dragEnabled(medium: FlexibleTableHeader): boolean;
+    dragEnabled(event: DragEvent): any;
     dropEnabled(event: DropEvent): any;
-    onDragStart(event: any): void;
-    onDragEnd(event: any): void;
+    onDragStart(event: DragEvent): void;
+    onDragEnd(event: DragEvent): void;
     onDrop(event: DropEvent): void;
 }

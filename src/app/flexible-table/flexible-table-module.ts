@@ -2,11 +2,13 @@
 * Provides rendering of flexible table in a lazy load fashion.
 */
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { CommonModule, DatePipe, CurrencyPipe, DecimalPipe, JsonPipe, SlicePipe, UpperCasePipe, LowerCasePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {IntoPipeModule} from 'into-pipes';
 import { DragDropModule } from 'drag-enabled';
 
-import { TablePaginationComponent } from './table.pagination.component';
+import { PaginationComponent } from './components/pagination.component';
+import { ConfigurationComponent } from './components/configuration.component';
+
 import { FlexibleTableComponent } from './flexible.table.component';
 
 @NgModule({
@@ -17,11 +19,11 @@ import { FlexibleTableComponent } from './flexible.table.component';
     ],
     declarations: [
         FlexibleTableComponent,
-        TablePaginationComponent
+        ConfigurationComponent,
+        PaginationComponent
     ],
     exports: [
-        FlexibleTableComponent,
-        TablePaginationComponent
+        FlexibleTableComponent
     ],
     entryComponents: [
     ],

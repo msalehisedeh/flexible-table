@@ -1,0 +1,76 @@
+.table-pagination {
+    box-sizing: border-box;
+    background-color: #fff;
+    border: 1px solid #254A5D;
+    border-radius: 2px;
+    color: #254A5D;
+    bottom: 5px;
+    clear: both;
+    display: flex;
+    font-size: 1em;
+    height: 38px;
+    max-width: 100%;
+    margin: 0 auto;
+    position: fixed;
+    left: 40%;
+    z-index: 55;
+
+    .fa {
+        padding: 4px 8px;
+        margin-top: 5px;
+    }
+
+    .next,
+    .prev,
+    .last,
+    .first {
+        background-repeat: no-repeat;
+        cursor:pointer;
+        width:auto;
+        display: block;
+        height: 39px;
+        text-indent: -99999px;
+        box-sizing: border-box;
+    }
+    .reset-size{
+        padding: 0;
+        height: 35px;
+        border-radius: 4px;
+
+        input{
+            border: 0;
+            border-left: 1px solid #4c5854;
+            height: 34px;
+            text-align: center;
+            width: 30px;
+            margin-right: 2px;
+            margin-left: 8px;
+        }
+    }
+    .current {
+        padding: 1px 5px;
+
+        input {
+            padding: 0 3px;
+            width: 14px;
+            height: 35px;
+            border: none;
+            text-align: center;
+        }
+    }
+    .disabled {
+        opacity: 0.4;
+    }
+}
+
+/*@media only screen and (-webkit-min-device-pixel-ratio: 2),
+    only screen and ( min--moz-device-pixel-ratio: 2),
+    only screen and ( -o-min-device-pixel-ratio: 2/1),
+    only screen and ( min-device-pixel-ratio: 2),
+    only screen and ( min-resolution: 192dpi),
+    only screen and ( min-resolution: 2dppx) {*/
+    @media screen and (max-width: 992px) {
+        .table-pagination {
+            left: 4px;
+        }
+}
