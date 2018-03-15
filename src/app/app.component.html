@@ -24,16 +24,14 @@
 
 <ng-template #detailer let-detail="data">
   <div class="custom-class">
-    <h3>Detail information about row {{detail.id}}</h3>
+    <h3>Detail information about {{detail.name}}</h3>
     <ol>
-      <li>id: {{detail.id}}</li>
-      <li>name: {{detail.name}}</li>
-      <li>username: {{detail.username}}</li>
+      <li>id: {{detail.guid}}</li>
+      <li>tags: {{detail.tags}}</li>
       <li>email: <span [innerHTML]="detail.email | into:'email'"></span></li>
       <li>address: <span [innerHTML]="detail.address | into:'address'"></span></li>
       <li>phone: {{detail.phone}}</li>
-      <li>website: <span [innerHTML]="detail.website | into:'link'"></span></li>
-      <li>company: {{detail.company.name}}</li>
+      <li>company: {{detail.company}}</li>
     </ol>
   </div>
 </ng-template>

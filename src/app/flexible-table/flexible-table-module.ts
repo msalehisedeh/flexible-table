@@ -8,6 +8,7 @@ import { DragDropModule } from 'drag-enabled';
 
 import { PaginationComponent } from './components/pagination.component';
 import { ConfigurationComponent } from './components/configuration.component';
+import { TableViewComponent } from './components/table.component';
 
 import { FlexibleTableComponent } from './flexible.table.component';
 
@@ -20,7 +21,8 @@ import { FlexibleTableComponent } from './flexible.table.component';
     declarations: [
         FlexibleTableComponent,
         ConfigurationComponent,
-        PaginationComponent
+        PaginationComponent,
+        TableViewComponent
     ],
     exports: [
         FlexibleTableComponent

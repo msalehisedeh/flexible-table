@@ -5,6 +5,19 @@ Have you ever wanted a simple way of flushing your data in a all versatile table
 just to get your data displayed the way you wanted?
 
 
+# Version 0.1.0
+
+This release is basically performance improvements and internal arangement of components to make it possible to provide additional functionalities which will be released soon. 
+
+```
+MODULE:
+  FlexibleTableModule
+
+DEPENDENCIES: 
+	"font-awesome": "^4.7.0",
+	"drag-enabled": "^0.0.1",
+	"into-pipes": "^0.2.2"
+```
 # Version 0.0.1
 
 The following are available functionalities presented in this version. 
@@ -18,6 +31,7 @@ DEPENDENCIES:
 	"drag-enabled": "^0.0.1",
 	"into-pipes": "^0.1.0"
 ```
+
 ## Formatting the table cell content.
 
 We are using "into-pipes" library. to see available formatting options, please follow what is supported by the library.
@@ -69,38 +83,63 @@ All you will need is to add a header JSON and you are set to get the job done. T
 Let's say you have the following data to be displayed:
 ```
 {
-    "id": 1,
-    "name": "Leanne Graham",
-    "username": "Bret",
-    "email": "Sincere@april.biz",
-    "address": {
-      "street": "Kulas Light",
-      "suite": "Apt. 556",
-      "city": "Gwenborough",
-      "zipcode": "92998-3874",
-      "geo": {
-        "lat": "-37.3159",
-        "lng": "81.1496"
-      }
+  "guid": "701134c1-82cd-4f24-a867-f896350643f9",
+  "isActive": false,
+  "balance": "$3,666.56",
+  "picture": "https://image.flaticon.com/icons/png/128/701/701997.png",
+  "age": 37,
+  "eyeColor": "brown",
+  "name": "Cecelia Hartman",
+  "gender": "female",
+  "company": "MOMENTIA",
+  "email": "ceceliahartman@momentia.com",
+  "phone": "+1 (937) 578-2156",
+  "address": {
+    "street": "548 Clymer Street",
+    "suite": "Apt. 556",
+    "city": "Loveland",
+    "zipcode": "92998-3641"
+  },
+  "about": "Est voluptate ea occaecat officia excepteur anim ipsum. Ipsum aliquip pariatur.\r\n",
+  "registered": "2016-09-03T07:03:48 +07:00",
+  "latitude": -56.348654,
+  "longitude": 52.767967,
+  "tags": [
+    "est",
+    "id",
+    "ut",
+    "sint",
+    "cillum",
+    "minim",
+    "commodo"
+  ],
+  "friends": [
+    {
+      "id": 0,
+      "name": "Yang Barrera"
     },
-    "phone": "1-770-736-8031 x56442",
-    "website": "hildegard.org",
-    "company": {
-      "name": "Romaguera-Crona",
-      "catchPhrase": "Multi-layered client-server neural-net",
-      "bs": "harness real-time e-markets"
+    {
+      "id": 1,
+      "name": "Rosella Lane"
+    },
+    {
+      "id": 2,
+      "name": "Doyle Welch"
     }
+  ],
+  "greeting": "Hello, Cecelia Hartman! You have 5 unread messages.",
+  "favoriteFruit": "banana"
 }
 ```
 
 And you want user ID, name, username, the city he/she lives in, and the company works for. All you need is to map your data as it follows:
 ```
 [
-    {key: "id",value: "ID",present: true, dragable:true, sortable: true},  
 	  {key: "name",value: "Name",present: true, dragable:true, sortable: true},  
-	  {key: "username",value: "User Name",present: true, dragable:true, sortable: true},  
+	  {key: "isActive",value: "Active",present: true, dragable:true, sortable: true, format: "if:~:true:\"font:fa fa-check:replace\":\"\""},
+	  {key: "picture",value: "Picture",present: true, dragable:true, sortable: true, format: "image:auto:32px"},
 	  {key: "address.city",value: "City", present: true, dragable:true, sortable: true},  
-	  {key: "company.name",value: "Company",present: true, dragable:true, sortable: true} 
+	  {key: "company",value: "Company",present: true, dragable:true, sortable: true} 
   ]
 ```
 The above will instruct the table to make the mentioned columns visible and sortable.  You can hide anyone of them or disable sorting on any columns.  You can make them draggable or have the content of a cell formatted if you add a "format" attribute to the column metadata you want to be formatted. 

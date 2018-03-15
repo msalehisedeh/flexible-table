@@ -14,11 +14,11 @@ export class AppComponent implements OnInit {
   pageInfo = {pageSize:8,currentPage:1,from:0,resetSize: true, contentSize: 0};
 
   usersHeader:FlexibleTableHeader[] = [
-    {key: "id",value: "ID",present: true, dragable:true, sortable: true},  
 	  {key: "name",value: "Name",present: true, dragable:true, sortable: true},  
-	  {key: "username",value: "User Name",present: true, dragable:true, sortable: true},  
+	  {key: "isActive",value: "Active",present: true, dragable:true, sortable: true, format: "if:~:true:\"font:fa fa-check:replace\":\"\""},
+	  {key: "picture",value: "Picture",present: true, dragable:true, sortable: true, format: "image:auto:32px"},
 	  {key: "address.city",value: "City", present: true, dragable:true, sortable: true},  
-	  {key: "company.name",value: "Company",present: true, dragable:true, sortable: true} 
+	  {key: "company",value: "Company",present: true, dragable:true, sortable: true} 
   ];
 
   users: any[];
@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.service.usersList().subscribe(
       (users) => {
-        this.users = users.json();
+        this.users = users;//.json();
         this.pageInfo.contentSize = this.users.length;
       }
     )

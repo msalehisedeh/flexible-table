@@ -1,8 +1,6 @@
 /*
-* Provides rendering of a table which is using the given FlexibleTableHeader set in
-* order to tabulate the given data. As per definition of earch header component,
-* a column could be hidden, sortable, or draggable. Each table row can expand/collapse
-* or respond to a click action.
+* Provides ability to configure displaying of table columns. As per definition of earch header component,
+* a column could be hidden.
 */
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 

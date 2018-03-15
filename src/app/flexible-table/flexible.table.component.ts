@@ -38,8 +38,9 @@ export interface FlexibleTableHeader {
 	styleUrls: ['./flexible.table.component.scss']
 })
 export class FlexibleTableComponent implements OnInit {
-	private registeredHeaders = [];
-    dragging = false;
+
+	subItems:any;
+	subHeaders:any;
 
     @Input("vocabulary")
     public vocabulary = {
@@ -100,105 +101,7 @@ export class FlexibleTableComponent implements OnInit {
 	@Output('onconfigurationchange')
 	private onconfigurationchange = new EventEmitter();
 
-	@ViewChild('flexible', {read: ViewContainerRef}) private table: ViewContainerRef;
-
     constructor(private intoPipe: InToPipe) {}
-
-
-	private findColumnWithID(id: string) {
-        const list = this.headerColumnElements();
-		let column = null;
-		for (let i = 0; i < list.length; i++) {
-			if (list[i].getAttribute("id") === id) {
-				column = list[i];
-				break;
-			}
-		}
-		return column;
-	}
-
-	private swapColumns(sourceID: string, destinationID: string) {
-		const srcIndex = this.getColumnIndex(sourceID);
-		const desIndex = this.getColumnIndex(destinationID);
-        if (srcIndex < 0 || desIndex < 0) {
-            console.log("invalid drop id", sourceID, destinationID);
-            return;
-        }
-		const sobj = this.headers[srcIndex];
-		this.headers[srcIndex] = this.headers[desIndex];
-        this.headers[desIndex] = sobj;
-
-		for (let i = 0; i < this.items.length; i++) {
-			const row = this.items[i];
-			const sobji = row[srcIndex];
-			row[srcIndex] = row[desIndex];
-			row[desIndex] = sobji;
-		}
-		this.onconfigurationchange.emit(this.headers);
-	}
-
-	private getColumnIndex(id: string) {
-		let index = -1;
-		for (let i = 0; i < this.headers.length; i++) {
-			if (this.headers[i].key === id) {
-				index = i;
-				break;
-			}
-		}
-		return index;
-	}
-	private itemValue(item, hpath) {
-		let subitem = item;
-		hpath.map( (subkey) => {
-			if (subitem) {
-				subitem = subitem[subkey] ? subitem[subkey] : undefined;
-			}
-		})
-		return subitem ? subitem : "";
-	}
-
-	private sort(header: FlexibleTableHeader, icon) {
-		if (header.sortable) {
-			for (let i = 0; i < this.headers.length ; i++) {
-                const h = this.headers[i];
-
-                if (h.key !== header.key) {
-					const item = this.findColumnWithID(h.key);
-
-					if (item) {
-						item.classList.remove("ascending");
-						item.classList.remove("descending");
-						item.classList.add("sortable");
-					}
-                    h.descending = false;
-                    h.ascending = false;
-				}
-			}
-            icon.classList.remove("fa-sort");
-			if (header.ascending || (!header.ascending && !header.descending)) {
-				header.descending = true;
-				header.ascending = false;
-				icon.classList.remove("fa-sort-asc");
-				icon.classList.add("fa-sort-desc");
-			} else {
-				header.descending = false;
-				header.ascending = true;
-				icon.classList.remove("fa-sort-desc");
-				icon.classList.add("fa-sort-asc");
-			}
-			const hpath = header.key.split(".");
-			this.items.sort((a, b) => {
-				const v1 = this.itemValue(a, hpath);
-				const v2 = this.itemValue(b, hpath);
-
-				if (header.ascending) {
-					return v1 > v2 ? 1 : -1;
-				}
-				return v1 < v2 ? 1 : -1;
-			});
-			setTimeout( () => this.onconfigurationchange.emit(this.headers), 2);
-		}
-	}
 
 	ngOnInit() {
 		if (!this.headers || this.headers.length === 0) {
@@ -207,112 +110,33 @@ export class FlexibleTableComponent implements OnInit {
                 this.headers.push({ key: item, value: item, sortable: true, present: true });
            });
         }
-        if (this.actionKeys) {
-            this.actionKeys = this.actionKeys.split(",");
-		}
 		if (!this.rowDetailer && this.expandable) {
 			this.rowDetailer = function(item) {
 				return {data: item, headers: []};
 			};
 		}
-		if (!this.expandable) {
-			this.expandable = function(item, showIcon) {return showIcon};
-		}
-		if (!this.rowDetailerHeaders) {
-			this.rowDetailerHeaders = (item) => [];
-		}
+		this.updateLimits();
+	}
+
+	updateLimits() {
+		this.subHeaders = this.headers.filter( (header) => header.present === true);
 	}
 
 	reconfigure(event) {
+		this.headers = event;
+		this.updateLimits();
 		this.onconfigurationchange.emit(event);
 	}
 
-    headerColumnElements() {
-		return this.table.element.nativeElement.children ?
-				this.table.element.nativeElement.children[1].children[0].children : [];
-    }
-
-	headerById(id) {
-		let h;
-		for (const i in this.headers) {
-			if (this.headers[i].key === id) {
-				h = this.headers[i];
-				break;
-			}
-		}
-		return h;
+	onPaginationChange(event) {
+		this.pageInfo = event;
 	}
 
-    columnsCount() {
-		let count = 0;
-		this.headers.map( (item) => {
-            if (item.present) {
-                count++;
-            }
-		});
-        if (this.action) {
-            count++;
-        }
-        return count;
-    }
-
-    keydown(event, item) {
-        const code = event.which;
-        if ((code === 13) || (code === 32)) {
-			item.click();
-		}
-    }
-    offScreenMessage(item) {
-        let message: string = this.action;
-        this.actionKeys.map((key) => { message = message.replace(key, item[key.substring(1, key.length - 1)]); })
-        return message;
-    }
-
-    cellContent(item, header) {
-		let content = this.itemValue(item, header.key.split("."));
-
-		if (header.format && content !== undefined && content != null) {
-            content = this.intoPipe.transform(content, header.format);
-        }
-        return (content !== undefined && content != null) ? content : '&nbsp;';
+	tableAction(event) {
+		this.onaction.emit(event)
 	}
 
-	rowDetailerContext(item) {
-		return {
-			data: item,
-			tableInfo: this.tableInfo,
-			headers: this.rowDetailerHeaders(item)
-		};
-	}
-
-	actionClick(event, item: any) {
-		event.stopPropagation();
-        if (this.rowDetailer && (this.expandIf || this.expandable(item, false)) ) {
-            if (item.expanded) {
-                delete item.expanded;
-            } else {
-                item.expanded = true;
-            }
-        } else {
-            this.onaction.emit(item);
-		}
-		return false;
-	}
-
-
-	dragEnabled(event: DragEvent) {
-		return event.medium.dragable;
-	}
-	dropEnabled(event: DropEvent) {
-		return event.destination.medium.dragable;
-	}
-	onDragStart(event: DragEvent){
-//        this.dragging = true;
-	}
-	onDragEnd(event: DragEvent){
- //       this.dragging = false;
-	}
 	onDrop(event:DropEvent){
-		this.swapColumns(event.source.medium.key, event.destination.medium.key);
+
 	}
 }
