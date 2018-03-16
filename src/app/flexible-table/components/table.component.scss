@@ -62,8 +62,12 @@
 				height: 0;
 				overflow: hidden;
 				text-indent: -99999px;
-				width: 0;
+                width: 0;
 			}
+                
+            ::ng-deep img {
+                height: 24px;
+            }
         }
         td.index {
             background-color: #eee;
@@ -143,11 +147,13 @@ table tr.detail td {
 table tr.expanded td a.expanded {
     background-position: right 2px;
 }
-table tbody tr:hover {
+table tbody tr:hover, table tbody tr.hover {
     background-color: #FFEED2;
 }
 table tbody tr.detail:hover,
-table tbody tr.detail:hover td table thead tr {
+table tbody tr.detail.hover,
+table tbody tr.detail:hover td table thead tr,
+table tbody tr.detail.hover td table thead tr {
     background-color: inherit;
 }
 
@@ -159,10 +165,12 @@ table tr td a.actionable {
     line-height: 30px;
     color: #254A4D;
 }
-table tbody tr.detail:hover td:last-child{
+table tbody tr.detail:hover td:last-child,
+table tbody tr.detail.hover td:last-child{
     border-right: 0;
 }
-table tbody tr.detail:hover td:first-child{
+table tbody tr.detail:hover td:first-child,
+table tbody tr.detail.hover td:first-child{
     border-left: 0;
 }
 table tr td {

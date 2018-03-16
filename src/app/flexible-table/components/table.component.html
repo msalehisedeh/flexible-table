@@ -16,6 +16,13 @@
                 [attr.tabindex]="header.sortable ? 0 : -1"
                 (keydown)="keydown($event, th)" (click)="sort(header, icon)">
                 <span *ngIf="header.sortable" class="off-screen"  [textContent]="vocabulary.clickSort"></span>
+                <span class="locker icon fa" #locker
+                        *ngIf="lockable && (headers.length > 1 || header.locked)"
+                        tabindex="0"
+                        title="lock/unlock this column"
+                        (keydown)="keydown($event, locker)" (click)="lock(header, $event)"
+                        [class.fa-lock]="header.locked"
+                        [class.fa-unlock]="!header.locked"></span>
                 <span class="title"
                         [class.dragable]="header.dragable"
                         [textContent]="header.value"></span>
@@ -31,7 +38,10 @@
         <ng-template ngFor let-item [ngForOf]="items" let-i="index">
             <tr *ngIf="i >= pageInfo.from && i <= pageInfo.to "
                 (click)="actionClick($event, item)"
+                (mouseover)="hover(item, true)"
+                (mouseout)="hover(item, false)"
                 [class.pointer]="action"
+                [class.hover]="item.hover"
                 [class.expanded]="item.expanded"
                 [class.odd]="i%2">
                 <td scope="row" class="index" *ngIf="enableIndexing">{{i + 1}}</td>

@@ -1,4 +1,4 @@
-import { OnInit } from '@angular/core';
+import { OnInit, ElementRef } from '@angular/core';
 import { InToPipe } from 'into-pipes';
 import { DropEvent, DragEvent } from 'drag-enabled';
 export interface FlexibleTableHeader {
@@ -10,12 +10,12 @@ export interface FlexibleTableHeader {
     dragable?: boolean;
     sortable?: boolean;
     class?: string;
-    lockable?: boolean;
     locked?: boolean;
     ascending?: boolean;
     descending?: boolean;
 }
 export declare class TableViewComponent implements OnInit {
+    el: ElementRef;
     private intoPipe;
     private registeredHeaders;
     dragging: boolean;
@@ -28,6 +28,7 @@ export declare class TableViewComponent implements OnInit {
         lastPage: string;
         previousPage: string;
     };
+    lockable: boolean;
     caption: string;
     action: string;
     pageInfo: any;
@@ -42,18 +43,21 @@ export declare class TableViewComponent implements OnInit {
     expandIf: boolean;
     rowDetailerHeaders: any;
     private onaction;
-    private onconfigurationchange;
+    private onchange;
     private table;
-    constructor(intoPipe: InToPipe);
+    constructor(el: ElementRef, intoPipe: InToPipe);
     private findColumnWithID(id);
-    private swapColumns(sourceID, destinationID);
+    private swapColumns(source, destination);
     private getColumnIndex(id);
     private itemValue(item, hpath);
-    private sort(header, icon);
+    lock(header: FlexibleTableHeader, event: any): void;
+    sort(header: FlexibleTableHeader, icon: any): void;
+    offsetWidth(): any;
     ngOnInit(): void;
     headerColumnElements(): any;
     headerById(id: any): any;
     columnsCount(): number;
+    hover(item: any, flag: any): void;
     keydown(event: any, item: any): void;
     offScreenMessage(item: any): string;
     cellContent(item: any, header: any): any;

@@ -14,23 +14,7 @@ import {
 	EventEmitter
 } from '@angular/core';
 
-import {InToPipe} from 'into-pipes';
 import { DropEvent, DragEvent } from 'drag-enabled';
-
-export interface FlexibleTableHeader {
-	key: string,
-	value: string,
-	present: boolean,
-	width?: string,
-	format?: string,
-	dragable?: boolean
-	sortable?: boolean,
-	class?:string,
-	lockable?:boolean,
-	locked?:boolean,
-	ascending?: boolean,
-	descending?: boolean
-}
 
 @Component({
 	selector: 'flexible-table',
@@ -101,7 +85,7 @@ export class FlexibleTableComponent implements OnInit {
 	@Output('onconfigurationchange')
 	private onconfigurationchange = new EventEmitter();
 
-    constructor(private intoPipe: InToPipe) {}
+    constructor() {}
 
 	ngOnInit() {
 		if (!this.headers || this.headers.length === 0) {

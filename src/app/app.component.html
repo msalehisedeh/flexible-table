@@ -5,6 +5,22 @@
   </h1>
 </div>
 
+<lock-table 
+      *ngIf="users" 
+      caption="total records found {{users.length}}" 
+      action="View details of %name% where ID is %id%"
+      actionKeys="%name%,%id%"
+      [headers]="usersHeader" 
+      [items]="users" 
+      [pageInfo]="pageInfo"
+      dragColumns="true" 
+      enableIndexing="true"
+      actionable="true"
+      configurable="true"
+      (onconfigurationchange)="onconfigurationchange($event)"
+      (onaction)="onaction($event)"></lock-table>
+
+
 <flexible-table 
       *ngIf="users" 
       caption="total records found {{users.length}}" 

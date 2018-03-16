@@ -11,7 +11,8 @@ import {
 	ViewChild,
 	ViewContainerRef,
 	OnInit,
-	EventEmitter
+	EventEmitter,
+	ElementRef
 } from '@angular/core';
 
 import {InToPipe} from 'into-pipes';
@@ -26,7 +27,6 @@ export interface FlexibleTableHeader {
 	dragable?: boolean
 	sortable?: boolean,
 	class?:string,
-	lockable?:boolean,
 	locked?:boolean,
 	ascending?: boolean,
 	descending?: boolean
@@ -51,6 +51,9 @@ export class TableViewComponent implements OnInit {
 		lastPage: "Last",
 		previousPage: "Previous"
 	};
+
+	@Input("lockable")
+	lockable:boolean;
 
 	@Input("caption")
     public caption: string;
@@ -94,12 +97,12 @@ export class TableViewComponent implements OnInit {
 	@Output('onaction')
 	private onaction = new EventEmitter();
 
-	@Output('onconfigurationchange')
-	private onconfigurationchange = new EventEmitter();
+	@Output('onchange')
+	private onchange = new EventEmitter();
 
 	@ViewChild('flexible', {read: ViewContainerRef}) private table: ViewContainerRef;
 
-    constructor(private intoPipe: InToPipe) {}
+    constructor(public el:ElementRef, private intoPipe: InToPipe) {}
 
 
 	private findColumnWithID(id: string) {
@@ -114,24 +117,31 @@ export class TableViewComponent implements OnInit {
 		return column;
 	}
 
-	private swapColumns(sourceID: string, destinationID: string) {
-		const srcIndex = this.getColumnIndex(sourceID);
-		const desIndex = this.getColumnIndex(destinationID);
-        if (srcIndex < 0 || desIndex < 0) {
-            console.log("invalid drop id", sourceID, destinationID);
-            return;
-        }
-		const sobj = this.headers[srcIndex];
-		this.headers[srcIndex] = this.headers[desIndex];
-        this.headers[desIndex] = sobj;
+	private swapColumns(source: any, destination: any) {
 
-		for (let i = 0; i < this.items.length; i++) {
-			const row = this.items[i];
-			const sobji = row[srcIndex];
-			row[srcIndex] = row[desIndex];
-			row[desIndex] = sobji;
+		if (source.node.parentNode === destination.node.parentNode) {
+			const srcIndex = this.getColumnIndex(source.medium.key);
+			const desIndex = this.getColumnIndex(destination.medium.key);
+			if (srcIndex < 0 || desIndex < 0) {
+				console.log("invalid drop id", source.medium.key, destination.medium.key);
+				return;
+			}
+			const sobj = this.headers[srcIndex];
+			this.headers[srcIndex] = this.headers[desIndex];
+			this.headers[desIndex] = sobj;
+	
+			for (let i = 0; i < this.items.length; i++) {
+				const row = this.items[i];
+				const sobji = row[srcIndex];
+				row[srcIndex] = row[desIndex];
+				row[desIndex] = sobji;
+			}	
+		//	this.onchange.emit(this.headers);
+		} else if (source.medium.locked || destination.medium.locked) {
+			source.medium.locked = !source.medium.locked;
+			destination.medium.locked = !destination.medium.locked;
+			this.onchange.emit(this.headers);
 		}
-		this.onconfigurationchange.emit(this.headers);
 	}
 
 	private getColumnIndex(id: string) {
@@ -154,7 +164,13 @@ export class TableViewComponent implements OnInit {
 		return subitem === undefined || subitem === null || subitem === "null" ? "" : subitem;
 	}
 
-	private sort(header: FlexibleTableHeader, icon) {
+	lock(header: FlexibleTableHeader, event) {
+        event.stopPropagation();	
+        event.preventDefault();
+		header.locked = !header.locked;
+		this.onchange.emit(this.headers);
+	}
+	sort(header: FlexibleTableHeader, icon) {
 		if (header.sortable) {
 			for (let i = 0; i < this.headers.length ; i++) {
                 const h = this.headers[i];
@@ -193,16 +209,16 @@ export class TableViewComponent implements OnInit {
 				}
 				return v1 < v2 ? 1 : -1;
 			});
-			setTimeout( () => this.onconfigurationchange.emit(this.headers), 2);
 		}
 	}
 
+	offsetWidth() {
+		return this.table.element.nativeElement.offsetWidth;
+	}
+
 	ngOnInit() {
-		if (!this.headers || this.headers.length === 0) {
+		if (!this.headers) {
 			this.headers = [];
-            this.items[0].map((item) => {
-                this.headers.push({ key: item, value: item, sortable: true, present: true });
-           });
         }
         if (this.actionKeys) {
             this.actionKeys = this.actionKeys.split(",");
@@ -247,7 +263,14 @@ export class TableViewComponent implements OnInit {
             count++;
         }
         return count;
-    }
+	}
+	hover(item, flag) {
+		if (flag) {
+			item.hover = true;
+		} else {
+			delete item.hover;
+		}
+	}
 
     keydown(event, item) {
         const code = event.which;
@@ -306,6 +329,6 @@ export class TableViewComponent implements OnInit {
  //       this.dragging = false;
 	}
 	onDrop(event:DropEvent){
-		this.swapColumns(event.source.medium.key, event.destination.medium.key);
+		this.swapColumns(event.source, event.destination);
 	}
 }

@@ -11,6 +11,7 @@ import { ConfigurationComponent } from './components/configuration.component';
 import { TableViewComponent } from './components/table.component';
 
 import { FlexibleTableComponent } from './flexible.table.component';
+import { LockTableComponent } from './lock.table.component';
 
 @NgModule({
     imports: [
@@ -20,12 +21,14 @@ import { FlexibleTableComponent } from './flexible.table.component';
     ],
     declarations: [
         FlexibleTableComponent,
+        LockTableComponent,
         ConfigurationComponent,
         PaginationComponent,
         TableViewComponent
     ],
     exports: [
-        FlexibleTableComponent
+        FlexibleTableComponent,
+        LockTableComponent
     ],
     entryComponents: [
     ],

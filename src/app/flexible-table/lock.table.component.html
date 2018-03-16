@@ -1,0 +1,42 @@
+<div class="caption">
+	<table-configuration
+		*ngIf="configurable" 
+		[headers]="headers" 
+		[title]="vocabulary.configureColumns" 
+		[action]="vocabulary.configureTable"
+		(onchange)="reconfigure($event)"></table-configuration>
+
+	<div *ngIf="caption" [textContent]="caption"></div>
+</div>
+<div class="smart-table-wrap" (scroll)="scroll($event)">
+	<table-view #lockedTable
+		*ngIf="items" 
+		class="locked-table"
+		lockable="true"
+		[headers]="lockedHeaders" 
+		[items]="items" 
+        [pageInfo]="pageInfo"
+        [vocabulary]="vocabulary"
+		[enableIndexing]="enableIndexing"
+        [rowDetailer]="rowDetailer"
+		[actionable]="actionable"
+		(onchange)="onlock($event)"
+        (onDrop)="onDrop($event)"
+		(onaction)="tableAction($event)"></table-view>
+
+    <table-view #unlockedTable
+		*ngIf="items" 
+		class="unlocked-table"
+		lockable="true"
+		[headers]="unlockedHeaders" 
+		[items]="items" 
+        [pageInfo]="pageInfo"
+        [vocabulary]="vocabulary"
+        [rowDetailer]="rowDetailer"
+        [actionable]="actionable"
+		(onDrop)="onDrop($event)"
+		(onchange)="onlock($event)"
+		(onaction)="tableAction($event)"></table-view>
+	
+</div>
+<table-pagination [info]="pageInfo" [vocabulary]="vocabulary" #pager></table-pagination>

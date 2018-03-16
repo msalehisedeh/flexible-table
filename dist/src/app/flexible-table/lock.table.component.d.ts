@@ -1,8 +1,9 @@
-import { OnInit } from '@angular/core';
+import { OnInit, Renderer } from '@angular/core';
 import { DropEvent } from 'drag-enabled';
-export declare class FlexibleTableComponent implements OnInit {
-    subItems: any;
-    subHeaders: any;
+export declare class LockTableComponent implements OnInit {
+    private renderer;
+    lockedHeaders: any;
+    unlockedHeaders: any;
     vocabulary: {
         configureTable: string;
         configureColumns: string;
@@ -22,17 +23,16 @@ export declare class FlexibleTableComponent implements OnInit {
     tableInfo: any;
     configurable: boolean;
     enableIndexing: boolean;
-    rowDetailer: any;
-    expandable: any;
-    expandIf: boolean;
-    rowDetailerHeaders: any;
     private onaction;
     private onconfigurationchange;
-    constructor();
+    private lockedTable;
+    private unlockedTable;
+    scroll(event: any): void;
+    constructor(renderer: Renderer);
     ngOnInit(): void;
-    updateLimits(): void;
+    evaluatePositioning(): void;
     reconfigure(event: any): void;
-    onPaginationChange(event: any): void;
+    onlock(event: any): void;
     tableAction(event: any): void;
     onDrop(event: DropEvent): void;
 }

@@ -5,8 +5,7 @@
 }(this, (function (exports,core,intoPipes,common,dragEnabled) { 'use strict';
 
 var FlexibleTableComponent = /** @class */ (function () {
-    function FlexibleTableComponent(intoPipe) {
-        this.intoPipe = intoPipe;
+    function FlexibleTableComponent() {
         this.vocabulary = {
             configureTable: "Configure Table",
             configureColumns: "Configure Columns",
@@ -60,9 +59,7 @@ FlexibleTableComponent.decorators = [
                 styles: [":host{display:inline-block!important;width:100%}.flexible-table{position:relative;margin:0 auto;display:table;border-spacing:0;border-collapse:collapse}.flexible-table .off-screen{display:block;float:left;height:0;overflow:hidden;text-indent:-99999px;width:0}.flexible-table table{margin:1rem auto;padding:0;width:100%;table-layout:fixed;max-width:99%;background-color:transparent;border-collapse:collapse}.flexible-table table caption{background-color:#c3e5e2;border-radius:2px;color:#1b1b1b;caption-side:top;font-size:14px;padding:5px 6px;margin-bottom:15px;text-align:left}.flexible-table table thead{border-top:1px solid #bbb;border-bottom:1px solid #bbb;background-color:#eee}.flexible-table table tr{border:0}.flexible-table table tr.expanded td{font-weight:700;border-bottom:0}.flexible-table table td{padding-left:3px}.flexible-table table td:first-child{padding-left:5px}.flexible-table table td .off-screen{display:block;float:left;height:0;overflow:hidden;text-indent:-99999px;width:0}.flexible-table table td.index{background-color:#eee;border-right:1px solid #bbb}.flexible-table table th{cursor:default;-webkit-user-select:none;-moz-user-select:none;-o-user-select:none;-ms-user-select:none;user-select:none;height:24px;position:relative;white-space:nowrap;font-weight:400;text-transform:uppercase;font-size:14px;padding-top:6px;padding-bottom:6px;text-align:left}.flexible-table table th.drag-over{background-color:#9b9b9b}.flexible-table table th.drag-over .icon,.flexible-table table th.drag-over .title{color:#eee}.flexible-table table th:first-child{padding-left:5px}.flexible-table table th.ascending,.flexible-table table th.descending,.flexible-table table th.sortable{cursor:pointer;height:12px}.flexible-table table th.indexable{width:33px}.flexible-table table th.actionable{width:24px}.flexible-table table th .title{color:#254a4d;display:inline-block;height:20px;white-space:nowrap}.flexible-table table th .dragable{cursor:move}.flexible-table table th .icon{width:22px;display:inline-block;height:20px;color:#254a4d}.flexible-table .fa.fa-angle-right{font-size:18px}.flexible-table table tr.detail td{border-top:0;cursor:default}.flexible-table table tr.expanded td a.expanded{background-position:right 2px}.flexible-table table tbody tr:hover{background-color:#ffeed2}.flexible-table table tbody tr.detail:hover,.flexible-table table tbody tr.detail:hover td table thead tr{background-color:inherit}.flexible-table table tr td a.actionable{display:inline-table;height:32px;vertical-align:middle;width:25px;line-height:30px;color:#254a4d}.flexible-table table tbody tr.detail:hover td:last-child{border-right:0}.flexible-table table tbody tr.detail:hover td:first-child{border-left:0}.flexible-table table tr td{border-bottom:1px solid #b1b3b3;color:#254a5d;font-size:15px;text-transform:capitalize}.flexible-table table tbody tr.pointer{cursor:pointer}.flexible-table table.alert-danger{border:0}.flexible-table table.alert-danger caption{background-color:transparent;font-weight:700;margin-bottom:0}.flexible-table table.alert-danger td{border-bottom:0;display:block}.flexible-table table.alert-danger td:first-child{padding-left:0}.flexible-table table.alert-danger td:last-child{border-bottom:0}.flexible-table table.alert-danger td:before{content:attr(data-label);float:left;font-weight:700;text-transform:uppercase;width:20%}.flexible-table table.alert-danger td a span.icon{width:100%}.flexible-table table.alert-danger thead{border:none;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}.flexible-table table.alert-danger tr{border:2px solid #fff;display:block;margin-bottom:.625em;padding:5px;border-radius:5px}.flexible-table table.alert-danger tr th.actionable{width:inherit}.flexible-table table.alert-danger tr td{border-bottom:0}@media screen and (max-width:600px){.flexible-table table{border:0}.flexible-table table td{border-bottom:0;display:block;text-align:right}.flexible-table table td:first-child{padding-left:0}.flexible-table table td:last-child{border-bottom:0}.flexible-table table td:before{content:attr(data-label);float:left;font-weight:700;text-transform:uppercase}.flexible-table table td a span.icon{width:100%}.flexible-table table thead{border:none;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}.flexible-table table tr{border-bottom:3px solid #ddd;display:block;margin-bottom:.625em}.flexible-table table tr th.actionable{width:inherit}.flexible-table table tr td{border-bottom:0}.flexible-table table.alert-danger td:before{width:inherit}}"]
             },] },
 ];
-FlexibleTableComponent.ctorParameters = function () { return [
-    { type: intoPipes.InToPipe, },
-]; };
+FlexibleTableComponent.ctorParameters = function () { return []; };
 FlexibleTableComponent.propDecorators = {
     "vocabulary": [{ type: core.Input, args: ["vocabulary",] },],
     "caption": [{ type: core.Input, args: ["caption",] },],
@@ -214,7 +211,8 @@ ConfigurationComponent.propDecorators = {
     "onchange": [{ type: core.Output, args: ['onchange',] },],
 };
 var TableViewComponent = /** @class */ (function () {
-    function TableViewComponent(intoPipe) {
+    function TableViewComponent(el, intoPipe) {
+        this.el = el;
         this.intoPipe = intoPipe;
         this.registeredHeaders = [];
         this.dragging = false;
@@ -229,7 +227,7 @@ var TableViewComponent = /** @class */ (function () {
         };
         this.tableClass = 'default-flexible-table';
         this.onaction = new core.EventEmitter();
-        this.onconfigurationchange = new core.EventEmitter();
+        this.onchange = new core.EventEmitter();
     }
     TableViewComponent.prototype.findColumnWithID = function (id) {
         var list = this.headerColumnElements();
@@ -242,23 +240,29 @@ var TableViewComponent = /** @class */ (function () {
         }
         return column;
     };
-    TableViewComponent.prototype.swapColumns = function (sourceID, destinationID) {
-        var srcIndex = this.getColumnIndex(sourceID);
-        var desIndex = this.getColumnIndex(destinationID);
-        if (srcIndex < 0 || desIndex < 0) {
-            console.log("invalid drop id", sourceID, destinationID);
-            return;
+    TableViewComponent.prototype.swapColumns = function (source, destination) {
+        if (source.node.parentNode === destination.node.parentNode) {
+            var srcIndex = this.getColumnIndex(source.medium.key);
+            var desIndex = this.getColumnIndex(destination.medium.key);
+            if (srcIndex < 0 || desIndex < 0) {
+                console.log("invalid drop id", source.medium.key, destination.medium.key);
+                return;
+            }
+            var sobj = this.headers[srcIndex];
+            this.headers[srcIndex] = this.headers[desIndex];
+            this.headers[desIndex] = sobj;
+            for (var i = 0; i < this.items.length; i++) {
+                var row = this.items[i];
+                var sobji = row[srcIndex];
+                row[srcIndex] = row[desIndex];
+                row[desIndex] = sobji;
+            }
         }
-        var sobj = this.headers[srcIndex];
-        this.headers[srcIndex] = this.headers[desIndex];
-        this.headers[desIndex] = sobj;
-        for (var i = 0; i < this.items.length; i++) {
-            var row = this.items[i];
-            var sobji = row[srcIndex];
-            row[srcIndex] = row[desIndex];
-            row[desIndex] = sobji;
+        else if (source.medium.locked || destination.medium.locked) {
+            source.medium.locked = !source.medium.locked;
+            destination.medium.locked = !destination.medium.locked;
+            this.onchange.emit(this.headers);
         }
-        this.onconfigurationchange.emit(this.headers);
     };
     TableViewComponent.prototype.getColumnIndex = function (id) {
         var index = -1;
@@ -278,6 +282,12 @@ var TableViewComponent = /** @class */ (function () {
             }
         });
         return subitem === undefined || subitem === null || subitem === "null" ? "" : subitem;
+    };
+    TableViewComponent.prototype.lock = function (header, event) {
+        event.stopPropagation();
+        event.preventDefault();
+        header.locked = !header.locked;
+        this.onchange.emit(this.headers);
     };
     TableViewComponent.prototype.sort = function (header, icon) {
         var _this = this;
@@ -317,16 +327,14 @@ var TableViewComponent = /** @class */ (function () {
                 }
                 return v1 < v2 ? 1 : -1;
             });
-            setTimeout(function () { return _this.onconfigurationchange.emit(_this.headers); }, 2);
         }
     };
+    TableViewComponent.prototype.offsetWidth = function () {
+        return this.table.element.nativeElement.offsetWidth;
+    };
     TableViewComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        if (!this.headers || this.headers.length === 0) {
+        if (!this.headers) {
             this.headers = [];
-            this.items[0].map(function (item) {
-                _this.headers.push({ key: item, value: item, sortable: true, present: true });
-            });
         }
         if (this.actionKeys) {
             this.actionKeys = this.actionKeys.split(",");
@@ -368,6 +376,14 @@ var TableViewComponent = /** @class */ (function () {
             count++;
         }
         return count;
+    };
+    TableViewComponent.prototype.hover = function (item, flag) {
+        if (flag) {
+            item.hover = true;
+        }
+        else {
+            delete item.hover;
+        }
     };
     TableViewComponent.prototype.keydown = function (event, item) {
         var code = event.which;
@@ -420,22 +436,24 @@ var TableViewComponent = /** @class */ (function () {
     TableViewComponent.prototype.onDragEnd = function (event) {
     };
     TableViewComponent.prototype.onDrop = function (event) {
-        this.swapColumns(event.source.medium.key, event.destination.medium.key);
+        this.swapColumns(event.source, event.destination);
     };
     return TableViewComponent;
 }());
 TableViewComponent.decorators = [
     { type: core.Component, args: [{
                 selector: 'table-view',
-                template: "\n<table [class]=\"tableClass\"  #flexible>\n    <caption *ngIf=\"caption\" [textContent]=\"caption\"></caption>\n    <thead>\n        <tr>\n            <th scope=\"col\" *ngIf=\"enableIndexing\" id=\"indexable\" class=\"indexable\"></th>\n            <th scope=\"col\" *ngFor=\"let header of headers\"\n                [dragEnabled]=\"dragEnabled.bind(this)\"\n                [dropEnabled]=\"dropEnabled.bind(this)\"\n                [medium]=\"header\"\n                (onDragStart)=\"onDragStart($event)\"\n                (onDragEnd)=\"onDragEnd($event)\"\n                (onDrop)=\"onDrop($event)\"\n                [id]=\"header.key\"\n                [attr.width]=\"header.width ? header.width : null\"\n                [attr.tabindex]=\"header.sortable ? 0 : -1\"\n                (keydown)=\"keydown($event, th)\" (click)=\"sort(header, icon)\">\n                <span *ngIf=\"header.sortable\" class=\"off-screen\"  [textContent]=\"vocabulary.clickSort\"></span>\n                <span class=\"title\"\n                        [class.dragable]=\"header.dragable\"\n                        [textContent]=\"header.value\"></span>\n                <span class=\"icon fa\" #icon\n                        [class.fa-sort]=\"header.sortable\"\n                        [class.fa-sort-asc]=\"header.assending\"\n                        [class.fa-sort-desc]=\"header.desending\"></span>\n            </th>\n            <th scope=\"col\" *ngIf=\"action\" id=\"actionable\" class=\"actionable\"></th>\n        </tr>\n    </thead>\n    <tbody>\n        <ng-template ngFor let-item [ngForOf]=\"items\" let-i=\"index\">\n            <tr *ngIf=\"i >= pageInfo.from && i <= pageInfo.to \"\n                (click)=\"actionClick($event, item)\"\n                [class.pointer]=\"action\"\n                [class.expanded]=\"item.expanded\"\n                [class.odd]=\"i%2\">\n                <td scope=\"row\" class=\"index\" *ngIf=\"enableIndexing\">{{i + 1}}</td>\n                <td scope=\"row\"\n                    *ngFor=\"let header of headers\"\n                    [attr.data-label]=\"header.value\"\n                    [innerHTML]=\"cellContent(item, header)\"></td>\n                <td scope=\"row\" *ngIf=\"action\">\n                    <a class=\"actionable\"\n                        *ngIf=\"expandable(item, true)\"\n                        tabindex=\"0\"\n                        role=\"button\"\n                        style=\"cursor:pointer\"\n                        [class.expanded]=\"item.expanded\" #clicker\n                        (keydown)=\"keydown($event, clicker)\" (click)=\"actionClick($event, item)\">\n                        <span\n                            class=\"icon fa\"\n                            [class.fa-angle-right]=\"!rowDetailer\"\n                            [class.fa-minus-square-o]=\"rowDetailer && item.expanded\"\n                            [class.fa-plus-square-o]=\"rowDetailer && !item.expanded\"\n                            aria-hidden=\"true\"></span>\n                        <span class=\"off-screen\" [textContent]=\"offScreenMessage(item)\"></span>\n                    </a>\n                </td>\n            </tr>\n            <tr *ngIf=\"rowDetailer && item.expanded\" class=\"detail\" [class.odd]=\"i%2\">\n                <td scope=\"row\" class=\"index\" *ngIf=\"enableIndexing\"></td>\n                <td [attr.colspan]=\"columnsCount()\">\n                    <ng-container [ngTemplateOutlet]=\"rowDetailer\" [ngTemplateOutletContext]=\"rowDetailerContext(item)\"></ng-container>\n                </td>\n            </tr>\n        </ng-template>\n    </tbody>\n</table>\n",
-                styles: [":host{display:inline-block!important;width:100%;position:relative;margin:0 auto;border-spacing:0;border-collapse:collapse}:host .off-screen{display:block;float:left;height:0;overflow:hidden;text-indent:-99999px;width:0}:host table{margin:1rem auto;padding:0;width:100%;table-layout:fixed;max-width:99%;background-color:transparent;border-collapse:collapse}:host table caption{background-color:#c3e5e2;border-radius:2px;color:#1b1b1b;caption-side:top;font-size:14px;padding:5px 6px;margin-bottom:15px;text-align:left}:host table thead{border-top:1px solid #bbb;border-bottom:1px solid #bbb;background-color:#eee}:host table tr{border:0}:host table tr.expanded td{font-weight:700}:host table td{padding-left:3px}:host table td:first-child{padding-left:5px}:host table td .off-screen{display:block;float:left;height:0;overflow:hidden;text-indent:-99999px;width:0}:host table td.index{background-color:#eee;border-right:1px solid #bbb}:host table th{cursor:default;-webkit-user-select:none;-moz-user-select:none;-o-user-select:none;-ms-user-select:none;user-select:none;height:24px;position:relative;white-space:nowrap;font-weight:400;text-transform:uppercase;font-size:14px;padding-top:6px;padding-bottom:6px;text-align:left}:host table th.drag-over{background-color:#9b9b9b}:host table th.drag-over .icon,:host table th.drag-over .title{color:#eee}:host table th:first-child{padding-left:5px}:host table th.ascending,:host table th.descending,:host table th.sortable{cursor:pointer;height:12px}:host table th.indexable{width:33px}:host table th.actionable{width:24px}:host table th .title{color:#254a4d;display:inline-block;height:20px;white-space:nowrap}:host table th .dragable{cursor:move}:host table th .icon{width:22px;display:inline-block;height:20px;color:#254a4d}:host .fa.fa-angle-right{font-size:18px}table tr.expanded td{border-bottom:0}table tr.detail td{border-top:0;cursor:default}table tr.expanded td a.expanded{background-position:right 2px}table tbody tr:hover{background-color:#ffeed2}table tbody tr.detail:hover,table tbody tr.detail:hover td table thead tr{background-color:inherit}table tr td a.actionable{display:inline-table;height:32px;vertical-align:middle;width:25px;line-height:30px;color:#254a4d}table tbody tr.detail:hover td:last-child{border-right:0}table tbody tr.detail:hover td:first-child{border-left:0}table tr td{border-bottom:1px solid #b1b3b3;color:#254a5d;font-size:15px;text-transform:capitalize}table tbody tr.pointer{cursor:pointer}table.alert-danger{border:0}table.alert-danger caption{background-color:transparent;font-weight:700;margin-bottom:0}table.alert-danger td{border-bottom:0;display:block}table.alert-danger td:first-child{padding-left:0}table.alert-danger td:last-child{border-bottom:0}table.alert-danger td:before{content:attr(data-label);float:left;font-weight:700;text-transform:uppercase;width:20%}table.alert-danger td a span.icon{width:100%}table.alert-danger thead{border:none;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}table.alert-danger tr{border:2px solid #fff;display:block;margin-bottom:.625em;padding:5px;border-radius:5px}table.alert-danger tr th.actionable{width:inherit}table.alert-danger tr td{border-bottom:0}@media screen and (max-width:600px){table{border:0}table td{border-bottom:0;display:block;text-align:right}table td:first-child{padding-left:0}table td:last-child{border-bottom:0}table td:before{content:attr(data-label);float:left;font-weight:700;text-transform:uppercase}table td a span.icon{width:100%}table thead{border:none;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}table tr{border-bottom:3px solid #ddd;display:block;margin-bottom:.625em}table tr th.actionable{width:inherit}table tr td{border-bottom:0}table.alert-danger td:before{width:inherit}}"]
+                template: "\n<table [class]=\"tableClass\"  #flexible>\n    <caption *ngIf=\"caption\" [textContent]=\"caption\"></caption>\n    <thead>\n        <tr>\n            <th scope=\"col\" *ngIf=\"enableIndexing\" id=\"indexable\" class=\"indexable\"></th>\n            <th scope=\"col\" *ngFor=\"let header of headers\"\n                [dragEnabled]=\"dragEnabled.bind(this)\"\n                [dropEnabled]=\"dropEnabled.bind(this)\"\n                [medium]=\"header\"\n                (onDragStart)=\"onDragStart($event)\"\n                (onDragEnd)=\"onDragEnd($event)\"\n                (onDrop)=\"onDrop($event)\"\n                [id]=\"header.key\"\n                [attr.width]=\"header.width ? header.width : null\"\n                [attr.tabindex]=\"header.sortable ? 0 : -1\"\n                (keydown)=\"keydown($event, th)\" (click)=\"sort(header, icon)\">\n                <span *ngIf=\"header.sortable\" class=\"off-screen\"  [textContent]=\"vocabulary.clickSort\"></span>\n                <span class=\"locker icon fa\" #locker\n                        *ngIf=\"lockable && (headers.length > 1 || header.locked)\"\n                        tabindex=\"0\"\n                        title=\"lock/unlock this column\"\n                        (keydown)=\"keydown($event, locker)\" (click)=\"lock(header, $event)\"\n                        [class.fa-lock]=\"header.locked\"\n                        [class.fa-unlock]=\"!header.locked\"></span>\n                <span class=\"title\"\n                        [class.dragable]=\"header.dragable\"\n                        [textContent]=\"header.value\"></span>\n                <span class=\"icon fa\" #icon\n                        [class.fa-sort]=\"header.sortable\"\n                        [class.fa-sort-asc]=\"header.assending\"\n                        [class.fa-sort-desc]=\"header.desending\"></span>\n            </th>\n            <th scope=\"col\" *ngIf=\"action\" id=\"actionable\" class=\"actionable\"></th>\n        </tr>\n    </thead>\n    <tbody>\n        <ng-template ngFor let-item [ngForOf]=\"items\" let-i=\"index\">\n            <tr *ngIf=\"i >= pageInfo.from && i <= pageInfo.to \"\n                (click)=\"actionClick($event, item)\"\n                (mouseover)=\"hover(item, true)\"\n                (mouseout)=\"hover(item, false)\"\n                [class.pointer]=\"action\"\n                [class.hover]=\"item.hover\"\n                [class.expanded]=\"item.expanded\"\n                [class.odd]=\"i%2\">\n                <td scope=\"row\" class=\"index\" *ngIf=\"enableIndexing\">{{i + 1}}</td>\n                <td scope=\"row\"\n                    *ngFor=\"let header of headers\"\n                    [attr.data-label]=\"header.value\"\n                    [innerHTML]=\"cellContent(item, header)\"></td>\n                <td scope=\"row\" *ngIf=\"action\">\n                    <a class=\"actionable\"\n                        *ngIf=\"expandable(item, true)\"\n                        tabindex=\"0\"\n                        role=\"button\"\n                        style=\"cursor:pointer\"\n                        [class.expanded]=\"item.expanded\" #clicker\n                        (keydown)=\"keydown($event, clicker)\" (click)=\"actionClick($event, item)\">\n                        <span\n                            class=\"icon fa\"\n                            [class.fa-angle-right]=\"!rowDetailer\"\n                            [class.fa-minus-square-o]=\"rowDetailer && item.expanded\"\n                            [class.fa-plus-square-o]=\"rowDetailer && !item.expanded\"\n                            aria-hidden=\"true\"></span>\n                        <span class=\"off-screen\" [textContent]=\"offScreenMessage(item)\"></span>\n                    </a>\n                </td>\n            </tr>\n            <tr *ngIf=\"rowDetailer && item.expanded\" class=\"detail\" [class.odd]=\"i%2\">\n                <td scope=\"row\" class=\"index\" *ngIf=\"enableIndexing\"></td>\n                <td [attr.colspan]=\"columnsCount()\">\n                    <ng-container [ngTemplateOutlet]=\"rowDetailer\" [ngTemplateOutletContext]=\"rowDetailerContext(item)\"></ng-container>\n                </td>\n            </tr>\n        </ng-template>\n    </tbody>\n</table>\n",
+                styles: [":host{display:inline-block!important;width:100%;position:relative;margin:0 auto;border-spacing:0;border-collapse:collapse}:host .off-screen{display:block;float:left;height:0;overflow:hidden;text-indent:-99999px;width:0}:host table{margin:1rem auto;padding:0;width:100%;table-layout:fixed;max-width:99%;background-color:transparent;border-collapse:collapse}:host table caption{background-color:#c3e5e2;border-radius:2px;color:#1b1b1b;caption-side:top;font-size:14px;padding:5px 6px;margin-bottom:15px;text-align:left}:host table thead{border-top:1px solid #bbb;border-bottom:1px solid #bbb;background-color:#eee}:host table tr{border:0}:host table tr.expanded td{font-weight:700}:host table td{padding-left:3px}:host table td:first-child{padding-left:5px}:host table td .off-screen{display:block;float:left;height:0;overflow:hidden;text-indent:-99999px;width:0}:host table td ::ng-deep img{height:24px}:host table td.index{background-color:#eee;border-right:1px solid #bbb}:host table th{cursor:default;-webkit-user-select:none;-moz-user-select:none;-o-user-select:none;-ms-user-select:none;user-select:none;height:24px;position:relative;white-space:nowrap;font-weight:400;text-transform:uppercase;font-size:14px;padding-top:6px;padding-bottom:6px;text-align:left}:host table th.drag-over{background-color:#9b9b9b}:host table th.drag-over .icon,:host table th.drag-over .title{color:#eee}:host table th:first-child{padding-left:5px}:host table th.ascending,:host table th.descending,:host table th.sortable{cursor:pointer;height:12px}:host table th.indexable{width:33px}:host table th.actionable{width:24px}:host table th .title{color:#254a4d;display:inline-block;height:20px;white-space:nowrap}:host table th .dragable{cursor:move}:host table th .icon{width:22px;display:inline-block;height:20px;color:#254a4d}:host .fa.fa-angle-right{font-size:18px}table tr.expanded td{border-bottom:0}table tr.detail td{border-top:0;cursor:default}table tr.expanded td a.expanded{background-position:right 2px}table tbody tr.hover,table tbody tr:hover{background-color:#ffeed2}table tbody tr.detail.hover,table tbody tr.detail.hover td table thead tr,table tbody tr.detail:hover,table tbody tr.detail:hover td table thead tr{background-color:inherit}table tr td a.actionable{display:inline-table;height:32px;vertical-align:middle;width:25px;line-height:30px;color:#254a4d}table tbody tr.detail.hover td:last-child,table tbody tr.detail:hover td:last-child{border-right:0}table tbody tr.detail.hover td:first-child,table tbody tr.detail:hover td:first-child{border-left:0}table tr td{border-bottom:1px solid #b1b3b3;color:#254a5d;font-size:15px;text-transform:capitalize}table tbody tr.pointer{cursor:pointer}table.alert-danger{border:0}table.alert-danger caption{background-color:transparent;font-weight:700;margin-bottom:0}table.alert-danger td{border-bottom:0;display:block}table.alert-danger td:first-child{padding-left:0}table.alert-danger td:last-child{border-bottom:0}table.alert-danger td:before{content:attr(data-label);float:left;font-weight:700;text-transform:uppercase;width:20%}table.alert-danger td a span.icon{width:100%}table.alert-danger thead{border:none;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}table.alert-danger tr{border:2px solid #fff;display:block;margin-bottom:.625em;padding:5px;border-radius:5px}table.alert-danger tr th.actionable{width:inherit}table.alert-danger tr td{border-bottom:0}@media screen and (max-width:600px){table{border:0}table td{border-bottom:0;display:block;text-align:right}table td:first-child{padding-left:0}table td:last-child{border-bottom:0}table td:before{content:attr(data-label);float:left;font-weight:700;text-transform:uppercase}table td a span.icon{width:100%}table thead{border:none;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}table tr{border-bottom:3px solid #ddd;display:block;margin-bottom:.625em}table tr th.actionable{width:inherit}table tr td{border-bottom:0}table.alert-danger td:before{width:inherit}}"]
             },] },
 ];
 TableViewComponent.ctorParameters = function () { return [
+    { type: core.ElementRef, },
     { type: intoPipes.InToPipe, },
 ]; };
 TableViewComponent.propDecorators = {
     "vocabulary": [{ type: core.Input, args: ["vocabulary",] },],
+    "lockable": [{ type: core.Input, args: ["lockable",] },],
     "caption": [{ type: core.Input, args: ["caption",] },],
     "action": [{ type: core.Input, args: ["action",] },],
     "pageInfo": [{ type: core.Input, args: ["pageInfo",] },],
@@ -450,8 +468,83 @@ TableViewComponent.propDecorators = {
     "expandIf": [{ type: core.Input, args: ["expandIf",] },],
     "rowDetailerHeaders": [{ type: core.Input, args: ["rowDetailerHeaders",] },],
     "onaction": [{ type: core.Output, args: ['onaction',] },],
-    "onconfigurationchange": [{ type: core.Output, args: ['onconfigurationchange',] },],
+    "onchange": [{ type: core.Output, args: ['onchange',] },],
     "table": [{ type: core.ViewChild, args: ['flexible', { read: core.ViewContainerRef },] },],
+};
+var LockTableComponent = /** @class */ (function () {
+    function LockTableComponent(renderer) {
+        this.renderer = renderer;
+        this.vocabulary = {
+            configureTable: "Configure Table",
+            configureColumns: "Configure Columns",
+            clickSort: "Click to Sort",
+            setSize: "Set Size",
+            firstPage: "First",
+            lastPage: "Last",
+            previousPage: "Previous"
+        };
+        this.tableClass = 'default-flexible-table';
+        this.onaction = new core.EventEmitter();
+        this.onconfigurationchange = new core.EventEmitter();
+    }
+    LockTableComponent.prototype.scroll = function (event) {
+        this.renderer.setElementStyle(this.lockedTable.el.nativeElement, "left", event.target.scrollLeft + "px");
+    };
+    LockTableComponent.prototype.ngOnInit = function () {
+        if (!this.headers) {
+            this.headers = [];
+        }
+        this.reconfigure(this.headers);
+    };
+    LockTableComponent.prototype.evaluatePositioning = function () {
+        this.renderer.setElementStyle(this.unlockedTable.element.nativeElement, "margin-left", this.lockedTable.offsetWidth() + "px");
+    };
+    LockTableComponent.prototype.reconfigure = function (event) {
+        this.headers = event;
+        this.lockedHeaders = this.headers.filter(function (item) { return item.locked === true && item.present; });
+        this.unlockedHeaders = this.headers.filter(function (item) { return item.locked !== true && item.present; });
+        this.onconfigurationchange.emit(event);
+        setTimeout(this.evaluatePositioning.bind(this), 111);
+    };
+    LockTableComponent.prototype.onlock = function (event) {
+        this.lockedHeaders = this.headers.filter(function (item) { return item.locked === true && item.present; });
+        this.unlockedHeaders = this.headers.filter(function (item) { return item.locked !== true && item.present; });
+        this.onconfigurationchange.emit(event);
+        setTimeout(this.evaluatePositioning.bind(this), 111);
+    };
+    LockTableComponent.prototype.tableAction = function (event) {
+        this.onaction.emit(event);
+    };
+    LockTableComponent.prototype.onDrop = function (event) {
+    };
+    return LockTableComponent;
+}());
+LockTableComponent.decorators = [
+    { type: core.Component, args: [{
+                selector: 'lock-table',
+                template: "<div class=\"caption\">\n\t<table-configuration\n\t\t*ngIf=\"configurable\"\n\t\t[headers]=\"headers\"\n\t\t[title]=\"vocabulary.configureColumns\"\n\t\t[action]=\"vocabulary.configureTable\"\n\t\t(onchange)=\"reconfigure($event)\"></table-configuration>\n\t<div *ngIf=\"caption\" [textContent]=\"caption\"></div>\n</div>\n<div class=\"smart-table-wrap\" (scroll)=\"scroll($event)\">\n\t<table-view #lockedTable\n\t\t*ngIf=\"items\"\n\t\tclass=\"locked-table\"\n\t\tlockable=\"true\"\n\t\t[headers]=\"lockedHeaders\"\n\t\t[items]=\"items\"\n        [pageInfo]=\"pageInfo\"\n        [vocabulary]=\"vocabulary\"\n\t\t[enableIndexing]=\"enableIndexing\"\n        [rowDetailer]=\"rowDetailer\"\n\t\t[actionable]=\"actionable\"\n\t\t(onchange)=\"onlock($event)\"\n        (onDrop)=\"onDrop($event)\"\n\t\t(onaction)=\"tableAction($event)\"></table-view>\n    <table-view #unlockedTable\n\t\t*ngIf=\"items\"\n\t\tclass=\"unlocked-table\"\n\t\tlockable=\"true\"\n\t\t[headers]=\"unlockedHeaders\"\n\t\t[items]=\"items\"\n        [pageInfo]=\"pageInfo\"\n        [vocabulary]=\"vocabulary\"\n        [rowDetailer]=\"rowDetailer\"\n        [actionable]=\"actionable\"\n\t\t(onDrop)=\"onDrop($event)\"\n\t\t(onchange)=\"onlock($event)\"\n\t\t(onaction)=\"tableAction($event)\"></table-view>\n</div>\n<table-pagination [info]=\"pageInfo\" [vocabulary]=\"vocabulary\" #pager></table-pagination>\n",
+                styles: [":host{width:100%;position:relative;margin:0 auto;display:table}:host .off-screen{display:block;float:left;height:0;overflow:hidden;text-indent:-99999px;width:0}:host .caption{background-color:#c3e5e2;border-radius:2px;-webkit-box-sizing:border-box;box-sizing:border-box;color:#1b1b1b;caption-side:top;font-size:14px;margin-bottom:15px;padding:5px 6px;text-align:left;width:100%}:host .caption table-configuration{display:inline-block;float:right;position:unset}:host .smart-table-wrap{border-spacing:0;border-collapse:collapse;border-right:1px solid #aaa;border-bottom:1px solid #aaa;-webkit-box-sizing:border-box;box-sizing:border-box;width:100%;position:relative;overflow-x:auto}:host .smart-table-wrap .unlocked-table ::ng-deep table{max-width:100%;margin-bottom:0;margin-top:0}:host .smart-table-wrap .unlocked-table ::ng-deep table th .locker{cursor:pointer;color:#00925b;text-align:center}:host .smart-table-wrap .unlocked-table ::ng-deep table td,:host .smart-table-wrap .unlocked-table ::ng-deep table th{white-space:nowrap;min-height:23px!important}:host .smart-table-wrap .unlocked-table ::ng-deep table tbody tr{background-color:#fff}:host .smart-table-wrap .unlocked-table ::ng-deep table tbody tr.hover,:host .smart-table-wrap .unlocked-table ::ng-deep table tbody tr:hover{background-color:#ffeed2}:host .smart-table-wrap .unlocked-table ::ng-deep table img{height:14px}:host .smart-table-wrap .locked-table{position:absolute;margin:0 auto;display:inline-table;border-spacing:0;border-collapse:collapse;float:left;z-index:2;width:auto}:host .smart-table-wrap .locked-table ::ng-deep table{display:inline-block;border-right:1px solid #aaa;margin:0;width:auto}:host .smart-table-wrap .locked-table ::ng-deep table th .locker{cursor:pointer;color:#8b0224;text-align:center}:host .smart-table-wrap .locked-table ::ng-deep table td,:host .smart-table-wrap .locked-table ::ng-deep table th{white-space:nowrap;min-height:23px!important}:host .smart-table-wrap .locked-table ::ng-deep table tbody tr{background-color:#fff}:host .smart-table-wrap .locked-table ::ng-deep table tbody tr.hover,:host .smart-table-wrap .locked-table ::ng-deep table tbody tr:hover{background-color:#ffeed2}:host .smart-table-wrap .locked-table ::ng-deep table img{height:14px}@media screen and (max-width:600px){.smart-table-wrap{border:0!important;position:unset;overflow-x:unset}.smart-table-wrap .unlocked-table{margin-left:0!important}.smart-table-wrap .unlocked-table ::ng-deep table td,.smart-table-wrap .unlocked-table ::ng-deep table th{white-space:unset}.smart-table-wrap .unlocked-table ::ng-deep table img{height:30px}.smart-table-wrap .locked-table{position:unset!important;margin:0!important;display:table;left:0!important}.smart-table-wrap .locked-table ::ng-deep table{display:table!important;margin:0!important;width:100%!important}.smart-table-wrap .locked-table ::ng-deep table td,.smart-table-wrap .locked-table ::ng-deep table th{white-space:unset}.smart-table-wrap .locked-table ::ng-deep table img{height:30px}}"]
+            },] },
+];
+LockTableComponent.ctorParameters = function () { return [
+    { type: core.Renderer, },
+]; };
+LockTableComponent.propDecorators = {
+    "vocabulary": [{ type: core.Input, args: ["vocabulary",] },],
+    "caption": [{ type: core.Input, args: ["caption",] },],
+    "action": [{ type: core.Input, args: ["action",] },],
+    "actionKeys": [{ type: core.Input, args: ["actionKeys",] },],
+    "tableClass": [{ type: core.Input, args: ["tableClass",] },],
+    "headers": [{ type: core.Input, args: ["headers",] },],
+    "items": [{ type: core.Input, args: ["items",] },],
+    "pageInfo": [{ type: core.Input, args: ["pageInfo",] },],
+    "tableInfo": [{ type: core.Input, args: ["tableInfo",] },],
+    "configurable": [{ type: core.Input, args: ["configurable",] },],
+    "enableIndexing": [{ type: core.Input, args: ["enableIndexing",] },],
+    "onaction": [{ type: core.Output, args: ['onaction',] },],
+    "onconfigurationchange": [{ type: core.Output, args: ['onconfigurationchange',] },],
+    "lockedTable": [{ type: core.ViewChild, args: ['lockedTable',] },],
+    "unlockedTable": [{ type: core.ViewChild, args: ['unlockedTable', { read: core.ViewContainerRef },] },],
 };
 var FlexibleTableModule = /** @class */ (function () {
     function FlexibleTableModule() {
@@ -467,12 +560,14 @@ FlexibleTableModule.decorators = [
                 ],
                 declarations: [
                     FlexibleTableComponent,
+                    LockTableComponent,
                     ConfigurationComponent,
                     PaginationComponent,
                     TableViewComponent
                 ],
                 exports: [
-                    FlexibleTableComponent
+                    FlexibleTableComponent,
+                    LockTableComponent
                 ],
                 entryComponents: [],
                 providers: [],
@@ -483,9 +578,10 @@ FlexibleTableModule.ctorParameters = function () { return []; };
 
 exports.FlexibleTableComponent = FlexibleTableComponent;
 exports.FlexibleTableModule = FlexibleTableModule;
-exports.ɵa = ConfigurationComponent;
-exports.ɵb = PaginationComponent;
-exports.ɵc = TableViewComponent;
+exports.ɵb = ConfigurationComponent;
+exports.ɵc = PaginationComponent;
+exports.ɵd = TableViewComponent;
+exports.ɵa = LockTableComponent;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

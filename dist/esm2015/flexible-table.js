@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ViewContainerRef, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ViewContainerRef, ElementRef, Renderer, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { InToPipe, IntoPipeModule } from 'into-pipes';
 import { CommonModule } from '@angular/common';
 import { DragDropModule } from 'drag-enabled';
@@ -7,16 +7,8 @@ import { DragDropModule } from 'drag-enabled';
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
-/**
- * @record
- */
-
 class FlexibleTableComponent {
-    /**
-     * @param {?} intoPipe
-     */
-    constructor(intoPipe) {
-        this.intoPipe = intoPipe;
+    constructor() {
         this.vocabulary = {
             configureTable: "Configure Table",
             configureColumns: "Configure Columns",
@@ -120,9 +112,7 @@ FlexibleTableComponent.decorators = [
             },] },
 ];
 /** @nocollapse */
-FlexibleTableComponent.ctorParameters = () => [
-    { type: InToPipe, },
-];
+FlexibleTableComponent.ctorParameters = () => [];
 FlexibleTableComponent.propDecorators = {
     "vocabulary": [{ type: Input, args: ["vocabulary",] },],
     "caption": [{ type: Input, args: ["caption",] },],
@@ -392,9 +382,11 @@ ConfigurationComponent.propDecorators = {
 
 class TableViewComponent {
     /**
+     * @param {?} el
      * @param {?} intoPipe
      */
-    constructor(intoPipe) {
+    constructor(el, intoPipe) {
+        this.el = el;
         this.intoPipe = intoPipe;
         this.registeredHeaders = [];
         this.dragging = false;
@@ -409,7 +401,7 @@ class TableViewComponent {
         };
         this.tableClass = 'default-flexible-table';
         this.onaction = new EventEmitter();
-        this.onconfigurationchange = new EventEmitter();
+        this.onchange = new EventEmitter();
     }
     /**
      * @param {?} id
@@ -427,27 +419,34 @@ class TableViewComponent {
         return column;
     }
     /**
-     * @param {?} sourceID
-     * @param {?} destinationID
+     * @param {?} source
+     * @param {?} destination
      * @return {?}
      */
-    swapColumns(sourceID, destinationID) {
-        const /** @type {?} */ srcIndex = this.getColumnIndex(sourceID);
-        const /** @type {?} */ desIndex = this.getColumnIndex(destinationID);
-        if (srcIndex < 0 || desIndex < 0) {
-            console.log("invalid drop id", sourceID, destinationID);
-            return;
+    swapColumns(source, destination) {
+        if (source.node.parentNode === destination.node.parentNode) {
+            const /** @type {?} */ srcIndex = this.getColumnIndex(source.medium.key);
+            const /** @type {?} */ desIndex = this.getColumnIndex(destination.medium.key);
+            if (srcIndex < 0 || desIndex < 0) {
+                console.log("invalid drop id", source.medium.key, destination.medium.key);
+                return;
+            }
+            const /** @type {?} */ sobj = this.headers[srcIndex];
+            this.headers[srcIndex] = this.headers[desIndex];
+            this.headers[desIndex] = sobj;
+            for (let /** @type {?} */ i = 0; i < this.items.length; i++) {
+                const /** @type {?} */ row = this.items[i];
+                const /** @type {?} */ sobji = row[srcIndex];
+                row[srcIndex] = row[desIndex];
+                row[desIndex] = sobji;
+            }
+            //	this.onchange.emit(this.headers);
         }
-        const /** @type {?} */ sobj = this.headers[srcIndex];
-        this.headers[srcIndex] = this.headers[desIndex];
-        this.headers[desIndex] = sobj;
-        for (let /** @type {?} */ i = 0; i < this.items.length; i++) {
-            const /** @type {?} */ row = this.items[i];
-            const /** @type {?} */ sobji = row[srcIndex];
-            row[srcIndex] = row[desIndex];
-            row[desIndex] = sobji;
+        else if (source.medium.locked || destination.medium.locked) {
+            source.medium.locked = !source.medium.locked;
+            destination.medium.locked = !destination.medium.locked;
+            this.onchange.emit(this.headers);
         }
-        this.onconfigurationchange.emit(this.headers);
     }
     /**
      * @param {?} id
@@ -476,6 +475,17 @@ class TableViewComponent {
             }
         });
         return subitem === undefined || subitem === null || subitem === "null" ? "" : subitem;
+    }
+    /**
+     * @param {?} header
+     * @param {?} event
+     * @return {?}
+     */
+    lock(header, event) {
+        event.stopPropagation();
+        event.preventDefault();
+        header.locked = !header.locked;
+        this.onchange.emit(this.headers);
     }
     /**
      * @param {?} header
@@ -519,18 +529,20 @@ class TableViewComponent {
                 }
                 return v1 < v2 ? 1 : -1;
             });
-            setTimeout(() => this.onconfigurationchange.emit(this.headers), 2);
         }
     }
     /**
      * @return {?}
      */
+    offsetWidth() {
+        return this.table.element.nativeElement.offsetWidth;
+    }
+    /**
+     * @return {?}
+     */
     ngOnInit() {
-        if (!this.headers || this.headers.length === 0) {
+        if (!this.headers) {
             this.headers = [];
-            this.items[0].map((item) => {
-                this.headers.push({ key: item, value: item, sortable: true, present: true });
-            });
         }
         if (this.actionKeys) {
             this.actionKeys = this.actionKeys.split(",");
@@ -582,6 +594,19 @@ class TableViewComponent {
             count++;
         }
         return count;
+    }
+    /**
+     * @param {?} item
+     * @param {?} flag
+     * @return {?}
+     */
+    hover(item, flag) {
+        if (flag) {
+            item.hover = true;
+        }
+        else {
+            delete item.hover;
+        }
     }
     /**
      * @param {?} event
@@ -679,7 +704,7 @@ class TableViewComponent {
      * @return {?}
      */
     onDrop(event) {
-        this.swapColumns(event.source.medium.key, event.destination.medium.key);
+        this.swapColumns(event.source, event.destination);
     }
 }
 TableViewComponent.decorators = [
@@ -703,6 +728,13 @@ TableViewComponent.decorators = [
                 [attr.tabindex]="header.sortable ? 0 : -1"
                 (keydown)="keydown($event, th)" (click)="sort(header, icon)">
                 <span *ngIf="header.sortable" class="off-screen"  [textContent]="vocabulary.clickSort"></span>
+                <span class="locker icon fa" #locker
+                        *ngIf="lockable && (headers.length > 1 || header.locked)"
+                        tabindex="0"
+                        title="lock/unlock this column"
+                        (keydown)="keydown($event, locker)" (click)="lock(header, $event)"
+                        [class.fa-lock]="header.locked"
+                        [class.fa-unlock]="!header.locked"></span>
                 <span class="title"
                         [class.dragable]="header.dragable"
                         [textContent]="header.value"></span>
@@ -718,7 +750,10 @@ TableViewComponent.decorators = [
         <ng-template ngFor let-item [ngForOf]="items" let-i="index">
             <tr *ngIf="i >= pageInfo.from && i <= pageInfo.to "
                 (click)="actionClick($event, item)"
+                (mouseover)="hover(item, true)"
+                (mouseout)="hover(item, false)"
                 [class.pointer]="action"
+                [class.hover]="item.hover"
                 [class.expanded]="item.expanded"
                 [class.odd]="i%2">
                 <td scope="row" class="index" *ngIf="enableIndexing">{{i + 1}}</td>
@@ -754,15 +789,17 @@ TableViewComponent.decorators = [
     </tbody>
 </table>
 `,
-                styles: [`:host{display:inline-block!important;width:100%;position:relative;margin:0 auto;border-spacing:0;border-collapse:collapse}:host .off-screen{display:block;float:left;height:0;overflow:hidden;text-indent:-99999px;width:0}:host table{margin:1rem auto;padding:0;width:100%;table-layout:fixed;max-width:99%;background-color:transparent;border-collapse:collapse}:host table caption{background-color:#c3e5e2;border-radius:2px;color:#1b1b1b;caption-side:top;font-size:14px;padding:5px 6px;margin-bottom:15px;text-align:left}:host table thead{border-top:1px solid #bbb;border-bottom:1px solid #bbb;background-color:#eee}:host table tr{border:0}:host table tr.expanded td{font-weight:700}:host table td{padding-left:3px}:host table td:first-child{padding-left:5px}:host table td .off-screen{display:block;float:left;height:0;overflow:hidden;text-indent:-99999px;width:0}:host table td.index{background-color:#eee;border-right:1px solid #bbb}:host table th{cursor:default;-webkit-user-select:none;-moz-user-select:none;-o-user-select:none;-ms-user-select:none;user-select:none;height:24px;position:relative;white-space:nowrap;font-weight:400;text-transform:uppercase;font-size:14px;padding-top:6px;padding-bottom:6px;text-align:left}:host table th.drag-over{background-color:#9b9b9b}:host table th.drag-over .icon,:host table th.drag-over .title{color:#eee}:host table th:first-child{padding-left:5px}:host table th.ascending,:host table th.descending,:host table th.sortable{cursor:pointer;height:12px}:host table th.indexable{width:33px}:host table th.actionable{width:24px}:host table th .title{color:#254a4d;display:inline-block;height:20px;white-space:nowrap}:host table th .dragable{cursor:move}:host table th .icon{width:22px;display:inline-block;height:20px;color:#254a4d}:host .fa.fa-angle-right{font-size:18px}table tr.expanded td{border-bottom:0}table tr.detail td{border-top:0;cursor:default}table tr.expanded td a.expanded{background-position:right 2px}table tbody tr:hover{background-color:#ffeed2}table tbody tr.detail:hover,table tbody tr.detail:hover td table thead tr{background-color:inherit}table tr td a.actionable{display:inline-table;height:32px;vertical-align:middle;width:25px;line-height:30px;color:#254a4d}table tbody tr.detail:hover td:last-child{border-right:0}table tbody tr.detail:hover td:first-child{border-left:0}table tr td{border-bottom:1px solid #b1b3b3;color:#254a5d;font-size:15px;text-transform:capitalize}table tbody tr.pointer{cursor:pointer}table.alert-danger{border:0}table.alert-danger caption{background-color:transparent;font-weight:700;margin-bottom:0}table.alert-danger td{border-bottom:0;display:block}table.alert-danger td:first-child{padding-left:0}table.alert-danger td:last-child{border-bottom:0}table.alert-danger td:before{content:attr(data-label);float:left;font-weight:700;text-transform:uppercase;width:20%}table.alert-danger td a span.icon{width:100%}table.alert-danger thead{border:none;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}table.alert-danger tr{border:2px solid #fff;display:block;margin-bottom:.625em;padding:5px;border-radius:5px}table.alert-danger tr th.actionable{width:inherit}table.alert-danger tr td{border-bottom:0}@media screen and (max-width:600px){table{border:0}table td{border-bottom:0;display:block;text-align:right}table td:first-child{padding-left:0}table td:last-child{border-bottom:0}table td:before{content:attr(data-label);float:left;font-weight:700;text-transform:uppercase}table td a span.icon{width:100%}table thead{border:none;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}table tr{border-bottom:3px solid #ddd;display:block;margin-bottom:.625em}table tr th.actionable{width:inherit}table tr td{border-bottom:0}table.alert-danger td:before{width:inherit}}`]
+                styles: [`:host{display:inline-block!important;width:100%;position:relative;margin:0 auto;border-spacing:0;border-collapse:collapse}:host .off-screen{display:block;float:left;height:0;overflow:hidden;text-indent:-99999px;width:0}:host table{margin:1rem auto;padding:0;width:100%;table-layout:fixed;max-width:99%;background-color:transparent;border-collapse:collapse}:host table caption{background-color:#c3e5e2;border-radius:2px;color:#1b1b1b;caption-side:top;font-size:14px;padding:5px 6px;margin-bottom:15px;text-align:left}:host table thead{border-top:1px solid #bbb;border-bottom:1px solid #bbb;background-color:#eee}:host table tr{border:0}:host table tr.expanded td{font-weight:700}:host table td{padding-left:3px}:host table td:first-child{padding-left:5px}:host table td .off-screen{display:block;float:left;height:0;overflow:hidden;text-indent:-99999px;width:0}:host table td ::ng-deep img{height:24px}:host table td.index{background-color:#eee;border-right:1px solid #bbb}:host table th{cursor:default;-webkit-user-select:none;-moz-user-select:none;-o-user-select:none;-ms-user-select:none;user-select:none;height:24px;position:relative;white-space:nowrap;font-weight:400;text-transform:uppercase;font-size:14px;padding-top:6px;padding-bottom:6px;text-align:left}:host table th.drag-over{background-color:#9b9b9b}:host table th.drag-over .icon,:host table th.drag-over .title{color:#eee}:host table th:first-child{padding-left:5px}:host table th.ascending,:host table th.descending,:host table th.sortable{cursor:pointer;height:12px}:host table th.indexable{width:33px}:host table th.actionable{width:24px}:host table th .title{color:#254a4d;display:inline-block;height:20px;white-space:nowrap}:host table th .dragable{cursor:move}:host table th .icon{width:22px;display:inline-block;height:20px;color:#254a4d}:host .fa.fa-angle-right{font-size:18px}table tr.expanded td{border-bottom:0}table tr.detail td{border-top:0;cursor:default}table tr.expanded td a.expanded{background-position:right 2px}table tbody tr.hover,table tbody tr:hover{background-color:#ffeed2}table tbody tr.detail.hover,table tbody tr.detail.hover td table thead tr,table tbody tr.detail:hover,table tbody tr.detail:hover td table thead tr{background-color:inherit}table tr td a.actionable{display:inline-table;height:32px;vertical-align:middle;width:25px;line-height:30px;color:#254a4d}table tbody tr.detail.hover td:last-child,table tbody tr.detail:hover td:last-child{border-right:0}table tbody tr.detail.hover td:first-child,table tbody tr.detail:hover td:first-child{border-left:0}table tr td{border-bottom:1px solid #b1b3b3;color:#254a5d;font-size:15px;text-transform:capitalize}table tbody tr.pointer{cursor:pointer}table.alert-danger{border:0}table.alert-danger caption{background-color:transparent;font-weight:700;margin-bottom:0}table.alert-danger td{border-bottom:0;display:block}table.alert-danger td:first-child{padding-left:0}table.alert-danger td:last-child{border-bottom:0}table.alert-danger td:before{content:attr(data-label);float:left;font-weight:700;text-transform:uppercase;width:20%}table.alert-danger td a span.icon{width:100%}table.alert-danger thead{border:none;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}table.alert-danger tr{border:2px solid #fff;display:block;margin-bottom:.625em;padding:5px;border-radius:5px}table.alert-danger tr th.actionable{width:inherit}table.alert-danger tr td{border-bottom:0}@media screen and (max-width:600px){table{border:0}table td{border-bottom:0;display:block;text-align:right}table td:first-child{padding-left:0}table td:last-child{border-bottom:0}table td:before{content:attr(data-label);float:left;font-weight:700;text-transform:uppercase}table td a span.icon{width:100%}table thead{border:none;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}table tr{border-bottom:3px solid #ddd;display:block;margin-bottom:.625em}table tr th.actionable{width:inherit}table tr td{border-bottom:0}table.alert-danger td:before{width:inherit}}`]
             },] },
 ];
 /** @nocollapse */
 TableViewComponent.ctorParameters = () => [
+    { type: ElementRef, },
     { type: InToPipe, },
 ];
 TableViewComponent.propDecorators = {
     "vocabulary": [{ type: Input, args: ["vocabulary",] },],
+    "lockable": [{ type: Input, args: ["lockable",] },],
     "caption": [{ type: Input, args: ["caption",] },],
     "action": [{ type: Input, args: ["action",] },],
     "pageInfo": [{ type: Input, args: ["pageInfo",] },],
@@ -777,8 +814,156 @@ TableViewComponent.propDecorators = {
     "expandIf": [{ type: Input, args: ["expandIf",] },],
     "rowDetailerHeaders": [{ type: Input, args: ["rowDetailerHeaders",] },],
     "onaction": [{ type: Output, args: ['onaction',] },],
-    "onconfigurationchange": [{ type: Output, args: ['onconfigurationchange',] },],
+    "onchange": [{ type: Output, args: ['onchange',] },],
     "table": [{ type: ViewChild, args: ['flexible', { read: ViewContainerRef },] },],
+};
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+class LockTableComponent {
+    /**
+     * @param {?} renderer
+     */
+    constructor(renderer) {
+        this.renderer = renderer;
+        this.vocabulary = {
+            configureTable: "Configure Table",
+            configureColumns: "Configure Columns",
+            clickSort: "Click to Sort",
+            setSize: "Set Size",
+            firstPage: "First",
+            lastPage: "Last",
+            previousPage: "Previous"
+        };
+        this.tableClass = 'default-flexible-table';
+        this.onaction = new EventEmitter();
+        this.onconfigurationchange = new EventEmitter();
+    }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    scroll(event) {
+        this.renderer.setElementStyle(this.lockedTable.el.nativeElement, "left", event.target.scrollLeft + "px");
+    }
+    /**
+     * @return {?}
+     */
+    ngOnInit() {
+        if (!this.headers) {
+            this.headers = [];
+        }
+        this.reconfigure(this.headers);
+    }
+    /**
+     * @return {?}
+     */
+    evaluatePositioning() {
+        this.renderer.setElementStyle(this.unlockedTable.element.nativeElement, "margin-left", this.lockedTable.offsetWidth() + "px");
+    }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    reconfigure(event) {
+        this.headers = event;
+        this.lockedHeaders = this.headers.filter((item) => item.locked === true && item.present);
+        this.unlockedHeaders = this.headers.filter((item) => item.locked !== true && item.present);
+        this.onconfigurationchange.emit(event);
+        setTimeout(this.evaluatePositioning.bind(this), 111);
+    }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    onlock(event) {
+        this.lockedHeaders = this.headers.filter((item) => item.locked === true && item.present);
+        this.unlockedHeaders = this.headers.filter((item) => item.locked !== true && item.present);
+        this.onconfigurationchange.emit(event);
+        setTimeout(this.evaluatePositioning.bind(this), 111);
+    }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    tableAction(event) {
+        this.onaction.emit(event);
+    }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    onDrop(event) {
+    }
+}
+LockTableComponent.decorators = [
+    { type: Component, args: [{
+                selector: 'lock-table',
+                template: `<div class="caption">
+	<table-configuration
+		*ngIf="configurable"
+		[headers]="headers"
+		[title]="vocabulary.configureColumns"
+		[action]="vocabulary.configureTable"
+		(onchange)="reconfigure($event)"></table-configuration>
+	<div *ngIf="caption" [textContent]="caption"></div>
+</div>
+<div class="smart-table-wrap" (scroll)="scroll($event)">
+	<table-view #lockedTable
+		*ngIf="items"
+		class="locked-table"
+		lockable="true"
+		[headers]="lockedHeaders"
+		[items]="items"
+        [pageInfo]="pageInfo"
+        [vocabulary]="vocabulary"
+		[enableIndexing]="enableIndexing"
+        [rowDetailer]="rowDetailer"
+		[actionable]="actionable"
+		(onchange)="onlock($event)"
+        (onDrop)="onDrop($event)"
+		(onaction)="tableAction($event)"></table-view>
+    <table-view #unlockedTable
+		*ngIf="items"
+		class="unlocked-table"
+		lockable="true"
+		[headers]="unlockedHeaders"
+		[items]="items"
+        [pageInfo]="pageInfo"
+        [vocabulary]="vocabulary"
+        [rowDetailer]="rowDetailer"
+        [actionable]="actionable"
+		(onDrop)="onDrop($event)"
+		(onchange)="onlock($event)"
+		(onaction)="tableAction($event)"></table-view>
+</div>
+<table-pagination [info]="pageInfo" [vocabulary]="vocabulary" #pager></table-pagination>
+`,
+                styles: [`:host{width:100%;position:relative;margin:0 auto;display:table}:host .off-screen{display:block;float:left;height:0;overflow:hidden;text-indent:-99999px;width:0}:host .caption{background-color:#c3e5e2;border-radius:2px;-webkit-box-sizing:border-box;box-sizing:border-box;color:#1b1b1b;caption-side:top;font-size:14px;margin-bottom:15px;padding:5px 6px;text-align:left;width:100%}:host .caption table-configuration{display:inline-block;float:right;position:unset}:host .smart-table-wrap{border-spacing:0;border-collapse:collapse;border-right:1px solid #aaa;border-bottom:1px solid #aaa;-webkit-box-sizing:border-box;box-sizing:border-box;width:100%;position:relative;overflow-x:auto}:host .smart-table-wrap .unlocked-table ::ng-deep table{max-width:100%;margin-bottom:0;margin-top:0}:host .smart-table-wrap .unlocked-table ::ng-deep table th .locker{cursor:pointer;color:#00925b;text-align:center}:host .smart-table-wrap .unlocked-table ::ng-deep table td,:host .smart-table-wrap .unlocked-table ::ng-deep table th{white-space:nowrap;min-height:23px!important}:host .smart-table-wrap .unlocked-table ::ng-deep table tbody tr{background-color:#fff}:host .smart-table-wrap .unlocked-table ::ng-deep table tbody tr.hover,:host .smart-table-wrap .unlocked-table ::ng-deep table tbody tr:hover{background-color:#ffeed2}:host .smart-table-wrap .unlocked-table ::ng-deep table img{height:14px}:host .smart-table-wrap .locked-table{position:absolute;margin:0 auto;display:inline-table;border-spacing:0;border-collapse:collapse;float:left;z-index:2;width:auto}:host .smart-table-wrap .locked-table ::ng-deep table{display:inline-block;border-right:1px solid #aaa;margin:0;width:auto}:host .smart-table-wrap .locked-table ::ng-deep table th .locker{cursor:pointer;color:#8b0224;text-align:center}:host .smart-table-wrap .locked-table ::ng-deep table td,:host .smart-table-wrap .locked-table ::ng-deep table th{white-space:nowrap;min-height:23px!important}:host .smart-table-wrap .locked-table ::ng-deep table tbody tr{background-color:#fff}:host .smart-table-wrap .locked-table ::ng-deep table tbody tr.hover,:host .smart-table-wrap .locked-table ::ng-deep table tbody tr:hover{background-color:#ffeed2}:host .smart-table-wrap .locked-table ::ng-deep table img{height:14px}@media screen and (max-width:600px){.smart-table-wrap{border:0!important;position:unset;overflow-x:unset}.smart-table-wrap .unlocked-table{margin-left:0!important}.smart-table-wrap .unlocked-table ::ng-deep table td,.smart-table-wrap .unlocked-table ::ng-deep table th{white-space:unset}.smart-table-wrap .unlocked-table ::ng-deep table img{height:30px}.smart-table-wrap .locked-table{position:unset!important;margin:0!important;display:table;left:0!important}.smart-table-wrap .locked-table ::ng-deep table{display:table!important;margin:0!important;width:100%!important}.smart-table-wrap .locked-table ::ng-deep table td,.smart-table-wrap .locked-table ::ng-deep table th{white-space:unset}.smart-table-wrap .locked-table ::ng-deep table img{height:30px}}`]
+            },] },
+];
+/** @nocollapse */
+LockTableComponent.ctorParameters = () => [
+    { type: Renderer, },
+];
+LockTableComponent.propDecorators = {
+    "vocabulary": [{ type: Input, args: ["vocabulary",] },],
+    "caption": [{ type: Input, args: ["caption",] },],
+    "action": [{ type: Input, args: ["action",] },],
+    "actionKeys": [{ type: Input, args: ["actionKeys",] },],
+    "tableClass": [{ type: Input, args: ["tableClass",] },],
+    "headers": [{ type: Input, args: ["headers",] },],
+    "items": [{ type: Input, args: ["items",] },],
+    "pageInfo": [{ type: Input, args: ["pageInfo",] },],
+    "tableInfo": [{ type: Input, args: ["tableInfo",] },],
+    "configurable": [{ type: Input, args: ["configurable",] },],
+    "enableIndexing": [{ type: Input, args: ["enableIndexing",] },],
+    "onaction": [{ type: Output, args: ['onaction',] },],
+    "onconfigurationchange": [{ type: Output, args: ['onconfigurationchange',] },],
+    "lockedTable": [{ type: ViewChild, args: ['lockedTable',] },],
+    "unlockedTable": [{ type: ViewChild, args: ['unlockedTable', { read: ViewContainerRef },] },],
 };
 
 /**
@@ -796,12 +981,14 @@ FlexibleTableModule.decorators = [
                 ],
                 declarations: [
                     FlexibleTableComponent,
+                    LockTableComponent,
                     ConfigurationComponent,
                     PaginationComponent,
                     TableViewComponent
                 ],
                 exports: [
-                    FlexibleTableComponent
+                    FlexibleTableComponent,
+                    LockTableComponent
                 ],
                 entryComponents: [],
                 providers: [],
@@ -824,5 +1011,5 @@ FlexibleTableModule.ctorParameters = () => [];
  * Generated bundle index. Do not edit.
  */
 
-export { FlexibleTableComponent, FlexibleTableModule, ConfigurationComponent as ɵa, PaginationComponent as ɵb, TableViewComponent as ɵc };
+export { FlexibleTableComponent, FlexibleTableModule, ConfigurationComponent as ɵb, PaginationComponent as ɵc, TableViewComponent as ɵd, LockTableComponent as ɵa };
 //# sourceMappingURL=flexible-table.js.map

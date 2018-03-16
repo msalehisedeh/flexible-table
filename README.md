@@ -1,9 +1,66 @@
 
 # Welcome to Flexible table!
 
-Have you ever wanted a simple way of flushing your data in a all versatile table and pass in a few metadata 
-just to get your data displayed the way you wanted?
+Have you ever wanted a simple way of flushing your data in a all versatile table and pass in a few metadata just to get your data displayed the way you wanted? AND how about adding graphics into the resulting table with some nifty formatting rules just by mapping your JSON data into table column headers! Ha? Say it again!!
 
+
+# Version 1.0.0
+
+Good news. With this release you will have access to lockable table!!
+
+```
+MODULE:
+  FlexibleTableModule
+
+EXPORTS:
+  FlexibleTableComponent
+  LockTableComponent
+
+DEPENDENCIES: 
+	"font-awesome": "^4.7.0",
+	"drag-enabled": "^0.0.1",
+	"into-pipes": "^0.2.2"
+```
+
+## Features Update
+* Expand / Collapse rows (will not happen for LockTableComponent. But is available on  FlexibleTableComponent)
+
+## Attributes (LockTableComponent)
+| Attribute          |Description                                 |
+|--------------------|--------------------------------------------|
+|caption             |Caption to be displayed                     |
+|action              |off-screen message to be displayed if click on a row results in an action. If supplied, action column will be displayed and will take effect on user click                   |
+|actionKeys          |parameters to feed the action.  parameters should exist in headers mapping.            |
+|tableClass          |class name to be assigned to the table.     |
+|headers             |mapping of items to be displayed as headers including insturctions on formatting, dragging, ...                               |
+|items               |items to be displayed                       |
+|pageInfo            |pagination information. If is not supplied, paggination will not take place.            |
+|tableInfo           |Information about component owning the table. this information will be passed to the component that will display when a row is expanded.                                |
+|configurable        |flag to allow hidding/displaying of specific headers.                                    |
+|enableIndexing      |flag to display index of rows.              |
+
+## Events
+| Event                |Description                                     |
+|----------------------|------------------------------------------------|
+|onaction              |Will be published on a click action of a row    |
+|onconfigurationchange |Will be called when user selects to hide/unhide some of headers on configuration popup          |
+
+Sample table tag in your HTML content:
+```
+<lock-table 
+      caption="total records found {{users.length}}" 
+      action="View details of %name% where ID is %id%"
+      actionKeys="%name%,%id%"
+      [headers]="usersHeader" 
+      [items]="users" 
+      [pageInfo]="pageInfo"
+      enableIndexing="true"
+      actionable="true"
+      configurable="true"
+      (onconfigurationchange)="onconfigurationchange($event)"
+      (onaction)="onaction($event)"></lock-table>
+```
+![alt text](https://raw.githubusercontent.com/msalehisedeh/flexible-table/master/sample2.png  "What you would see when a flexible table is used")
 
 # Version 0.1.0
 
@@ -42,17 +99,13 @@ We are using "into-pipes" library. to see available formatting options, please f
 * Pagination enabled / disabled
 * Indexing enabled / disabled
 * Expand / Collapse rows
-* Conditional row highlight
-* Conditional row select
-* Conditional Column highlight
-* Conditional Column select
 * Configure any column to sort content
 * Configure any column to show / hide
 * Configure any column to format content
 * Configure any column to reorder by drag/drop
 * Configure any column to filter content
 
-## Attributes
+## Attributes (FlexibleTableComponent)
 | Attribute          |Description                                 |
 |--------------------|--------------------------------------------|
 |caption             |Caption to be displayed                     |
@@ -175,7 +228,6 @@ Now you need to set the table tag in your HTML content:
       [headers]="usersHeader" 
       [items]="users" 
       [pageInfo]="pageInfo"
-      dragColumns="true" 
       enableIndexing="true"
       actionable="true"
       configurable="true"
