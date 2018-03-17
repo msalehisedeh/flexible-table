@@ -1,8 +1,8 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('into-pipes'), require('@angular/common'), require('drag-enabled')) :
-	typeof define === 'function' && define.amd ? define(['exports', '@angular/core', 'into-pipes', '@angular/common', 'drag-enabled'], factory) :
-	(factory((global['flexible-table'] = {}),global.ng.core,global.intoPipes,global.ng.common,global.dragEnabled));
-}(this, (function (exports,core,intoPipes,common,dragEnabled) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('into-pipes'), require('@angular/platform-browser'), require('@angular/common'), require('drag-enabled')) :
+	typeof define === 'function' && define.amd ? define(['exports', '@angular/core', 'into-pipes', '@angular/platform-browser', '@angular/common', 'drag-enabled'], factory) :
+	(factory((global['flexible-table'] = {}),global.ng.core,global.intoPipes,global.ng.platformBrowser,global.ng.common,global.dragEnabled));
+}(this, (function (exports,core,intoPipes,platformBrowser,common,dragEnabled) { 'use strict';
 
 var FlexibleTableComponent = /** @class */ (function () {
     function FlexibleTableComponent() {
@@ -211,9 +211,10 @@ ConfigurationComponent.propDecorators = {
     "onchange": [{ type: core.Output, args: ['onchange',] },],
 };
 var TableViewComponent = /** @class */ (function () {
-    function TableViewComponent(el, intoPipe) {
+    function TableViewComponent(el, intoPipe, _sanitizer) {
         this.el = el;
         this.intoPipe = intoPipe;
+        this._sanitizer = _sanitizer;
         this.registeredHeaders = [];
         this.dragging = false;
         this.vocabulary = {
@@ -400,6 +401,7 @@ var TableViewComponent = /** @class */ (function () {
         var content = this.itemValue(item, header.key.split("."));
         if (header.format && content !== undefined && content != null) {
             content = this.intoPipe.transform(content, header.format);
+            content = new intoPipes.SanitizeHtmlPipe(this._sanitizer).transform(content);
         }
         return (content !== undefined && content != null) ? content : '&nbsp;';
     };
@@ -450,6 +452,7 @@ TableViewComponent.decorators = [
 TableViewComponent.ctorParameters = function () { return [
     { type: core.ElementRef, },
     { type: intoPipes.InToPipe, },
+    { type: platformBrowser.DomSanitizer, },
 ]; };
 TableViewComponent.propDecorators = {
     "vocabulary": [{ type: core.Input, args: ["vocabulary",] },],

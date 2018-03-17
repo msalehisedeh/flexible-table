@@ -15,8 +15,9 @@ import {
 	ElementRef
 } from '@angular/core';
 
-import {InToPipe} from 'into-pipes';
+import {InToPipe, SanitizeHtmlPipe} from 'into-pipes';
 import { DropEvent, DragEvent } from 'drag-enabled';
+import { DomSanitizer } from '@angular/platform-browser';
 
 export interface FlexibleTableHeader {
 	key: string,
@@ -102,7 +103,7 @@ export class TableViewComponent implements OnInit {
 
 	@ViewChild('flexible', {read: ViewContainerRef}) private table: ViewContainerRef;
 
-    constructor(public el:ElementRef, private intoPipe: InToPipe) {}
+    constructor(public el:ElementRef, private intoPipe: InToPipe, private _sanitizer:DomSanitizer) {}
 
 
 	private findColumnWithID(id: string) {
@@ -288,7 +289,8 @@ export class TableViewComponent implements OnInit {
 		let content = this.itemValue(item, header.key.split("."));
 
 		if (header.format && content !== undefined && content != null) {
-            content = this.intoPipe.transform(content, header.format);
+			content = this.intoPipe.transform(content, header.format);
+			content = new SanitizeHtmlPipe(this._sanitizer).transform(content);
         }
         return (content !== undefined && content != null) ? content : '&nbsp;';
 	}

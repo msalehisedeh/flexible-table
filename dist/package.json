@@ -1,6 +1,6 @@
 {
   "name": "flexible-table",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -18,7 +18,7 @@
     "core-js": "^2.4.1",
     "drag-enabled": "^0.0.1",
     "font-awesome": "^4.7.0",
-    "into-pipes": "^0.2.2",
+    "into-pipes": "^0.3.1",
     "zone.js": "^0.8.14",
     "tslib": "^1.7.1"
   },

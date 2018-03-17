@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ViewContainerRef, ElementRef, Renderer, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { InToPipe, IntoPipeModule } from 'into-pipes';
+import { InToPipe, SanitizeHtmlPipe, IntoPipeModule } from 'into-pipes';
+import { DomSanitizer } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { DragDropModule } from 'drag-enabled';
 
@@ -384,10 +385,12 @@ class TableViewComponent {
     /**
      * @param {?} el
      * @param {?} intoPipe
+     * @param {?} _sanitizer
      */
-    constructor(el, intoPipe) {
+    constructor(el, intoPipe, _sanitizer) {
         this.el = el;
         this.intoPipe = intoPipe;
+        this._sanitizer = _sanitizer;
         this.registeredHeaders = [];
         this.dragging = false;
         this.vocabulary = {
@@ -637,6 +640,7 @@ class TableViewComponent {
         let /** @type {?} */ content = this.itemValue(item, header.key.split("."));
         if (header.format && content !== undefined && content != null) {
             content = this.intoPipe.transform(content, header.format);
+            content = new SanitizeHtmlPipe(this._sanitizer).transform(content);
         }
         return (content !== undefined && content != null) ? content : '&nbsp;';
     }
@@ -796,6 +800,7 @@ TableViewComponent.decorators = [
 TableViewComponent.ctorParameters = () => [
     { type: ElementRef, },
     { type: InToPipe, },
+    { type: DomSanitizer, },
 ];
 TableViewComponent.propDecorators = {
     "vocabulary": [{ type: Input, args: ["vocabulary",] },],

@@ -60,6 +60,7 @@ Sample table tag in your HTML content:
       (onconfigurationchange)="onconfigurationchange($event)"
       (onaction)="onaction($event)"></lock-table>
 ```
+
 ![alt text](https://raw.githubusercontent.com/msalehisedeh/flexible-table/master/sample2.png  "What you would see when a flexible table is used")
 
 # Version 0.1.0
@@ -75,6 +76,7 @@ DEPENDENCIES:
 	"drag-enabled": "^0.0.1",
 	"into-pipes": "^0.2.2"
 ```
+
 # Version 0.0.1
 
 The following are available functionalities presented in this version. 

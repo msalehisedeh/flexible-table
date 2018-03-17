@@ -16,8 +16,8 @@ export class AppComponent implements OnInit {
   usersHeader:FlexibleTableHeader[] = [
 	  {key: "registered",value: "Registered On",present: true, dragable:true, sortable: true, format:"date:short"},  
 	  {key: "name",value: "Name",present: true, dragable:true, sortable: true},  
-	  {key: "isActive",value: "Active",present: true, dragable:true, sortable: true, format: "if:~:true:\"font:fa fa-check:replace\":\"font:fa fa-times:replace\""},
-	  {key: "picture",value: "Picture",present: true, dragable:true, sortable: true, format: "image:auto:32px"},
+	  {key: "isActive",value: "Active",present: true, dragable:true, sortable: true, format: "if:~=:true:\"font:fa fa-check:replace\":\"font:fa:replace\""},
+	  {key: "picture",value: "Picture",present: true, dragable:true, sortable: true, format: "image:auto:14px"},
 	  {key: "address.city",value: "City", present: true, dragable:true, sortable: true},  
 	  {key: "company",value: "Company",present: true, dragable:true, sortable: true} 
   ];
