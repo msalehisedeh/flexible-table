@@ -1,7 +1,6 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ViewContainerRef, ElementRef, Renderer, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { InToPipe, SanitizeHtmlPipe, IntoPipeModule } from 'into-pipes';
-import { DomSanitizer } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
+import { IntoPipeModule } from 'into-pipes';
 import { DragDropModule } from 'drag-enabled';
 
 /**
@@ -384,13 +383,9 @@ ConfigurationComponent.propDecorators = {
 class TableViewComponent {
     /**
      * @param {?} el
-     * @param {?} intoPipe
-     * @param {?} _sanitizer
      */
-    constructor(el, intoPipe, _sanitizer) {
+    constructor(el) {
         this.el = el;
-        this.intoPipe = intoPipe;
-        this._sanitizer = _sanitizer;
         this.registeredHeaders = [];
         this.dragging = false;
         this.vocabulary = {
@@ -638,10 +633,6 @@ class TableViewComponent {
      */
     cellContent(item, header) {
         let /** @type {?} */ content = this.itemValue(item, header.key.split("."));
-        if (header.format && content !== undefined && content != null) {
-            content = this.intoPipe.transform(content, header.format);
-            content = new SanitizeHtmlPipe(this._sanitizer).transform(content);
-        }
         return (content !== undefined && content != null) ? content : '&nbsp;';
     }
     /**
@@ -674,6 +665,26 @@ class TableViewComponent {
             this.onaction.emit(item);
         }
         return false;
+    }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    onTableCellEdit(event) {
+        const /** @type {?} */ id = event.id.split("-");
+        const /** @type {?} */ name = event.name;
+        const /** @type {?} */ value = event.value;
+        const /** @type {?} */ item = this.items[parseInt(id[1])];
+        if (item) {
+            const /** @type {?} */ list = id[0].split(".");
+            let /** @type {?} */ subitem = item[list[0]];
+            for (let /** @type {?} */ i = 1; i < (list.length - 1); i++) {
+                subitem = subitem[list[i]];
+            }
+            if (subitem && list.length > 1) {
+                subitem[list[list.length - 1]] = value;
+            }
+        }
     }
     /**
      * @param {?} event
@@ -764,7 +775,11 @@ TableViewComponent.decorators = [
                 <td scope="row"
                     *ngFor="let header of headers"
                     [attr.data-label]="header.value"
-                    [innerHTML]="cellContent(item, header)"></td>
+                    [intoName]="header.value"
+                    [intoId]="header.key + '-' + i"
+                    [into]="header.format"
+                    [rawContent]="cellContent(item, header)"
+                    [onComponentChange]="onTableCellEdit.bind(this)"></td>
                 <td scope="row" *ngIf="action">
                     <a class="actionable"
                         *ngIf="expandable(item, true)"
@@ -799,8 +814,6 @@ TableViewComponent.decorators = [
 /** @nocollapse */
 TableViewComponent.ctorParameters = () => [
     { type: ElementRef, },
-    { type: InToPipe, },
-    { type: DomSanitizer, },
 ];
 TableViewComponent.propDecorators = {
     "vocabulary": [{ type: Input, args: ["vocabulary",] },],

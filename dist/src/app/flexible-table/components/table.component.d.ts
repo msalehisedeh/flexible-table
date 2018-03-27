@@ -1,7 +1,5 @@
 import { OnInit, ElementRef } from '@angular/core';
-import { InToPipe } from 'into-pipes';
 import { DropEvent, DragEvent } from 'drag-enabled';
-import { DomSanitizer } from '@angular/platform-browser';
 export interface FlexibleTableHeader {
     key: string;
     value: string;
@@ -17,8 +15,6 @@ export interface FlexibleTableHeader {
 }
 export declare class TableViewComponent implements OnInit {
     el: ElementRef;
-    private intoPipe;
-    private _sanitizer;
     private registeredHeaders;
     dragging: boolean;
     vocabulary: {
@@ -47,7 +43,7 @@ export declare class TableViewComponent implements OnInit {
     private onaction;
     private onchange;
     private table;
-    constructor(el: ElementRef, intoPipe: InToPipe, _sanitizer: DomSanitizer);
+    constructor(el: ElementRef);
     private findColumnWithID(id);
     private swapColumns(source, destination);
     private getColumnIndex(id);
@@ -69,6 +65,7 @@ export declare class TableViewComponent implements OnInit {
         headers: any;
     };
     actionClick(event: any, item: any): boolean;
+    onTableCellEdit(event: any): void;
     dragEnabled(event: DragEvent): any;
     dropEnabled(event: DropEvent): any;
     onDragStart(event: DragEvent): void;

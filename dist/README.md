@@ -3,6 +3,25 @@
 
 Have you ever wanted a simple way of flushing your data in a all versatile table and pass in a few metadata just to get your data displayed the way you wanted? AND how about adding graphics into the resulting table with some nifty formatting rules just by mapping your JSON data into table column headers! Ha? Say it again!!
 
+FlexibleTable is an Angular based code. LockTable will allow you to lock/unlock columns. Both tables are fully configurable with pagination and ability to re-order table columns through drag/drop operation.
+
+# Version 1.1.0
+
+With this release you will be able to make table cells editable / interactable.. For more information read into-pipes documentation.
+
+```
+MODULE:
+  FlexibleTableModule
+
+EXPORTS:
+  FlexibleTableComponent
+  LockTableComponent
+
+DEPENDENCIES: 
+	"font-awesome": "^4.7.0",
+	"drag-enabled": "^0.2.3",
+	"into-pipes": "^1.2.2"
+```
 
 # Version 1.0.0
 
@@ -19,7 +38,7 @@ EXPORTS:
 DEPENDENCIES: 
 	"font-awesome": "^4.7.0",
 	"drag-enabled": "^0.0.1",
-	"into-pipes": "^0.2.2"
+	"into-pipes": "^0.3.1"
 ```
 
 ## Features Update

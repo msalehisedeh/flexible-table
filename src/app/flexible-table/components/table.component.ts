@@ -15,9 +15,7 @@ import {
 	ElementRef
 } from '@angular/core';
 
-import {InToPipe, SanitizeHtmlPipe} from 'into-pipes';
 import { DropEvent, DragEvent } from 'drag-enabled';
-import { DomSanitizer } from '@angular/platform-browser';
 
 export interface FlexibleTableHeader {
 	key: string,
@@ -103,7 +101,7 @@ export class TableViewComponent implements OnInit {
 
 	@ViewChild('flexible', {read: ViewContainerRef}) private table: ViewContainerRef;
 
-    constructor(public el:ElementRef, private intoPipe: InToPipe, private _sanitizer:DomSanitizer) {}
+    constructor(public el:ElementRef) {}
 
 
 	private findColumnWithID(id: string) {
@@ -287,11 +285,6 @@ export class TableViewComponent implements OnInit {
 
     cellContent(item, header) {
 		let content = this.itemValue(item, header.key.split("."));
-
-		if (header.format && content !== undefined && content != null) {
-			content = this.intoPipe.transform(content, header.format);
-			content = new SanitizeHtmlPipe(this._sanitizer).transform(content);
-        }
         return (content !== undefined && content != null) ? content : '&nbsp;';
 	}
 
@@ -317,6 +310,23 @@ export class TableViewComponent implements OnInit {
 		return false;
 	}
 
+	onTableCellEdit(event) {
+		const id = event.id.split("-");
+		const name = event.name;
+		const value= event.value;
+		const item = this.items[parseInt(id[1])];
+
+		if (item) {
+			const list = id[0].split(".");
+			let subitem = item[list[0]];
+			for(let i = 1; i < (list.length - 1); i++) {
+				subitem = subitem[list[i]]
+			}
+			if (subitem && list.length > 1){
+				subitem[list[list.length - 1]] = value;
+			}
+		}
+    }
 
 	dragEnabled(event: DragEvent) {
 		return event.medium.dragable;
