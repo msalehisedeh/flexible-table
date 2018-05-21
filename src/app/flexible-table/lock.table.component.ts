@@ -18,6 +18,7 @@ import {
 
 import { DropEvent, DragEvent } from 'drag-enabled';
 import { TableViewComponent } from './components/table.component';
+import { TableHeadersGenerator } from './components/table-headers-generator';
 
 @Component({
 	selector: 'lock-table',
@@ -28,6 +29,7 @@ export class LockTableComponent implements OnInit {
 
 	lockedHeaders:any;
 	unlockedHeaders:any;
+	filteredItems = [];
 
     @Input("vocabulary")
     public vocabulary = {
@@ -67,6 +69,9 @@ export class LockTableComponent implements OnInit {
     @Input("configurable")
     public configurable: boolean;
 
+    @Input("enableFiltering")
+    public enableFiltering: boolean;
+
     @Input("enableIndexing")
     public enableIndexing: boolean;
 
@@ -80,8 +85,8 @@ export class LockTableComponent implements OnInit {
 	@ViewChild('lockedTable')
 	private lockedTable: TableViewComponent;
 
-	@ViewChild('unlockedTable', {read: ViewContainerRef})
-	private unlockedTable: ViewContainerRef;
+	@ViewChild('unlockedTable')
+	private unlockedTable: TableViewComponent;
 
     scroll(event) {
 		this.renderer.setElementStyle(
@@ -96,15 +101,16 @@ export class LockTableComponent implements OnInit {
 
 	ngOnInit() {
 		if (!this.headers) {
-			this.headers = [];
-        }
+			this.headers = new TableHeadersGenerator().generateHeadersFor(this.items[0],"", 5, this.enableFiltering);
+		}
+		this.filteredItems = this.items;
 		this.reconfigure(this.headers);
 
 	}
 
 	evaluatePositioning() {
 		this.renderer.setElementStyle(
-			this.unlockedTable.element.nativeElement,
+			this.unlockedTable.el.nativeElement,
 			"margin-left",
 			this.lockedTable.offsetWidth()+"px");
 	}
@@ -124,6 +130,16 @@ export class LockTableComponent implements OnInit {
 		this.onconfigurationchange.emit(event);
 
 		setTimeout(this.evaluatePositioning.bind(this),111);
+	}
+	changeLockedTableFilteredItems(event) {
+		if (this.lockedTable) {
+			this.lockedTable.filteredItems = event;
+		}
+	}
+	changeUnlockedTableFilteredItems(event) {
+		if (this.unlockedTable) {
+			this.unlockedTable.filteredItems = event;
+		}
 	}
 
 	tableAction(event) {

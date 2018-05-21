@@ -1,7 +1,86 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ViewContainerRef, ElementRef, Renderer, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Injectable, Component, Input, Output, EventEmitter, ViewChild, ViewContainerRef, ElementRef, Renderer, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IntoPipeModule } from 'into-pipes';
 import { DragDropModule } from 'drag-enabled';
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
+/*
+ * This object will traverse through a given json object and finds all the attributes of
+ * the object and its related associations within the json. The resulting structure would be
+ * name of attributes and a pathway to reach the attribute deep in object heirarchy.
+ */
+/**
+ * @record
+ */
+
+class TableHeadersGenerator {
+    constructor() {
+        this.headers = [];
+    }
+    /**
+     * @param {?} root
+     * @param {?} path
+     * @param {?} maxVisible
+     * @param {?} filteringEnabled
+     * @return {?}
+     */
+    generateHeadersFor(root, path, maxVisible, filteringEnabled) {
+        if (root !== null) {
+            Object.keys(root).map((key) => {
+                const /** @type {?} */ innerPath = (path.length ? (path + "." + key) : key);
+                if (typeof root[key] === "string" || typeof root[key] === "number" || typeof root[key] === "boolean") {
+                    const /** @type {?} */ header = {
+                        key: innerPath,
+                        value: this.makeWords(innerPath),
+                        sortable: true,
+                        dragable: true,
+                        present: (path.length === 0 && this.headers.length < maxVisible)
+                    };
+                    if (filteringEnabled) {
+                        header.filter = "";
+                    }
+                    this.headers.push(header);
+                }
+                else if (root[key] instanceof Array) {
+                    const /** @type {?} */ node = root[key];
+                    if (node.length && !(node[0] instanceof Array) && (typeof node[0] !== "string")) {
+                        this.generateHeadersFor(node[0], innerPath, maxVisible, filteringEnabled);
+                    }
+                    else {
+                        this.headers.push({
+                            key: innerPath,
+                            value: this.makeWords(innerPath)
+                        });
+                    }
+                }
+                else {
+                    this.generateHeadersFor(root[key], innerPath, maxVisible, filteringEnabled);
+                }
+            });
+        }
+        return this.headers;
+    }
+    /**
+     * @param {?} name
+     * @return {?}
+     */
+    makeWords(name) {
+        return name
+            .replace(/\./g, ' ~ ')
+            .replace(/([A-Z])/g, ' $1')
+            .replace(/-/g, " ")
+            .replace(/_/g, " ")
+            .replace(/^./, (str) => str.toUpperCase());
+    }
+}
+TableHeadersGenerator.decorators = [
+    { type: Injectable },
+];
+/** @nocollapse */
+TableHeadersGenerator.ctorParameters = () => [];
 
 /**
  * @fileoverview added by tsickle
@@ -27,10 +106,7 @@ class FlexibleTableComponent {
      */
     ngOnInit() {
         if (!this.headers || this.headers.length === 0) {
-            this.headers = [];
-            this.items[0].map((item) => {
-                this.headers.push({ key: item, value: item, sortable: true, present: true });
-            });
+            this.headers = new TableHeadersGenerator().generateHeadersFor(this.items[0], "", 5, this.enableFiltering);
         }
         if (!this.rowDetailer && this.expandable) {
             this.rowDetailer = function (item) {
@@ -97,6 +173,7 @@ FlexibleTableComponent.decorators = [
         [pageInfo]="pageInfo"
         [vocabulary]="vocabulary"
 		[enableIndexing]="enableIndexing"
+		[enableFiltering]="enableFiltering"
         [rowDetailer]="rowDetailer"
         [actionable]="actionable"
         [expandable]="expandable"
@@ -125,6 +202,7 @@ FlexibleTableComponent.propDecorators = {
     "tableInfo": [{ type: Input, args: ["tableInfo",] },],
     "configurable": [{ type: Input, args: ["configurable",] },],
     "enableIndexing": [{ type: Input, args: ["enableIndexing",] },],
+    "enableFiltering": [{ type: Input, args: ["enableFiltering",] },],
     "rowDetailer": [{ type: Input, args: ["rowDetailer",] },],
     "expandable": [{ type: Input, args: ["expandable",] },],
     "expandIf": [{ type: Input, args: ["expandIf",] },],
@@ -322,6 +400,20 @@ class ConfigurationComponent {
         this.onchange.emit(this.headers);
     }
     /**
+     * @param {?} item
+     * @param {?} header
+     * @return {?}
+     */
+    enableFilter(item, header) {
+        if (header.filter === undefined) {
+            header.filter = "";
+        }
+        else {
+            delete header.filter;
+        }
+        this.onchange.emit(this.headers);
+    }
+    /**
      * @param {?} event
      * @return {?}
      */
@@ -348,6 +440,14 @@ ConfigurationComponent.decorators = [
 <ul role="list" [style.display]="showConfigurationView ? 'block':'none'">
     <p [textContent]="title"></p>
     <li  *ngFor="let header of headers" role="listitem">
+        <label for="{{header.key ? header.key+'f':'f'}}">
+            <input type="checkbox" #filter
+                    [id]="header.key ? header.key+'f':'f'"
+                    [checked]="header.filter !== undefined"
+                    (keyup)="keyup($event)"
+                    (click)="enableFilter(filter, header)" />
+            <span>Filrer</span>
+        </label>
         <label for="{{header.key ? header.key+'c':'c'}}">
             <input type="checkbox" #checkbox
                     [id]="header.key ? header.key+'c':'c'"
@@ -386,8 +486,8 @@ class TableViewComponent {
      */
     constructor(el) {
         this.el = el;
-        this.registeredHeaders = [];
         this.dragging = false;
+        this.filteredItems = [];
         this.vocabulary = {
             configureTable: "Configure Table",
             configureColumns: "Configure Columns",
@@ -400,6 +500,7 @@ class TableViewComponent {
         this.tableClass = 'default-flexible-table';
         this.onaction = new EventEmitter();
         this.onchange = new EventEmitter();
+        this.onfilter = new EventEmitter();
     }
     /**
      * @param {?} id
@@ -429,21 +530,28 @@ class TableViewComponent {
                 console.log("invalid drop id", source.medium.key, destination.medium.key);
                 return;
             }
-            const /** @type {?} */ sobj = this.headers[srcIndex];
-            this.headers[srcIndex] = this.headers[desIndex];
-            this.headers[desIndex] = sobj;
-            for (let /** @type {?} */ i = 0; i < this.items.length; i++) {
-                const /** @type {?} */ row = this.items[i];
-                const /** @type {?} */ sobji = row[srcIndex];
-                row[srcIndex] = row[desIndex];
-                row[desIndex] = sobji;
-            }
-            //	this.onchange.emit(this.headers);
+            const /** @type {?} */ x = this.filteredItems;
+            this.filteredItems = [];
+            setTimeout(() => {
+                const /** @type {?} */ sobj = this.headers[srcIndex];
+                this.headers[srcIndex] = this.headers[desIndex];
+                this.headers[desIndex] = sobj;
+                this.filteredItems = x;
+                this.onfilter.emit(this.filteredItems);
+                this.onchange.emit(this.headers);
+            }, 33);
         }
         else if (source.medium.locked || destination.medium.locked) {
-            source.medium.locked = !source.medium.locked;
-            destination.medium.locked = !destination.medium.locked;
-            this.onchange.emit(this.headers);
+            const /** @type {?} */ x = this.filteredItems;
+            this.filteredItems = [];
+            this.onfilter.emit(this.filteredItems);
+            setTimeout(() => {
+                source.medium.locked = !source.medium.locked;
+                destination.medium.locked = !destination.medium.locked;
+                this.filteredItems = x;
+                this.onfilter.emit(this.filteredItems);
+                this.onchange.emit(this.headers);
+            }, 33);
         }
     }
     /**
@@ -469,10 +577,10 @@ class TableViewComponent {
         let /** @type {?} */ subitem = item;
         hpath.map((subkey) => {
             if (subitem) {
-                subitem = subitem[subkey] ? subitem[subkey] : undefined;
+                subitem = subitem[subkey];
             }
         });
-        return subitem === undefined || subitem === null || subitem === "null" ? "" : subitem;
+        return subitem === undefined || subitem === null || subitem === "null" ? "" : String(subitem);
     }
     /**
      * @param {?} header
@@ -541,6 +649,12 @@ class TableViewComponent {
     ngOnInit() {
         if (!this.headers) {
             this.headers = [];
+        }
+        if (this.enableFiltering) {
+            this.filterItems();
+        }
+        else {
+            this.filteredItems = this.items;
         }
         if (this.actionKeys) {
             this.actionKeys = this.actionKeys.split(",");
@@ -648,6 +762,18 @@ class TableViewComponent {
     }
     /**
      * @param {?} event
+     * @param {?} header
+     * @return {?}
+     */
+    changeFilter(event, header) {
+        const /** @type {?} */ code = event.which;
+        header.filter = event.target.value;
+        if (code === 13) {
+            this.filterItems();
+        }
+    }
+    /**
+     * @param {?} event
      * @param {?} item
      * @return {?}
      */
@@ -665,6 +791,62 @@ class TableViewComponent {
             this.onaction.emit(item);
         }
         return false;
+    }
+    /**
+     * @param {?} value
+     * @param {?} filterBy
+     * @return {?}
+     */
+    shouldKeepItem(value, filterBy) {
+        let /** @type {?} */ result = false;
+        if (value !== undefined && value !== null && value.length) {
+            if (filterBy[0] === '<') {
+                result = parseFloat(value) < parseFloat(filterBy.substring(1));
+            }
+            else if (filterBy[0] === '>') {
+                result = parseFloat(value) > parseFloat(filterBy.substring(1));
+            }
+            else if (filterBy[0] === '!') {
+                result = parseFloat(value) != parseFloat(filterBy.substring(1));
+            }
+            else if (filterBy[0] === '*' && filterBy[filterBy.length - 1] !== '*') {
+                const /** @type {?} */ f = filterBy.substring(1);
+                result = value.toLowerCase().indexOf(f) !== value.length - f.length;
+            }
+            else if (filterBy[0] !== '*' && filterBy[filterBy.length - 1] === '*') {
+                const /** @type {?} */ f = filterBy.substring(0, filterBy.length - 1);
+                result = value.toLowerCase().indexOf(f) !== 0;
+            }
+            else if (filterBy[0] === '*' && filterBy[filterBy.length - 1] === '*') {
+                const /** @type {?} */ f = filterBy.substring(1, filterBy.length - 1);
+                result = value.toLowerCase().indexOf(f) < 0;
+            }
+            else {
+                result = value.toLowerCase().indexOf(filterBy) < 0;
+            }
+        }
+        return result;
+    }
+    /**
+     * @return {?}
+     */
+    filterItems() {
+        this.filteredItems = this.items.filter((item) => {
+            let /** @type {?} */ keepItem = true;
+            for (let /** @type {?} */ i = 0; i < this.headers.length; i++) {
+                const /** @type {?} */ header = this.headers[i];
+                if (header.filter && header.filter.length) {
+                    const /** @type {?} */ v2 = header.filter.toLowerCase();
+                    const /** @type {?} */ v = this.itemValue(item, header.key.split("."));
+                    if (this.shouldKeepItem(v, v2)) {
+                        keepItem = false;
+                        break;
+                    }
+                }
+            }
+            return keepItem;
+        });
+        this.onfilter.emit(this.filteredItems);
     }
     /**
      * @param {?} event
@@ -762,7 +944,22 @@ TableViewComponent.decorators = [
         </tr>
     </thead>
     <tbody>
-        <ng-template ngFor let-item [ngForOf]="items" let-i="index">
+        <tr *ngIf="enableFiltering">
+            <td scope="row" *ngIf="enableIndexing" class="index filter">
+                <input type="text" disabled style="opacity:0" />
+            </td>
+            <td scope="row" *ngFor="let header of headers; let i=index" class="filter">
+                <span *ngIf="header.filter === undefined">&nbsp;</span>
+                <input  *ngIf="header.filter !== undefined"
+                        id="filter-{{i}}"
+                        type="text"
+                        (keyup)="changeFilter($event, header)"
+                        [value]="header.filter ? header.filter : ''" />
+                <label *ngIf="header.filter !== undefined" for="filter-{{i}}" ><span class="off-screen" >Filter "{{header.value}}"</span><span class="fa fa-search"></span></label>
+            </td>
+            <td scope="row" *ngIf="action"></td>
+        </tr>
+       <ng-template ngFor let-item [ngForOf]="filteredItems" let-i="index">
             <tr *ngIf="i >= pageInfo.from && i <= pageInfo.to "
                 (click)="actionClick($event, item)"
                 (mouseover)="hover(item, true)"
@@ -808,7 +1005,7 @@ TableViewComponent.decorators = [
     </tbody>
 </table>
 `,
-                styles: [`:host{display:inline-block!important;width:100%;position:relative;margin:0 auto;border-spacing:0;border-collapse:collapse}:host .off-screen{display:block;float:left;height:0;overflow:hidden;text-indent:-99999px;width:0}:host table{margin:1rem auto;padding:0;width:100%;table-layout:fixed;max-width:99%;background-color:transparent;border-collapse:collapse}:host table caption{background-color:#c3e5e2;border-radius:2px;color:#1b1b1b;caption-side:top;font-size:14px;padding:5px 6px;margin-bottom:15px;text-align:left}:host table thead{border-top:1px solid #bbb;border-bottom:1px solid #bbb;background-color:#eee}:host table tr{border:0}:host table tr.expanded td{font-weight:700}:host table td{padding-left:3px}:host table td:first-child{padding-left:5px}:host table td .off-screen{display:block;float:left;height:0;overflow:hidden;text-indent:-99999px;width:0}:host table td ::ng-deep img{height:24px}:host table td.index{background-color:#eee;border-right:1px solid #bbb}:host table th{cursor:default;-webkit-user-select:none;-moz-user-select:none;-o-user-select:none;-ms-user-select:none;user-select:none;height:24px;position:relative;white-space:nowrap;font-weight:400;text-transform:uppercase;font-size:14px;padding-top:6px;padding-bottom:6px;text-align:left}:host table th.drag-over{background-color:#9b9b9b}:host table th.drag-over .icon,:host table th.drag-over .title{color:#eee}:host table th:first-child{padding-left:5px}:host table th.ascending,:host table th.descending,:host table th.sortable{cursor:pointer;height:12px}:host table th.indexable{width:33px}:host table th.actionable{width:24px}:host table th .title{color:#254a4d;display:inline-block;height:20px;white-space:nowrap}:host table th .dragable{cursor:move}:host table th .icon{width:22px;display:inline-block;height:20px;color:#254a4d}:host .fa.fa-angle-right{font-size:18px}table tr.expanded td{border-bottom:0}table tr.detail td{border-top:0;cursor:default}table tr.expanded td a.expanded{background-position:right 2px}table tbody tr.hover,table tbody tr:hover{background-color:#ffeed2}table tbody tr.detail.hover,table tbody tr.detail.hover td table thead tr,table tbody tr.detail:hover,table tbody tr.detail:hover td table thead tr{background-color:inherit}table tr td a.actionable{display:inline-table;height:32px;vertical-align:middle;width:25px;line-height:30px;color:#254a4d}table tbody tr.detail.hover td:last-child,table tbody tr.detail:hover td:last-child{border-right:0}table tbody tr.detail.hover td:first-child,table tbody tr.detail:hover td:first-child{border-left:0}table tr td{border-bottom:1px solid #b1b3b3;color:#254a5d;font-size:15px;text-transform:capitalize}table tbody tr.pointer{cursor:pointer}table.alert-danger{border:0}table.alert-danger caption{background-color:transparent;font-weight:700;margin-bottom:0}table.alert-danger td{border-bottom:0;display:block}table.alert-danger td:first-child{padding-left:0}table.alert-danger td:last-child{border-bottom:0}table.alert-danger td:before{content:attr(data-label);float:left;font-weight:700;text-transform:uppercase;width:20%}table.alert-danger td a span.icon{width:100%}table.alert-danger thead{border:none;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}table.alert-danger tr{border:2px solid #fff;display:block;margin-bottom:.625em;padding:5px;border-radius:5px}table.alert-danger tr th.actionable{width:inherit}table.alert-danger tr td{border-bottom:0}@media screen and (max-width:600px){table{border:0}table td{border-bottom:0;display:block;text-align:right}table td:first-child{padding-left:0}table td:last-child{border-bottom:0}table td:before{content:attr(data-label);float:left;font-weight:700;text-transform:uppercase}table td a span.icon{width:100%}table thead{border:none;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}table tr{border-bottom:3px solid #ddd;display:block;margin-bottom:.625em}table tr th.actionable{width:inherit}table tr td{border-bottom:0}table.alert-danger td:before{width:inherit}}`]
+                styles: [`:host{display:inline-block!important;width:100%;position:relative;margin:0 auto;border-spacing:0;border-collapse:collapse}:host .off-screen{display:block;float:left;height:0;overflow:hidden;text-indent:-99999px;width:0}:host table{margin:1rem auto;padding:0;width:100%;table-layout:fixed;max-width:99%;background-color:transparent;border-collapse:collapse}:host table caption{background-color:#c3e5e2;border-radius:2px;color:#1b1b1b;caption-side:top;font-size:14px;padding:5px 6px;margin-bottom:15px;text-align:left}:host table thead{border-top:1px solid #bbb;border-bottom:1px solid #bbb;background-color:#eee}:host table tr{border:0}:host table tr.expanded td{font-weight:700}:host table td{padding-left:3px}:host table td:first-child{padding-left:5px}:host table td .off-screen{display:block;float:left;height:0;overflow:hidden;text-indent:-99999px;width:0}:host table td.filter{padding:0;position:relative}:host table td.filter input{-webkit-box-sizing:border-box;box-sizing:border-box;width:100%;padding:5px}:host table td.filter .fa{position:absolute;top:7px;right:2px;color:#bad}:host table td ::ng-deep img{height:24px}:host table td.index{background-color:#eee;border-right:1px solid #bbb}:host table th{cursor:default;-webkit-user-select:none;-moz-user-select:none;-o-user-select:none;-ms-user-select:none;user-select:none;height:24px;position:relative;white-space:nowrap;font-weight:400;text-transform:uppercase;font-size:14px;padding-top:6px;padding-bottom:6px;text-align:left}:host table th.drag-over{background-color:#9b9b9b}:host table th.drag-over .icon,:host table th.drag-over .title{color:#eee}:host table th:first-child{padding-left:5px}:host table th.ascending,:host table th.descending,:host table th.sortable{cursor:pointer;height:12px}:host table th.indexable{width:33px}:host table th.actionable{width:24px}:host table th .title{color:#254a4d;display:inline-block;height:20px;white-space:nowrap}:host table th .dragable{cursor:move}:host table th .icon{width:22px;display:inline-block;height:20px;color:#254a4d}:host .fa.fa-angle-right{font-size:18px}table tr.expanded td{border-bottom:0}table tr.detail td{border-top:0;cursor:default}table tr.expanded td a.expanded{background-position:right 2px}table tbody tr.hover,table tbody tr:hover{background-color:#ffeed2}table tbody tr.detail.hover,table tbody tr.detail.hover td table thead tr,table tbody tr.detail:hover,table tbody tr.detail:hover td table thead tr{background-color:inherit}table tr td a.actionable{display:inline-table;height:32px;vertical-align:middle;width:25px;line-height:30px;color:#254a4d}table tbody tr.detail.hover td:last-child,table tbody tr.detail:hover td:last-child{border-right:0}table tbody tr.detail.hover td:first-child,table tbody tr.detail:hover td:first-child{border-left:0}table tr td{border-bottom:1px solid #b1b3b3;color:#254a5d;font-size:15px;text-transform:capitalize}table tbody tr.pointer{cursor:pointer}table.alert-danger{border:0}table.alert-danger caption{background-color:transparent;font-weight:700;margin-bottom:0}table.alert-danger td{border-bottom:0;display:block}table.alert-danger td:first-child{padding-left:0}table.alert-danger td:last-child{border-bottom:0}table.alert-danger td:before{content:attr(data-label);float:left;font-weight:700;text-transform:uppercase;width:20%}table.alert-danger td a span.icon{width:100%}table.alert-danger thead{border:none;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}table.alert-danger tr{border:2px solid #fff;display:block;margin-bottom:.625em;padding:5px;border-radius:5px}table.alert-danger tr th.actionable{width:inherit}table.alert-danger tr td{border-bottom:0}@media screen and (max-width:600px){table{border:0}table td{border-bottom:0;display:block;text-align:right}table td:first-child{padding-left:0}table td:last-child{border-bottom:0}table td:before{content:attr(data-label);float:left;font-weight:700;text-transform:uppercase}table td a span.icon{width:100%}table thead{border:none;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}table tr{border-bottom:3px solid #ddd;display:block;margin-bottom:.625em}table tr th.actionable{width:inherit}table tr td{border-bottom:0}table.alert-danger td:before{width:inherit}}`]
             },] },
 ];
 /** @nocollapse */
@@ -827,12 +1024,14 @@ TableViewComponent.propDecorators = {
     "items": [{ type: Input, args: ["items",] },],
     "tableInfo": [{ type: Input, args: ["tableInfo",] },],
     "enableIndexing": [{ type: Input, args: ["enableIndexing",] },],
+    "enableFiltering": [{ type: Input, args: ["enableFiltering",] },],
     "rowDetailer": [{ type: Input, args: ["rowDetailer",] },],
     "expandable": [{ type: Input, args: ["expandable",] },],
     "expandIf": [{ type: Input, args: ["expandIf",] },],
     "rowDetailerHeaders": [{ type: Input, args: ["rowDetailerHeaders",] },],
     "onaction": [{ type: Output, args: ['onaction',] },],
     "onchange": [{ type: Output, args: ['onchange',] },],
+    "onfilter": [{ type: Output, args: ['onfilter',] },],
     "table": [{ type: ViewChild, args: ['flexible', { read: ViewContainerRef },] },],
 };
 
@@ -846,6 +1045,7 @@ class LockTableComponent {
      */
     constructor(renderer) {
         this.renderer = renderer;
+        this.filteredItems = [];
         this.vocabulary = {
             configureTable: "Configure Table",
             configureColumns: "Configure Columns",
@@ -871,15 +1071,16 @@ class LockTableComponent {
      */
     ngOnInit() {
         if (!this.headers) {
-            this.headers = [];
+            this.headers = new TableHeadersGenerator().generateHeadersFor(this.items[0], "", 5, this.enableFiltering);
         }
+        this.filteredItems = this.items;
         this.reconfigure(this.headers);
     }
     /**
      * @return {?}
      */
     evaluatePositioning() {
-        this.renderer.setElementStyle(this.unlockedTable.element.nativeElement, "margin-left", this.lockedTable.offsetWidth() + "px");
+        this.renderer.setElementStyle(this.unlockedTable.el.nativeElement, "margin-left", this.lockedTable.offsetWidth() + "px");
     }
     /**
      * @param {?} event
@@ -901,6 +1102,24 @@ class LockTableComponent {
         this.unlockedHeaders = this.headers.filter((item) => item.locked !== true && item.present);
         this.onconfigurationchange.emit(event);
         setTimeout(this.evaluatePositioning.bind(this), 111);
+    }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    changeLockedTableFilteredItems(event) {
+        if (this.lockedTable) {
+            this.lockedTable.filteredItems = event;
+        }
+    }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    changeUnlockedTableFilteredItems(event) {
+        if (this.unlockedTable) {
+            this.unlockedTable.filteredItems = event;
+        }
     }
     /**
      * @param {?} event
@@ -934,27 +1153,31 @@ LockTableComponent.decorators = [
 		class="locked-table"
 		lockable="true"
 		[headers]="lockedHeaders"
-		[items]="items"
+		[items]="filteredItems"
         [pageInfo]="pageInfo"
         [vocabulary]="vocabulary"
 		[enableIndexing]="enableIndexing"
+		[enableFiltering]="enableFiltering"
         [rowDetailer]="rowDetailer"
 		[actionable]="actionable"
 		(onchange)="onlock($event)"
-        (onDrop)="onDrop($event)"
+		(onDrop)="onDrop($event)"
+		(onfilter)="changeUnlockedTableFilteredItems($event)"
 		(onaction)="tableAction($event)"></table-view>
     <table-view #unlockedTable
 		*ngIf="items"
 		class="unlocked-table"
 		lockable="true"
 		[headers]="unlockedHeaders"
-		[items]="items"
+		[items]="filteredItems"
         [pageInfo]="pageInfo"
         [vocabulary]="vocabulary"
+		[enableFiltering]="enableFiltering"
         [rowDetailer]="rowDetailer"
         [actionable]="actionable"
 		(onDrop)="onDrop($event)"
 		(onchange)="onlock($event)"
+		(onfilter)="changeLockedTableFilteredItems($event)"
 		(onaction)="tableAction($event)"></table-view>
 </div>
 <table-pagination [info]="pageInfo" [vocabulary]="vocabulary" #pager></table-pagination>
@@ -977,11 +1200,12 @@ LockTableComponent.propDecorators = {
     "pageInfo": [{ type: Input, args: ["pageInfo",] },],
     "tableInfo": [{ type: Input, args: ["tableInfo",] },],
     "configurable": [{ type: Input, args: ["configurable",] },],
+    "enableFiltering": [{ type: Input, args: ["enableFiltering",] },],
     "enableIndexing": [{ type: Input, args: ["enableIndexing",] },],
     "onaction": [{ type: Output, args: ['onaction',] },],
     "onconfigurationchange": [{ type: Output, args: ['onconfigurationchange',] },],
     "lockedTable": [{ type: ViewChild, args: ['lockedTable',] },],
-    "unlockedTable": [{ type: ViewChild, args: ['unlockedTable', { read: ViewContainerRef },] },],
+    "unlockedTable": [{ type: ViewChild, args: ['unlockedTable',] },],
 };
 
 /**

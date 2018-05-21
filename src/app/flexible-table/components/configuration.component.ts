@@ -29,6 +29,15 @@ export class ConfigurationComponent {
 		this.onchange.emit(this.headers);
 	}
 
+	enableFilter(item, header) {
+        if (header.filter === undefined) {
+			header.filter = "";
+		} else {
+			delete header.filter;
+		}
+		this.onchange.emit(this.headers);
+	}
+
     keyup(event) {
         const code = event.which;
         if (code === 13) {

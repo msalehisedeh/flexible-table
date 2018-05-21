@@ -11,6 +11,14 @@
 <ul role="list" [style.display]="showConfigurationView ? 'block':'none'">
     <p [textContent]="title"></p>
     <li  *ngFor="let header of headers" role="listitem">
+        <label for="{{header.key ? header.key+'f':'f'}}">
+            <input type="checkbox" #filter
+                    [id]="header.key ? header.key+'f':'f'"
+                    [checked]="header.filter !== undefined"
+                    (keyup)="keyup($event)"
+                    (click)="enableFilter(filter, header)" />
+            <span>Filrer</span>
+        </label>
         <label for="{{header.key ? header.key+'c':'c'}}">
             <input type="checkbox" #checkbox
                     [id]="header.key ? header.key+'c':'c'"

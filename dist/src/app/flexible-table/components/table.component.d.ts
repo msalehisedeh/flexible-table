@@ -6,6 +6,7 @@ export interface FlexibleTableHeader {
     present: boolean;
     width?: string;
     format?: string;
+    filter?: string;
     dragable?: boolean;
     sortable?: boolean;
     class?: string;
@@ -15,8 +16,8 @@ export interface FlexibleTableHeader {
 }
 export declare class TableViewComponent implements OnInit {
     el: ElementRef;
-    private registeredHeaders;
     dragging: boolean;
+    filteredItems: any[];
     vocabulary: {
         configureTable: string;
         configureColumns: string;
@@ -36,12 +37,14 @@ export declare class TableViewComponent implements OnInit {
     items: any[];
     tableInfo: any;
     enableIndexing: boolean;
+    enableFiltering: boolean;
     rowDetailer: any;
     expandable: any;
     expandIf: boolean;
     rowDetailerHeaders: any;
     private onaction;
     private onchange;
+    private onfilter;
     private table;
     constructor(el: ElementRef);
     private findColumnWithID(id);
@@ -58,13 +61,16 @@ export declare class TableViewComponent implements OnInit {
     hover(item: any, flag: any): void;
     keydown(event: any, item: any): void;
     offScreenMessage(item: any): string;
-    cellContent(item: any, header: any): any;
+    cellContent(item: any, header: any): string;
     rowDetailerContext(item: any): {
         data: any;
         tableInfo: any;
         headers: any;
     };
+    changeFilter(event: any, header: any): void;
     actionClick(event: any, item: any): boolean;
+    private shouldKeepItem(value, filterBy);
+    filterItems(): void;
     onTableCellEdit(event: any): void;
     dragEnabled(event: DragEvent): any;
     dropEnabled(event: DropEvent): any;

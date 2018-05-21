@@ -14,14 +14,16 @@
 		class="locked-table"
 		lockable="true"
 		[headers]="lockedHeaders" 
-		[items]="items" 
+		[items]="filteredItems" 
         [pageInfo]="pageInfo"
         [vocabulary]="vocabulary"
 		[enableIndexing]="enableIndexing"
+		[enableFiltering]="enableFiltering"
         [rowDetailer]="rowDetailer"
 		[actionable]="actionable"
 		(onchange)="onlock($event)"
-        (onDrop)="onDrop($event)"
+		(onDrop)="onDrop($event)"
+		(onfilter)="changeUnlockedTableFilteredItems($event)"
 		(onaction)="tableAction($event)"></table-view>
 
     <table-view #unlockedTable
@@ -29,13 +31,15 @@
 		class="unlocked-table"
 		lockable="true"
 		[headers]="unlockedHeaders" 
-		[items]="items" 
+		[items]="filteredItems" 
         [pageInfo]="pageInfo"
         [vocabulary]="vocabulary"
+		[enableFiltering]="enableFiltering"
         [rowDetailer]="rowDetailer"
         [actionable]="actionable"
 		(onDrop)="onDrop($event)"
 		(onchange)="onlock($event)"
+		(onfilter)="changeLockedTableFilteredItems($event)"
 		(onaction)="tableAction($event)"></table-view>
 	
 </div>

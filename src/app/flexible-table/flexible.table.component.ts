@@ -15,6 +15,7 @@ import {
 } from '@angular/core';
 
 import { DropEvent, DragEvent } from 'drag-enabled';
+import { TableHeadersGenerator } from './components/table-headers-generator';
 
 @Component({
 	selector: 'flexible-table',
@@ -67,6 +68,9 @@ export class FlexibleTableComponent implements OnInit {
     @Input("enableIndexing")
     public enableIndexing: boolean;
 
+    @Input("enableFiltering")
+    public enableFiltering: boolean;
+
     @Input("rowDetailer")
     public rowDetailer: any;
 
@@ -89,10 +93,7 @@ export class FlexibleTableComponent implements OnInit {
 
 	ngOnInit() {
 		if (!this.headers || this.headers.length === 0) {
-			this.headers = [];
-            this.items[0].map((item) => {
-                this.headers.push({ key: item, value: item, sortable: true, present: true });
-           });
+			this.headers = new TableHeadersGenerator().generateHeadersFor(this.items[0],"", 5, this.enableFiltering);
         }
 		if (!this.rowDetailer && this.expandable) {
 			this.rowDetailer = function(item) {

@@ -63,7 +63,23 @@
 				overflow: hidden;
 				text-indent: -99999px;
                 width: 0;
-			}
+            }
+            &.filter {
+                padding: 0;
+                position: relative;
+
+                input {
+                    box-sizing: border-box;
+                    width: 100%;
+                    padding: 5px;
+                }
+                .fa {
+                    position: absolute;
+                    top: 7px;
+                    right: 2px;
+                    color: #bad;
+                }
+            }
                 
             ::ng-deep img {
                 height: 24px;

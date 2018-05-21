@@ -35,7 +35,22 @@
         </tr>
     </thead>
     <tbody>
-        <ng-template ngFor let-item [ngForOf]="items" let-i="index">
+        <tr *ngIf="enableFiltering">
+            <td scope="row" *ngIf="enableIndexing" class="index filter">
+                <input type="text" disabled style="opacity:0" />
+            </td>
+            <td scope="row" *ngFor="let header of headers; let i=index" class="filter">
+                <span *ngIf="header.filter === undefined">&nbsp;</span>
+                <input  *ngIf="header.filter !== undefined"
+                        id="filter-{{i}}"
+                        type="text" 
+                        (keyup)="changeFilter($event, header)"
+                        [value]="header.filter ? header.filter : ''" />
+                <label *ngIf="header.filter !== undefined" for="filter-{{i}}" ><span class="off-screen" >Filter "{{header.value}}"</span><span class="fa fa-search"></span></label>
+            </td>
+            <td scope="row" *ngIf="action"></td>
+        </tr>
+       <ng-template ngFor let-item [ngForOf]="filteredItems" let-i="index">
             <tr *ngIf="i >= pageInfo.from && i <= pageInfo.to "
                 (click)="actionClick($event, item)"
                 (mouseover)="hover(item, true)"

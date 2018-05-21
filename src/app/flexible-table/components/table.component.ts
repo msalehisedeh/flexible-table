@@ -23,6 +23,7 @@ export interface FlexibleTableHeader {
 	present: boolean,
 	width?: string,
 	format?: string,
+	filter?: string,
 	dragable?: boolean
 	sortable?: boolean,
 	class?:string,
@@ -37,8 +38,8 @@ export interface FlexibleTableHeader {
 	styleUrls: ['./table.component.scss']
 })
 export class TableViewComponent implements OnInit {
-	private registeredHeaders = [];
-    dragging = false;
+	dragging = false;
+	filteredItems = [];
 
     @Input("vocabulary")
     public vocabulary = {
@@ -81,6 +82,9 @@ export class TableViewComponent implements OnInit {
     @Input("enableIndexing")
     public enableIndexing: boolean;
 
+    @Input("enableFiltering")
+    public enableFiltering: boolean;
+
     @Input("rowDetailer")
     public rowDetailer: any;
 
@@ -98,6 +102,9 @@ export class TableViewComponent implements OnInit {
 
 	@Output('onchange')
 	private onchange = new EventEmitter();
+
+	@Output('onfilter')
+	private onfilter = new EventEmitter();
 
 	@ViewChild('flexible', {read: ViewContainerRef}) private table: ViewContainerRef;
 
@@ -125,21 +132,30 @@ export class TableViewComponent implements OnInit {
 				console.log("invalid drop id", source.medium.key, destination.medium.key);
 				return;
 			}
-			const sobj = this.headers[srcIndex];
-			this.headers[srcIndex] = this.headers[desIndex];
-			this.headers[desIndex] = sobj;
+			const x = this.filteredItems;
+			this.filteredItems = [];
+
+			setTimeout(()=>{
+				const sobj = this.headers[srcIndex];
+				this.headers[srcIndex] = this.headers[desIndex];
+				this.headers[desIndex] = sobj;
+				this.filteredItems = x;
+
+				this.onfilter.emit(this.filteredItems);
+				this.onchange.emit(this.headers);
+			}, 33);
 	
-			for (let i = 0; i < this.items.length; i++) {
-				const row = this.items[i];
-				const sobji = row[srcIndex];
-				row[srcIndex] = row[desIndex];
-				row[desIndex] = sobji;
-			}	
-		//	this.onchange.emit(this.headers);
 		} else if (source.medium.locked || destination.medium.locked) {
-			source.medium.locked = !source.medium.locked;
-			destination.medium.locked = !destination.medium.locked;
-			this.onchange.emit(this.headers);
+			const x = this.filteredItems;
+			this.filteredItems = [];
+			this.onfilter.emit(this.filteredItems);
+			setTimeout(()=>{
+				source.medium.locked = !source.medium.locked;
+				destination.medium.locked = !destination.medium.locked;
+				this.filteredItems = x;
+				this.onfilter.emit(this.filteredItems);
+				this.onchange.emit(this.headers);
+			},33);
 		}
 	}
 
@@ -157,10 +173,10 @@ export class TableViewComponent implements OnInit {
 		let subitem = item;
 		hpath.map( (subkey) => {
 			if (subitem) {
-				subitem = subitem[subkey] ? subitem[subkey] : undefined;
+				subitem = subitem[subkey];
 			}
 		})
-		return subitem === undefined || subitem === null || subitem === "null" ? "" : subitem;
+		return subitem === undefined || subitem === null || subitem === "null" ? "" : String(subitem);
 	}
 
 	lock(header: FlexibleTableHeader, event) {
@@ -218,7 +234,12 @@ export class TableViewComponent implements OnInit {
 	ngOnInit() {
 		if (!this.headers) {
 			this.headers = [];
-        }
+		}
+		if (this.enableFiltering) {
+			this.filterItems();
+		} else {
+			this.filteredItems = this.items;
+		}
         if (this.actionKeys) {
             this.actionKeys = this.actionKeys.split(",");
 		}
@@ -296,6 +317,15 @@ export class TableViewComponent implements OnInit {
 		};
 	}
 
+	changeFilter(event, header) {
+        const code = event.which;
+
+		header.filter = event.target.value;
+
+		if (code === 13) {
+			this.filterItems();
+		}
+	}
 	actionClick(event, item: any) {
 		event.stopPropagation();
         if (this.rowDetailer && (this.expandIf || this.expandable(item, false)) ) {
@@ -308,6 +338,53 @@ export class TableViewComponent implements OnInit {
             this.onaction.emit(item);
 		}
 		return false;
+	}
+
+	// <5, !5, >5, *E, E*, *E*
+	private shouldKeepItem(value, filterBy) {
+		let result = false;
+
+		if (value !== undefined && value !== null && value.length) {			
+			if (filterBy[0] === '<') {
+				result = parseFloat(value) < parseFloat(filterBy.substring(1));
+			} else if (filterBy[0] === '>') {
+				result = parseFloat(value) > parseFloat(filterBy.substring(1));
+			} else if (filterBy[0] === '!') {
+				result = parseFloat(value) != parseFloat(filterBy.substring(1));
+			} else if (filterBy[0] === '*' && filterBy[filterBy.length-1] !== '*') {
+				const f = filterBy.substring(1);
+				result = value.toLowerCase().indexOf(f) !== value.length - f.length
+			} else if (filterBy[0] !== '*' && filterBy[filterBy.length-1] === '*') {
+				const f = filterBy.substring(0, filterBy.length-1);
+				result = value.toLowerCase().indexOf(f) !== 0;
+			} else if (filterBy[0] === '*' && filterBy[filterBy.length-1] === '*') {
+				const f = filterBy.substring(1, filterBy.length-1);
+				result = value.toLowerCase().indexOf(f) < 0;
+			} else {
+				result = value.toLowerCase().indexOf(filterBy) < 0;
+			}
+		}
+		return result;
+	}
+	filterItems() {
+		this.filteredItems = this.items.filter((item) => {
+			let keepItem = true;
+
+			for (let i = 0; i < this.headers.length; i++) {
+				const header = this.headers[i];
+				if (header.filter && header.filter.length) {
+					const v2= header.filter.toLowerCase();
+					const v = this.itemValue(item, header.key.split("."));
+
+					if (this.shouldKeepItem(v,v2)) {
+						keepItem = false;
+						break;
+					}
+				}
+			}
+			return keepItem;
+		});
+		this.onfilter.emit(this.filteredItems);
 	}
 
 	onTableCellEdit(event) {

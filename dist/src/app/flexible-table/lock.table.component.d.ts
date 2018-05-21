@@ -4,6 +4,7 @@ export declare class LockTableComponent implements OnInit {
     private renderer;
     lockedHeaders: any;
     unlockedHeaders: any;
+    filteredItems: any[];
     vocabulary: {
         configureTable: string;
         configureColumns: string;
@@ -22,6 +23,7 @@ export declare class LockTableComponent implements OnInit {
     pageInfo: any;
     tableInfo: any;
     configurable: boolean;
+    enableFiltering: boolean;
     enableIndexing: boolean;
     private onaction;
     private onconfigurationchange;
@@ -33,6 +35,8 @@ export declare class LockTableComponent implements OnInit {
     evaluatePositioning(): void;
     reconfigure(event: any): void;
     onlock(event: any): void;
+    changeLockedTableFilteredItems(event: any): void;
+    changeUnlockedTableFilteredItems(event: any): void;
     tableAction(event: any): void;
     onDrop(event: DropEvent): void;
 }
