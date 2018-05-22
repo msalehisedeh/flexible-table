@@ -11,6 +11,7 @@ FlexibleTable is an Angular based code. LockTable will allow you to lock/unlock 
 
 flexible table is now getting more flexible... if you do not supply the headers metadata, smart table will generate it for you. This will be a good way of flushing unknown json into the table and have it displayed.
 In addition, a filtering mechanism is added. If you enable filtering of a column, then you can filter rows based on what is typed in the filter for that columns. You will need to specifically add blank filter (filter: "") atteribute in headers metadata or enable filter for each header through configuration panel. If smart table is generating headers automatically, it will include filters attribute if filtering is enabled. When requesting to filter on a column, you have option of including the following operands:
+
 | Operand  | Example      | Description                                 |
 |----------|--------------|---------------------------------------------|
 | <        | <5           | Perform less than operation                 |
@@ -19,7 +20,7 @@ In addition, a filtering mechanism is added. If you enable filtering of a column
 | =        | =5           | Perform equal to operation                  |
 | *        | *Name        | Perform Ends with operation                 |
 | *        | Name*        | Perform Starts with operation               |
-| *        | \*Name\*     | Perform contains with operation             |
+| *        | * Name*      | Perform contains with operation             |
 |          | Name         | Same as contains with operation             |
 
 
