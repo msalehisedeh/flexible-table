@@ -1,6 +1,6 @@
 {
   "name": "flexible-table",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -13,8 +13,11 @@
   "keywords": [
     "angular 4",
     "table",
+    "grid",
+    "sort",
     "sortable",
-    "paginate",
+    "pagination",
+    "filter",
     "filterable",
     "Drag drop",
     "configurable",

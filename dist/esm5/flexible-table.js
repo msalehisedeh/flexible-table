@@ -259,7 +259,7 @@ var ConfigurationComponent = /** @class */ (function () {
 ConfigurationComponent.decorators = [
     { type: Component, args: [{
                 selector: 'table-configuration',
-                template: "\n<div class=\"shim\"\n    [style.display]=\"showConfigurationView ? 'block':'none'\"\n    (click)=\"showConfigurationView = !showConfigurationView\"></div>\n<a  [attr.tabindex]=\"0\"\n    (keyup)=\"keyup($event)\"\n    (click)=\"showConfigurationView = !showConfigurationView\">\n    <span class=\"icon fa fa-gear\" aria-hidden=\"true\"></span>\n    <span class=\"off-screen\" [textContent]=\"action\"></span>\n</a>\n<ul role=\"list\" [style.display]=\"showConfigurationView ? 'block':'none'\">\n    <p [textContent]=\"title\"></p>\n    <li  *ngFor=\"let header of headers\" role=\"listitem\">\n        <label for=\"{{header.key ? header.key+'f':'f'}}\">\n            <input type=\"checkbox\" #filter\n                    [id]=\"header.key ? header.key+'f':'f'\"\n                    [checked]=\"header.filter !== undefined\"\n                    (keyup)=\"keyup($event)\"\n                    (click)=\"enableFilter(filter, header)\" />\n            <span>Filrer</span>\n        </label>\n        <label for=\"{{header.key ? header.key+'c':'c'}}\">\n            <input type=\"checkbox\" #checkbox\n                    [id]=\"header.key ? header.key+'c':'c'\"\n                    [value]=\"header.key\"\n                    [checked]=\"header.present\"\n                    (keyup)=\"keyup($event)\"\n                    (click)=\"reconfigure(checkbox, header)\" />\n            <span [textContent]=\"header.value\"></span>\n        </label>\n    </li>\n</ul>\n",
+                template: "\n<div class=\"shim\"\n    [style.display]=\"showConfigurationView ? 'block':'none'\"\n    (click)=\"showConfigurationView = !showConfigurationView\"></div>\n<a  [attr.tabindex]=\"0\"\n    (keyup)=\"keyup($event)\"\n    (click)=\"showConfigurationView = !showConfigurationView\">\n    <span class=\"icon fa fa-gear\" aria-hidden=\"true\"></span>\n    <span class=\"off-screen\" [textContent]=\"action\"></span>\n</a>\n<ul role=\"list\" [style.display]=\"showConfigurationView ? 'block':'none'\">\n    <p [textContent]=\"title\"></p>\n    <li  *ngFor=\"let header of headers\" role=\"listitem\">\n        <label for=\"{{header.key ? header.key+'f':'f'}}\">\n            <input type=\"checkbox\" #filter\n                    [id]=\"header.key ? header.key+'f':'f'\"\n                    [checked]=\"header.filter !== undefined\"\n                    (keyup)=\"keyup($event)\"\n                    (click)=\"enableFilter(filter, header)\" />\n            <span>Filrer</span>\n        </label>\n        <label for=\"{{header.key ? header.key+'c':'c'}}\">\n            <input type=\"checkbox\" #checkbox\n                    [id]=\"header.key ? header.key+'c':'c'\"\n                    [value]=\"header.key\"\n                    [checked]=\"header.present\"\n                    (keyup)=\"keyup($event)\"\n                    (click)=\"reconfigure(checkbox, header)\" />\n            <span>Show</span>\n        </label>\n        <span>: </span>\n        <span [textContent]=\"header.value\"></span>\n    </li>\n</ul>\n",
                 styles: [":host{-webkit-box-sizing:border-box;box-sizing:border-box;padding:2px;position:absolute;right:8px;top:18px;z-index:2}:host a{display:block;padding:0;cursor:pointer;z-index:5}:host a .icon{color:#00925b}:host a .off-screen{display:block;text-indent:-9999px;width:0;height:0;overflow:hidden}:host .shim{background-color:rgba(255,255,255,.2);width:100vw;height:100vh;position:fixed;top:0;left:0;z-index:2}:host ul{background-color:#fff;border:1px solid #999;border-radius:4px;display:block;list-style:none;max-height:300px;margin:2px 0;min-width:200px;overflow-y:auto;position:absolute;padding:15px;right:0;-webkit-box-shadow:6px 8px 6px -6px #1b1b1b;box-shadow:6px 8px 6px -6px #1b1b1b;z-index:5}:host ul li{white-space:nowrap}"]
             },] },
 ];
@@ -504,17 +504,20 @@ var TableViewComponent = /** @class */ (function () {
         }
         return false;
     };
-    TableViewComponent.prototype.shouldKeepItem = function (value, filterBy) {
+    TableViewComponent.prototype.shouldSkipItem = function (value, filterBy) {
         var result = false;
         if (value !== undefined && value !== null && value.length) {
             if (filterBy[0] === '<') {
-                result = parseFloat(value) < parseFloat(filterBy.substring(1));
+                result = parseFloat(value) >= parseFloat(filterBy.substring(1));
             }
             else if (filterBy[0] === '>') {
-                result = parseFloat(value) > parseFloat(filterBy.substring(1));
+                result = parseFloat(value) <= parseFloat(filterBy.substring(1));
             }
             else if (filterBy[0] === '!') {
-                result = parseFloat(value) != parseFloat(filterBy.substring(1));
+                result = parseFloat(value) == parseFloat(filterBy.substring(1));
+            }
+            else if (filterBy[0] === '=') {
+                result = parseFloat(value) !== parseFloat(filterBy.substring(1));
             }
             else if (filterBy[0] === '*' && filterBy[filterBy.length - 1] !== '*') {
                 var f = filterBy.substring(1);
@@ -543,7 +546,7 @@ var TableViewComponent = /** @class */ (function () {
                 if (header.filter && header.filter.length) {
                     var v2 = header.filter.toLowerCase();
                     var v = _this.itemValue(item, header.key.split("."));
-                    if (_this.shouldKeepItem(v, v2)) {
+                    if (_this.shouldSkipItem(v, v2)) {
                         keepItem = false;
                         break;
                     }

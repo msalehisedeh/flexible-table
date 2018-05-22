@@ -24,7 +24,7 @@ export interface FlexibleTableHeader {
 	width?: string,
 	format?: string,
 	filter?: string,
-	dragable?: boolean
+	dragable?: boolean,
 	sortable?: boolean,
 	class?:string,
 	locked?:boolean,
@@ -341,16 +341,18 @@ export class TableViewComponent implements OnInit {
 	}
 
 	// <5, !5, >5, *E, E*, *E*
-	private shouldKeepItem(value, filterBy) {
+	private shouldSkipItem(value, filterBy) {
 		let result = false;
 
 		if (value !== undefined && value !== null && value.length) {			
 			if (filterBy[0] === '<') {
-				result = parseFloat(value) < parseFloat(filterBy.substring(1));
+				result = parseFloat(value) >= parseFloat(filterBy.substring(1));
 			} else if (filterBy[0] === '>') {
-				result = parseFloat(value) > parseFloat(filterBy.substring(1));
+				result = parseFloat(value) <= parseFloat(filterBy.substring(1));
 			} else if (filterBy[0] === '!') {
-				result = parseFloat(value) != parseFloat(filterBy.substring(1));
+				result = parseFloat(value) == parseFloat(filterBy.substring(1));
+			} else if (filterBy[0] === '=') {
+				result = parseFloat(value) !== parseFloat(filterBy.substring(1));
 			} else if (filterBy[0] === '*' && filterBy[filterBy.length-1] !== '*') {
 				const f = filterBy.substring(1);
 				result = value.toLowerCase().indexOf(f) !== value.length - f.length
@@ -376,7 +378,7 @@ export class TableViewComponent implements OnInit {
 					const v2= header.filter.toLowerCase();
 					const v = this.itemValue(item, header.key.split("."));
 
-					if (this.shouldKeepItem(v,v2)) {
+					if (this.shouldSkipItem(v,v2)) {
 						keepItem = false;
 						break;
 					}

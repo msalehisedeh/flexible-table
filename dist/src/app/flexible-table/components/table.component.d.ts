@@ -69,7 +69,7 @@ export declare class TableViewComponent implements OnInit {
     };
     changeFilter(event: any, header: any): void;
     actionClick(event: any, item: any): boolean;
-    private shouldKeepItem(value, filterBy);
+    private shouldSkipItem(value, filterBy);
     filterItems(): void;
     onTableCellEdit(event: any): void;
     dragEnabled(event: DragEvent): any;

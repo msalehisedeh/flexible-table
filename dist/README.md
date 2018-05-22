@@ -10,22 +10,52 @@ FlexibleTable is an Angular based code. LockTable will allow you to lock/unlock 
 # Version 1.2.0
 
 flexible table is now getting more flexible... if you do not supply the headers metadata, smart table will generate it for you. This will be a good way of flushing unknown json into the table and have it displayed.
-In addition, a filtering mechanism is added. If you enable filtering of a column, then you can filter rows based on what is typed in the filter for that columns. You will need to specifically add blank filter atteribute in headers metadata or enable filter for each header through configuration panel. If smart rable is generating headers automatically, it will include filters attribute if filtering is enabled. When requesting to filter on a column, you have option of including the following operands:
+In addition, a filtering mechanism is added. If you enable filtering of a column, then you can filter rows based on what is typed in the filter for that columns. You will need to specifically add blank filter (filter: "") atteribute in headers metadata or enable filter for each header through configuration panel. If smart table is generating headers automatically, it will include filters attribute if filtering is enabled. When requesting to filter on a column, you have option of including the following operands:
 | Operand  | Example      | Description                                 |
 |----------|--------------|---------------------------------------------|
 | <        | <5           | Perform less than operation                 |
 | >        | >5           | Perform greater than operation              |
 | !        | !5           | Perform not equal operation                 |
+| =        | =5           | Perform equal to operation                  |
 | *        | *Name        | Perform Ends with operation                 |
 | *        | Name*        | Perform Starts with operation               |
-| *        | *Name*       | Perform contains with operation             |
-|          | Name         | Perform equals operation                    |
+| *        | \*Name\*     | Perform contains with operation             |
+|          | Name         | Same as contains with operation             |
+
+
+```javascript
+<flexible-table 
+      caption="total records found {{unknownJsonList.length}}" 
+      enableFiltering="true"
+      enableIndexing="true"
+      configurable="true"
+      [items]="unknownJsonList"
+      [pageInfo]="pageInfo"
+      (onconfigurationchange)="onconfigurationchange($event)"
+      (onaction)="onaction($event)"></flexible-table>
+```
+
+And the header metadata will be:
+```javascript
+FlexibleTableHeader {
+	key: string,       // JSON path to a value
+	value: string,     // column textual representation of JSON attribute
+	present: boolean,  // If the column should be displayed or not
+	width?: string,    // column width
+	format?: string,   // formatting instruction
+	filter?: string,   // filter 
+	dragable?: boolean,// should be dragged or accept a dragged column
+	sortable?: boolean,// should sort
+	class?:string,     // CSS class representing the column
+	locked?:boolean    // If column is locked in a lock table.
+}
+```
 
 # Version 1.1.0
 
 With this release you will be able to make table cells editable / interactable.. For more information read into-pipes documentation.
 
-```
+```javascript
 MODULE:
   FlexibleTableModule
 
@@ -43,7 +73,7 @@ DEPENDENCIES:
 
 Good news. With this release you will have access to lockable table!!
 
-```
+```javascript
 MODULE:
   FlexibleTableModule
 
@@ -81,7 +111,7 @@ DEPENDENCIES:
 |onconfigurationchange |Will be called when user selects to hide/unhide some of headers on configuration popup          |
 
 Sample table tag in your HTML content:
-```
+```javascript
 <lock-table 
       caption="total records found {{users.length}}" 
       action="View details of %name% where ID is %id%"
@@ -102,7 +132,7 @@ Sample table tag in your HTML content:
 
 This release is basically performance improvements and internal arangement of components to make it possible to provide additional functionalities which will be released soon. 
 
-```
+```javascript
 MODULE:
   FlexibleTableModule
 
@@ -116,7 +146,7 @@ DEPENDENCIES:
 
 The following are available functionalities presented in this version. 
 
-```
+```javascript
 MODULE:
   FlexibleTableModule
 
@@ -171,7 +201,7 @@ It is very simple. You have a JSON data to display and you want to allow user to
 All you will need is to add a header JSON and you are set to get the job done. That simple!!
 
 Let's say you have the following data to be displayed:
-```
+```javascript
 {
   "guid": "701134c1-82cd-4f24-a867-f896350643f9",
   "isActive": false,
@@ -223,7 +253,7 @@ Let's say you have the following data to be displayed:
 ```
 
 And you want user ID, name, username, the city he/she lives in, and the company works for. All you need is to map your data as it follows:
-```
+```javascript
 [
 	  {key: "name",value: "Name",present: true, dragable:true, sortable: true},  
 	  {key: "isActive",value: "Active",present: true, dragable:true, sortable: true, format: "if:~:true:\"font:fa fa-check:replace\":\"\""},
@@ -237,7 +267,7 @@ The above will instruct the table to make the mentioned columns visible and sort
 For example: "format: 'date:MM/dd/yyyy'" or "format: 'currency'"
 
 Now you need to set the **Pagination** data To something like:
-```
+```javascript
 {
 	pageSize:8,
 	currentPage:1,
@@ -248,7 +278,7 @@ Now you need to set the **Pagination** data To something like:
 ```
 
 **AND** pagination data should re-evaluate contentSize immediately when data items are available
-```
+```javascript
 	this.service.usersList().subscribe(
     	(users) => {
         	this.users = users.json();
@@ -258,7 +288,7 @@ Now you need to set the **Pagination** data To something like:
 ```
 
 Now you need to set the table tag in your HTML content:
-```
+```javascript
 <flexible-table 
       *ngIf="users" 
       caption="total records found {{users.length}}" 

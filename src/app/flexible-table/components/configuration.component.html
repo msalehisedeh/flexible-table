@@ -26,7 +26,9 @@
                     [checked]="header.present"
                     (keyup)="keyup($event)"
                     (click)="reconfigure(checkbox, header)" />
-            <span [textContent]="header.value"></span>
+            <span>Show</span>
         </label>
+        <span>: </span>
+        <span [textContent]="header.value"></span>
     </li>
 </ul>

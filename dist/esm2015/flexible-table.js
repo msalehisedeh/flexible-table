@@ -455,8 +455,10 @@ ConfigurationComponent.decorators = [
                     [checked]="header.present"
                     (keyup)="keyup($event)"
                     (click)="reconfigure(checkbox, header)" />
-            <span [textContent]="header.value"></span>
+            <span>Show</span>
         </label>
+        <span>: </span>
+        <span [textContent]="header.value"></span>
     </li>
 </ul>
 `,
@@ -797,17 +799,20 @@ class TableViewComponent {
      * @param {?} filterBy
      * @return {?}
      */
-    shouldKeepItem(value, filterBy) {
+    shouldSkipItem(value, filterBy) {
         let /** @type {?} */ result = false;
         if (value !== undefined && value !== null && value.length) {
             if (filterBy[0] === '<') {
-                result = parseFloat(value) < parseFloat(filterBy.substring(1));
+                result = parseFloat(value) >= parseFloat(filterBy.substring(1));
             }
             else if (filterBy[0] === '>') {
-                result = parseFloat(value) > parseFloat(filterBy.substring(1));
+                result = parseFloat(value) <= parseFloat(filterBy.substring(1));
             }
             else if (filterBy[0] === '!') {
-                result = parseFloat(value) != parseFloat(filterBy.substring(1));
+                result = parseFloat(value) == parseFloat(filterBy.substring(1));
+            }
+            else if (filterBy[0] === '=') {
+                result = parseFloat(value) !== parseFloat(filterBy.substring(1));
             }
             else if (filterBy[0] === '*' && filterBy[filterBy.length - 1] !== '*') {
                 const /** @type {?} */ f = filterBy.substring(1);
@@ -838,7 +843,7 @@ class TableViewComponent {
                 if (header.filter && header.filter.length) {
                     const /** @type {?} */ v2 = header.filter.toLowerCase();
                     const /** @type {?} */ v = this.itemValue(item, header.key.split("."));
-                    if (this.shouldKeepItem(v, v2)) {
+                    if (this.shouldSkipItem(v, v2)) {
                         keepItem = false;
                         break;
                     }
