@@ -35,7 +35,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngIf="enableFiltering">
+        <tr *ngIf="enableFiltering && items && items.length">
             <td scope="row" *ngIf="enableIndexing" class="index filter">
                 <input type="text" disabled style="opacity:0" />
             </td>

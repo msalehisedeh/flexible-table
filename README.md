@@ -338,3 +338,22 @@ You will also need to implement a few functions
 
 ![alt text](https://raw.githubusercontent.com/msalehisedeh/flexible-table/master/sample.png  "What you would see when a flexible table is used")
 
+
+### How to include font-awesome in your project?
+
+In your project root folder, find and open the file 'angular-cli.json' in any editor 
+Locate the styles[] array and add font-awesome references directory. like:
+
+```javascript
+"apps": 
+	[
+        {
+            ....
+            "styles": [
+              "../node_modules/font-awesome/css/font-awesome.css"
+              "styles.css"
+            ],
+            ...
+        }
+    ]
+```

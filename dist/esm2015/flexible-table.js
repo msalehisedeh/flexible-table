@@ -231,7 +231,15 @@ class PaginationComponent {
      */
     ngOnInit() {
         if (!this.info) {
-            this.info = { contentSize: 1000, pageSize: 1000, maxWidth: "0" };
+            this.info = {
+                contentSize: 1000,
+                pageSize: 1000,
+                pages: 1,
+                from: 0,
+                to: 1000,
+                currentPage: 1,
+                maxWidth: "0"
+            };
         }
         if (this.info.contentSize && this.info.pageSize) {
             this.info.pages = Math.ceil(this.info.contentSize / this.info.pageSize);
@@ -629,7 +637,7 @@ class TableViewComponent {
                 icon.classList.add("fa-sort-asc");
             }
             const /** @type {?} */ hpath = header.key.split(".");
-            this.items.sort((a, b) => {
+            this.filteredItems.sort((a, b) => {
                 const /** @type {?} */ v1 = this.itemValue(a, hpath);
                 const /** @type {?} */ v2 = this.itemValue(b, hpath);
                 if (header.ascending) {
@@ -646,9 +654,31 @@ class TableViewComponent {
         return this.table.element.nativeElement.offsetWidth;
     }
     /**
+     * @param {?} changes
+     * @return {?}
+     */
+    ngOnChanges(changes) {
+        if (changes === this.items) {
+            if (this.enableFiltering) {
+                //				this.filterItems();
+            }
+        }
+    }
+    /**
      * @return {?}
      */
     ngOnInit() {
+        if (!this.pageInfo) {
+            this.pageInfo = {
+                contentSize: 1000,
+                pageSize: 1000,
+                pages: 1,
+                from: 0,
+                to: 1000,
+                currentPage: 1,
+                maxWidth: "0"
+            };
+        }
         if (!this.headers) {
             this.headers = [];
         }
@@ -677,8 +707,12 @@ class TableViewComponent {
      * @return {?}
      */
     headerColumnElements() {
-        return this.table.element.nativeElement.children ?
-            this.table.element.nativeElement.children[1].children[0].children : [];
+        let /** @type {?} */ result = [];
+        if (this.table.element.nativeElement.children) {
+            const /** @type {?} */ list = this.table.element.nativeElement.children;
+            result = this.caption ? list[1].children[0].children : list[0].children[0].children;
+        }
+        return result;
     }
     /**
      * @param {?} id
@@ -803,16 +837,16 @@ class TableViewComponent {
         let /** @type {?} */ result = false;
         if (value !== undefined && value !== null && value.length) {
             if (filterBy[0] === '<') {
-                result = parseFloat(value) >= parseFloat(filterBy.substring(1));
+                result = parseFloat(value) < parseFloat(filterBy.substring(1));
             }
             else if (filterBy[0] === '>') {
-                result = parseFloat(value) <= parseFloat(filterBy.substring(1));
+                result = parseFloat(value) > parseFloat(filterBy.substring(1));
             }
             else if (filterBy[0] === '!') {
-                result = parseFloat(value) == parseFloat(filterBy.substring(1));
+                result = parseFloat(value) != parseFloat(filterBy.substring(1));
             }
             else if (filterBy[0] === '=') {
-                result = parseFloat(value) !== parseFloat(filterBy.substring(1));
+                result = parseFloat(value) == parseFloat(filterBy.substring(1));
             }
             else if (filterBy[0] === '*' && filterBy[filterBy.length - 1] !== '*') {
                 const /** @type {?} */ f = filterBy.substring(1);
@@ -949,7 +983,7 @@ TableViewComponent.decorators = [
         </tr>
     </thead>
     <tbody>
-        <tr *ngIf="enableFiltering">
+        <tr *ngIf="enableFiltering && items && items.length">
             <td scope="row" *ngIf="enableIndexing" class="index filter">
                 <input type="text" disabled style="opacity:0" />
             </td>

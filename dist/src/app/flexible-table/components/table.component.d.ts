@@ -1,4 +1,4 @@
-import { OnInit, ElementRef } from '@angular/core';
+import { OnInit, OnChanges, ElementRef } from '@angular/core';
 import { DropEvent, DragEvent } from 'drag-enabled';
 export interface FlexibleTableHeader {
     key: string;
@@ -14,7 +14,7 @@ export interface FlexibleTableHeader {
     ascending?: boolean;
     descending?: boolean;
 }
-export declare class TableViewComponent implements OnInit {
+export declare class TableViewComponent implements OnInit, OnChanges {
     el: ElementRef;
     dragging: boolean;
     filteredItems: any[];
@@ -54,8 +54,9 @@ export declare class TableViewComponent implements OnInit {
     lock(header: FlexibleTableHeader, event: any): void;
     sort(header: FlexibleTableHeader, icon: any): void;
     offsetWidth(): any;
+    ngOnChanges(changes: any): void;
     ngOnInit(): void;
-    headerColumnElements(): any;
+    headerColumnElements(): any[];
     headerById(id: any): any;
     columnsCount(): number;
     hover(item: any, flag: any): void;

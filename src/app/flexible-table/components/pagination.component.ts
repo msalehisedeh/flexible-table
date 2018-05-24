@@ -35,7 +35,15 @@ export class PaginationComponent implements OnInit {
 
 	ngOnInit() {
 		if (!this.info) {
-			this.info = { contentSize: 1000, pageSize: 1000, maxWidth: "0" };
+			this.info = { 
+                contentSize: 1000, 
+                pageSize: 1000, 
+                pages: 1, 
+                from: 0, 
+                to: 1000, 
+                currentPage: 1, 
+                maxWidth: "0" 
+            };
 		}
 		if (this.info.contentSize && this.info.pageSize) {
 			this.info.pages = Math.ceil(this.info.contentSize / this.info.pageSize);

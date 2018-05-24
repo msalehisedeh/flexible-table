@@ -11,6 +11,7 @@ import {
 	ViewChild,
 	ViewContainerRef,
 	OnInit,
+	OnChanges,
 	EventEmitter,
 	ElementRef
 } from '@angular/core';
@@ -37,7 +38,7 @@ export interface FlexibleTableHeader {
 	templateUrl: './table.component.html',
 	styleUrls: ['./table.component.scss']
 })
-export class TableViewComponent implements OnInit {
+export class TableViewComponent implements OnInit, OnChanges {
 	dragging = false;
 	filteredItems = [];
 
@@ -215,7 +216,7 @@ export class TableViewComponent implements OnInit {
 				icon.classList.add("fa-sort-asc");
 			}
 			const hpath = header.key.split(".");
-			this.items.sort((a, b) => {
+			this.filteredItems.sort((a, b) => {
 				const v1 = this.itemValue(a, hpath);
 				const v2 = this.itemValue(b, hpath);
 
@@ -231,7 +232,26 @@ export class TableViewComponent implements OnInit {
 		return this.table.element.nativeElement.offsetWidth;
 	}
 
+	ngOnChanges(changes:any) {
+		if (changes === this.items) {
+			if (this.enableFiltering) {
+//				this.filterItems();
+			}
+		}
+	}
+
 	ngOnInit() {
+		if (!this.pageInfo) {
+			this.pageInfo = { 
+                contentSize: 1000, 
+                pageSize: 1000, 
+                pages: 1, 
+                from: 0, 
+                to: 1000, 
+                currentPage: 1, 
+                maxWidth: "0" 
+            };
+		}
 		if (!this.headers) {
 			this.headers = [];
 		}
@@ -257,8 +277,13 @@ export class TableViewComponent implements OnInit {
 	}
 
     headerColumnElements() {
-		return this.table.element.nativeElement.children ?
-				this.table.element.nativeElement.children[1].children[0].children : [];
+		let result = [];
+
+		if (this.table.element.nativeElement.children) {
+			const list = this.table.element.nativeElement.children;
+			result = this.caption ? list[1].children[0].children : list[0].children[0].children;
+		}
+		return result;
     }
 
 	headerById(id) {
@@ -346,13 +371,13 @@ export class TableViewComponent implements OnInit {
 
 		if (value !== undefined && value !== null && value.length) {			
 			if (filterBy[0] === '<') {
-				result = parseFloat(value) >= parseFloat(filterBy.substring(1));
+				result = parseFloat(value) < parseFloat(filterBy.substring(1));
 			} else if (filterBy[0] === '>') {
-				result = parseFloat(value) <= parseFloat(filterBy.substring(1));
+				result = parseFloat(value) > parseFloat(filterBy.substring(1));
 			} else if (filterBy[0] === '!') {
-				result = parseFloat(value) == parseFloat(filterBy.substring(1));
+				result = parseFloat(value) != parseFloat(filterBy.substring(1));
 			} else if (filterBy[0] === '=') {
-				result = parseFloat(value) !== parseFloat(filterBy.substring(1));
+				result = parseFloat(value) == parseFloat(filterBy.substring(1));
 			} else if (filterBy[0] === '*' && filterBy[filterBy.length-1] !== '*') {
 				const f = filterBy.substring(1);
 				result = value.toLowerCase().indexOf(f) !== value.length - f.length
