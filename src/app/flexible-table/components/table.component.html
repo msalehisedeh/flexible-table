@@ -3,7 +3,7 @@
     <caption *ngIf="caption" [textContent]="caption"></caption>
     <thead>
         <tr>
-            <th scope="col" *ngIf="enableIndexing" id="indexable" class="indexable"></th>
+            <th scope="col" *ngIf="enableIndexing && !printMode" id="indexable" class="indexable"></th>
             <th scope="col" *ngFor="let header of headers"
                 [dragEnabled]="dragEnabled.bind(this)"
                 [dropEnabled]="dropEnabled.bind(this)"
@@ -15,9 +15,9 @@
                 [attr.width]="header.width ? header.width : null" 
                 [attr.tabindex]="header.sortable ? 0 : -1"
                 (keydown)="keydown($event, th)" (click)="sort(header, icon)">
-                <span *ngIf="header.sortable" class="off-screen"  [textContent]="vocabulary.clickSort"></span>
+                <span *ngIf="!printMode && header.sortable" class="off-screen"  [textContent]="vocabulary.clickSort"></span>
                 <span class="locker icon fa" #locker
-                        *ngIf="lockable && (headers.length > 1 || header.locked)"
+                        *ngIf="!printMode && lockable && (headers.length > 1 || header.locked)"
                         tabindex="0"
                         title="lock/unlock this column"
                         (keydown)="keydown($event, locker)" (click)="lock(header, $event)"
@@ -26,17 +26,18 @@
                 <span class="title"
                         [class.dragable]="header.dragable"
                         [textContent]="header.value"></span>
-                <span class="icon fa" #icon
+                <span class="icon fa" 
+                        *ngIf="!printMode && items && items.length" #icon
                         [class.fa-sort]="header.sortable"
                         [class.fa-sort-asc]="header.assending"
                         [class.fa-sort-desc]="header.desending"></span>
             </th>
-            <th scope="col" *ngIf="action" id="actionable" class="actionable"></th>
+            <th scope="col" *ngIf="action && !printMode" id="actionable" class="actionable"></th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngIf="enableFiltering && items && items.length">
-            <td scope="row" *ngIf="enableIndexing" class="index filter">
+        <tr *ngIf="!printMode && enableFiltering && items && items.length">
+            <td scope="row" *ngIf="enableIndexing && !printMode" class="index filter">
                 <input type="text" disabled style="opacity:0" />
             </td>
             <td scope="row" *ngFor="let header of headers; let i=index" class="filter">
@@ -48,7 +49,7 @@
                         [value]="header.filter ? header.filter : ''" />
                 <label *ngIf="header.filter !== undefined" for="filter-{{i}}" ><span class="off-screen" >Filter "{{header.value}}"</span><span class="fa fa-search"></span></label>
             </td>
-            <td scope="row" *ngIf="action"></td>
+            <td scope="row" *ngIf="action && !printMode"></td>
         </tr>
        <ng-template ngFor let-item [ngForOf]="filteredItems" let-i="index">
             <tr *ngIf="i >= pageInfo.from && i <= pageInfo.to "
@@ -59,7 +60,7 @@
                 [class.hover]="item.hover"
                 [class.expanded]="item.expanded"
                 [class.odd]="i%2">
-                <td scope="row" class="index" *ngIf="enableIndexing">{{i + 1}}</td>
+                <td scope="row" class="index" *ngIf="enableIndexing && !printMode">{{i + 1}}</td>
                 <td scope="row" 
                     *ngFor="let header of headers" 
                     [attr.data-label]="header.value" 
@@ -68,7 +69,7 @@
                     [into]="header.format"
                     [rawContent]="cellContent(item, header)"
                     [onComponentChange]="onTableCellEdit.bind(this)"></td>
-                <td scope="row" *ngIf="action">
+                <td scope="row" *ngIf="action && !printMode">
                     <a class="actionable"
                         *ngIf="expandable(item, true)"
                         tabindex="0"
@@ -87,7 +88,7 @@
                 </td>
             </tr>
             <tr *ngIf="rowDetailer && item.expanded" class="detail" [class.odd]="i%2">
-                <td scope="row" class="index" *ngIf="enableIndexing"></td>
+                <td scope="row" class="index" *ngIf="enableIndexing && !printMode"></td>
                 <td [attr.colspan]="columnsCount()">
                     <ng-container [ngTemplateOutlet]="rowDetailer" [ngTemplateOutletContext]="rowDetailerContext(item)"></ng-container>
                 </td>

@@ -10,7 +10,6 @@
 </div>
 <div class="smart-table-wrap" (scroll)="scroll($event)">
 	<table-view #lockedTable
-		*ngIf="items" 
 		class="locked-table"
 		lockable="true"
 		[headers]="lockedHeaders" 
@@ -27,7 +26,6 @@
 		(onaction)="tableAction($event)"></table-view>
 
     <table-view #unlockedTable
-		*ngIf="items" 
 		class="unlocked-table"
 		lockable="true"
 		[headers]="unlockedHeaders" 

@@ -89,6 +89,7 @@ TableHeadersGenerator.ctorParameters = () => [];
 class FlexibleTableComponent {
     constructor() {
         this.vocabulary = {
+            printTable: "Print Table",
             configureTable: "Configure Table",
             configureColumns: "Configure Columns",
             clickSort: "Click to Sort",
@@ -160,10 +161,11 @@ FlexibleTableComponent.decorators = [
         *ngIf="configurable"
         [headers]="headers"
         [title]="vocabulary.configureColumns"
+        [printTable]="vocabulary.printTable"
         [action]="vocabulary.configureTable"
+        (onprint)="viewTable.print()"
         (onchange)="reconfigure($event)"></table-configuration>
-    <table-view
-		*ngIf="items"
+    <table-view #viewTable
         [action]="action"
         [actionKeys]="actionKeys"
 		[tableClass]="tableClass"
@@ -397,6 +399,7 @@ PaginationComponent.propDecorators = {
 class ConfigurationComponent {
     constructor() {
         this.onchange = new EventEmitter();
+        this.onprint = new EventEmitter();
     }
     /**
      * @param {?} item
@@ -425,6 +428,13 @@ class ConfigurationComponent {
      * @param {?} event
      * @return {?}
      */
+    print(event) {
+        this.onprint.emit(true);
+    }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
     keyup(event) {
         const /** @type {?} */ code = event.which;
         if (code === 13) {
@@ -439,6 +449,12 @@ ConfigurationComponent.decorators = [
 <div class="shim"
     [style.display]="showConfigurationView ? 'block':'none'"
     (click)="showConfigurationView = !showConfigurationView"></div>
+<a  [attr.tabindex]="0" *ngIf="printTable"
+    (keyup)="keyup($event)"
+    (click)="print($event)">
+    <span class="icon fa fa-print" aria-hidden="true"></span>
+    <span class="off-screen" [textContent]="print"></span>
+</a>
 <a  [attr.tabindex]="0"
     (keyup)="keyup($event)"
     (click)="showConfigurationView = !showConfigurationView">
@@ -470,7 +486,7 @@ ConfigurationComponent.decorators = [
     </li>
 </ul>
 `,
-                styles: [`:host{-webkit-box-sizing:border-box;box-sizing:border-box;padding:2px;position:absolute;right:8px;top:18px;z-index:2}:host a{display:block;padding:0;cursor:pointer;z-index:5}:host a .icon{color:#00925b}:host a .off-screen{display:block;text-indent:-9999px;width:0;height:0;overflow:hidden}:host .shim{background-color:rgba(255,255,255,.2);width:100vw;height:100vh;position:fixed;top:0;left:0;z-index:2}:host ul{background-color:#fff;border:1px solid #999;border-radius:4px;display:block;list-style:none;max-height:300px;margin:2px 0;min-width:200px;overflow-y:auto;position:absolute;padding:15px;right:0;-webkit-box-shadow:6px 8px 6px -6px #1b1b1b;box-shadow:6px 8px 6px -6px #1b1b1b;z-index:5}:host ul li{white-space:nowrap}`]
+                styles: [`:host{-webkit-box-sizing:border-box;box-sizing:border-box;padding:2px;position:absolute;right:8px;top:18px;z-index:2}:host a{display:block;float:left;padding:0 0 0 10px;cursor:pointer;z-index:5}:host a .icon{color:#00925b}:host a .off-screen{display:block;text-indent:-9999px;width:0;height:0;overflow:hidden}:host .shim{background-color:rgba(255,255,255,.2);width:100vw;height:100vh;position:fixed;top:0;left:0;z-index:2}:host ul{background-color:#fff;border:1px solid #999;border-radius:4px;display:block;list-style:none;max-height:300px;margin:2px 0;min-width:200px;overflow-y:auto;position:absolute;padding:15px;right:0;-webkit-box-shadow:6px 8px 6px -6px #1b1b1b;box-shadow:6px 8px 6px -6px #1b1b1b;z-index:5}:host ul li{white-space:nowrap}`]
             },] },
 ];
 /** @nocollapse */
@@ -478,8 +494,10 @@ ConfigurationComponent.ctorParameters = () => [];
 ConfigurationComponent.propDecorators = {
     "title": [{ type: Input, args: ["title",] },],
     "action": [{ type: Input, args: ["action",] },],
+    "printTable": [{ type: Input, args: ["printTable",] },],
     "headers": [{ type: Input, args: ["headers",] },],
     "onchange": [{ type: Output, args: ['onchange',] },],
+    "onprint": [{ type: Output, args: ['onprint',] },],
 };
 
 /**
@@ -497,6 +515,7 @@ class TableViewComponent {
     constructor(el) {
         this.el = el;
         this.dragging = false;
+        this.printMode = false;
         this.filteredItems = [];
         this.vocabulary = {
             configureTable: "Configure Table",
@@ -609,7 +628,7 @@ class TableViewComponent {
      * @return {?}
      */
     sort(header, icon) {
-        if (header.sortable) {
+        if (header.sortable && this.items && this.items.length) {
             for (let /** @type {?} */ i = 0; i < this.headers.length; i++) {
                 const /** @type {?} */ h = this.headers[i];
                 if (h.key !== header.key) {
@@ -658,9 +677,14 @@ class TableViewComponent {
      * @return {?}
      */
     ngOnChanges(changes) {
-        if (changes === this.items) {
+        if (changes.items) {
             if (this.enableFiltering) {
-                //				this.filterItems();
+                if (this.enableFiltering) {
+                    this.filterItems();
+                }
+                else {
+                    this.filteredItems = this.items;
+                }
             }
         }
     }
@@ -829,6 +853,31 @@ class TableViewComponent {
         return false;
     }
     /**
+     * @return {?}
+     */
+    print() {
+        const /** @type {?} */ oldInfo = this.pageInfo;
+        this.pageInfo = {
+            contentSize: 1000,
+            pageSize: 1000,
+            pages: 1,
+            from: 0,
+            to: 1000,
+            currentPage: 1,
+            maxWidth: "0"
+        };
+        this.printMode = true;
+        setTimeout(() => {
+            const /** @type {?} */ content = this.el.nativeElement.innerHTML;
+            this.printMode = false;
+            this.pageInfo = oldInfo;
+            const /** @type {?} */ popupWin = window.open('', '_blank', 'width=300,height=300');
+            popupWin.document.open();
+            popupWin.document.write('<html><body onload="window.print()">' + content + '</html>');
+            popupWin.document.close();
+        }, 3);
+    }
+    /**
      * @param {?} value
      * @param {?} filterBy
      * @return {?}
@@ -837,16 +886,16 @@ class TableViewComponent {
         let /** @type {?} */ result = false;
         if (value !== undefined && value !== null && value.length) {
             if (filterBy[0] === '<') {
-                result = parseFloat(value) < parseFloat(filterBy.substring(1));
+                result = parseFloat(value) >= parseFloat(filterBy.substring(1));
             }
             else if (filterBy[0] === '>') {
-                result = parseFloat(value) > parseFloat(filterBy.substring(1));
+                result = parseFloat(value) <= parseFloat(filterBy.substring(1));
             }
             else if (filterBy[0] === '!') {
-                result = parseFloat(value) != parseFloat(filterBy.substring(1));
+                result = parseFloat(value) == parseFloat(filterBy.substring(1));
             }
             else if (filterBy[0] === '=') {
-                result = parseFloat(value) == parseFloat(filterBy.substring(1));
+                result = parseFloat(value) !== parseFloat(filterBy.substring(1));
             }
             else if (filterBy[0] === '*' && filterBy[filterBy.length - 1] !== '*') {
                 const /** @type {?} */ f = filterBy.substring(1);
@@ -951,7 +1000,7 @@ TableViewComponent.decorators = [
     <caption *ngIf="caption" [textContent]="caption"></caption>
     <thead>
         <tr>
-            <th scope="col" *ngIf="enableIndexing" id="indexable" class="indexable"></th>
+            <th scope="col" *ngIf="enableIndexing && !printMode" id="indexable" class="indexable"></th>
             <th scope="col" *ngFor="let header of headers"
                 [dragEnabled]="dragEnabled.bind(this)"
                 [dropEnabled]="dropEnabled.bind(this)"
@@ -963,9 +1012,9 @@ TableViewComponent.decorators = [
                 [attr.width]="header.width ? header.width : null"
                 [attr.tabindex]="header.sortable ? 0 : -1"
                 (keydown)="keydown($event, th)" (click)="sort(header, icon)">
-                <span *ngIf="header.sortable" class="off-screen"  [textContent]="vocabulary.clickSort"></span>
+                <span *ngIf="!printMode && header.sortable" class="off-screen"  [textContent]="vocabulary.clickSort"></span>
                 <span class="locker icon fa" #locker
-                        *ngIf="lockable && (headers.length > 1 || header.locked)"
+                        *ngIf="!printMode && lockable && (headers.length > 1 || header.locked)"
                         tabindex="0"
                         title="lock/unlock this column"
                         (keydown)="keydown($event, locker)" (click)="lock(header, $event)"
@@ -974,17 +1023,18 @@ TableViewComponent.decorators = [
                 <span class="title"
                         [class.dragable]="header.dragable"
                         [textContent]="header.value"></span>
-                <span class="icon fa" #icon
+                <span class="icon fa"
+                        *ngIf="!printMode && items && items.length" #icon
                         [class.fa-sort]="header.sortable"
                         [class.fa-sort-asc]="header.assending"
                         [class.fa-sort-desc]="header.desending"></span>
             </th>
-            <th scope="col" *ngIf="action" id="actionable" class="actionable"></th>
+            <th scope="col" *ngIf="action && !printMode" id="actionable" class="actionable"></th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngIf="enableFiltering && items && items.length">
-            <td scope="row" *ngIf="enableIndexing" class="index filter">
+        <tr *ngIf="!printMode && enableFiltering && items && items.length">
+            <td scope="row" *ngIf="enableIndexing && !printMode" class="index filter">
                 <input type="text" disabled style="opacity:0" />
             </td>
             <td scope="row" *ngFor="let header of headers; let i=index" class="filter">
@@ -996,7 +1046,7 @@ TableViewComponent.decorators = [
                         [value]="header.filter ? header.filter : ''" />
                 <label *ngIf="header.filter !== undefined" for="filter-{{i}}" ><span class="off-screen" >Filter "{{header.value}}"</span><span class="fa fa-search"></span></label>
             </td>
-            <td scope="row" *ngIf="action"></td>
+            <td scope="row" *ngIf="action && !printMode"></td>
         </tr>
        <ng-template ngFor let-item [ngForOf]="filteredItems" let-i="index">
             <tr *ngIf="i >= pageInfo.from && i <= pageInfo.to "
@@ -1007,7 +1057,7 @@ TableViewComponent.decorators = [
                 [class.hover]="item.hover"
                 [class.expanded]="item.expanded"
                 [class.odd]="i%2">
-                <td scope="row" class="index" *ngIf="enableIndexing">{{i + 1}}</td>
+                <td scope="row" class="index" *ngIf="enableIndexing && !printMode">{{i + 1}}</td>
                 <td scope="row"
                     *ngFor="let header of headers"
                     [attr.data-label]="header.value"
@@ -1016,7 +1066,7 @@ TableViewComponent.decorators = [
                     [into]="header.format"
                     [rawContent]="cellContent(item, header)"
                     [onComponentChange]="onTableCellEdit.bind(this)"></td>
-                <td scope="row" *ngIf="action">
+                <td scope="row" *ngIf="action && !printMode">
                     <a class="actionable"
                         *ngIf="expandable(item, true)"
                         tabindex="0"
@@ -1035,7 +1085,7 @@ TableViewComponent.decorators = [
                 </td>
             </tr>
             <tr *ngIf="rowDetailer && item.expanded" class="detail" [class.odd]="i%2">
-                <td scope="row" class="index" *ngIf="enableIndexing"></td>
+                <td scope="row" class="index" *ngIf="enableIndexing && !printMode"></td>
                 <td [attr.colspan]="columnsCount()">
                     <ng-container [ngTemplateOutlet]="rowDetailer" [ngTemplateOutletContext]="rowDetailerContext(item)"></ng-container>
                 </td>
@@ -1188,7 +1238,6 @@ LockTableComponent.decorators = [
 </div>
 <div class="smart-table-wrap" (scroll)="scroll($event)">
 	<table-view #lockedTable
-		*ngIf="items"
 		class="locked-table"
 		lockable="true"
 		[headers]="lockedHeaders"
@@ -1204,7 +1253,6 @@ LockTableComponent.decorators = [
 		(onfilter)="changeUnlockedTableFilteredItems($event)"
 		(onaction)="tableAction($event)"></table-view>
     <table-view #unlockedTable
-		*ngIf="items"
 		class="unlocked-table"
 		lockable="true"
 		[headers]="unlockedHeaders"

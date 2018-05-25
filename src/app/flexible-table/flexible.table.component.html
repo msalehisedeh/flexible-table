@@ -4,11 +4,12 @@
         *ngIf="configurable" 
         [headers]="headers" 
         [title]="vocabulary.configureColumns" 
+        [printTable]="vocabulary.printTable"
         [action]="vocabulary.configureTable"
+        (onprint)="viewTable.print()"
         (onchange)="reconfigure($event)"></table-configuration>
         
-    <table-view 
-		*ngIf="items" 
+    <table-view #viewTable
         [action]="action"
         [actionKeys]="actionKeys"
 		[tableClass]="tableClass"

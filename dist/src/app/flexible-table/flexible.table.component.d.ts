@@ -4,6 +4,7 @@ export declare class FlexibleTableComponent implements OnInit {
     subItems: any;
     subHeaders: any;
     vocabulary: {
+        printTable: string;
         configureTable: string;
         configureColumns: string;
         clickSort: string;

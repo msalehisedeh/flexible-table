@@ -40,6 +40,7 @@ export interface FlexibleTableHeader {
 })
 export class TableViewComponent implements OnInit, OnChanges {
 	dragging = false;
+	printMode = false;
 	filteredItems = [];
 
     @Input("vocabulary")
@@ -187,7 +188,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 		this.onchange.emit(this.headers);
 	}
 	sort(header: FlexibleTableHeader, icon) {
-		if (header.sortable) {
+		if (header.sortable && this.items && this.items.length) {
 			for (let i = 0; i < this.headers.length ; i++) {
                 const h = this.headers[i];
 
@@ -233,9 +234,13 @@ export class TableViewComponent implements OnInit, OnChanges {
 	}
 
 	ngOnChanges(changes:any) {
-		if (changes === this.items) {
+		if (changes.items) {
 			if (this.enableFiltering) {
-//				this.filterItems();
+				if (this.enableFiltering) {
+					this.filterItems();
+				} else {
+					this.filteredItems = this.items;
+				}
 			}
 		}
 	}
@@ -365,19 +370,43 @@ export class TableViewComponent implements OnInit, OnChanges {
 		return false;
 	}
 
+	print() {
+		const oldInfo = this.pageInfo;
+		this.pageInfo = { 
+			contentSize: 1000, 
+			pageSize: 1000, 
+			pages: 1, 
+			from: 0, 
+			to: 1000, 
+			currentPage: 1, 
+			maxWidth: "0" 
+		}
+		this.printMode = true;
+		setTimeout(()=>{
+			const content = this.el.nativeElement.innerHTML;
+			this.printMode = false;
+			this.pageInfo = oldInfo;
+			const popupWin = window.open('', '_blank', 'width=300,height=300');
+		
+			popupWin.document.open();
+        	popupWin.document.write('<html><body onload="window.print()">' + content + '</html>');
+        	popupWin.document.close();
+		},3);
+	}
+
 	// <5, !5, >5, *E, E*, *E*
 	private shouldSkipItem(value, filterBy) {
 		let result = false;
 
 		if (value !== undefined && value !== null && value.length) {			
 			if (filterBy[0] === '<') {
-				result = parseFloat(value) < parseFloat(filterBy.substring(1));
+				result = parseFloat(value) >= parseFloat(filterBy.substring(1));
 			} else if (filterBy[0] === '>') {
-				result = parseFloat(value) > parseFloat(filterBy.substring(1));
+				result = parseFloat(value) <= parseFloat(filterBy.substring(1));
 			} else if (filterBy[0] === '!') {
-				result = parseFloat(value) != parseFloat(filterBy.substring(1));
-			} else if (filterBy[0] === '=') {
 				result = parseFloat(value) == parseFloat(filterBy.substring(1));
+			} else if (filterBy[0] === '=') {
+				result = parseFloat(value) !== parseFloat(filterBy.substring(1));
 			} else if (filterBy[0] === '*' && filterBy[filterBy.length-1] !== '*') {
 				const f = filterBy.substring(1);
 				result = value.toLowerCase().indexOf(f) !== value.length - f.length

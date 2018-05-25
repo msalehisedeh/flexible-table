@@ -18,11 +18,17 @@ export class ConfigurationComponent {
 	@Input("action")
 	public action: string;
 
+	@Input("printTable")
+	public printTable: string;
+	
 	@Input("headers")
 	public headers: any[];
 
 	@Output('onchange')
 	private onchange = new EventEmitter();
+
+	@Output('onprint')
+	private onprint = new EventEmitter();
 
 	reconfigure(item, header) {
         header.present = item.checked;
@@ -36,6 +42,10 @@ export class ConfigurationComponent {
 			delete header.filter;
 		}
 		this.onchange.emit(this.headers);
+	}
+
+	print(event) {
+		this.onprint.emit(true);
 	}
 
     keyup(event) {

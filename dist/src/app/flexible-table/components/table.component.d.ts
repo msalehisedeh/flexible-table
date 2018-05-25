@@ -17,6 +17,7 @@ export interface FlexibleTableHeader {
 export declare class TableViewComponent implements OnInit, OnChanges {
     el: ElementRef;
     dragging: boolean;
+    printMode: boolean;
     filteredItems: any[];
     vocabulary: {
         configureTable: string;
@@ -70,6 +71,7 @@ export declare class TableViewComponent implements OnInit, OnChanges {
     };
     changeFilter(event: any, header: any): void;
     actionClick(event: any, item: any): boolean;
+    print(): void;
     private shouldSkipItem(value, filterBy);
     filterItems(): void;
     onTableCellEdit(event: any): void;

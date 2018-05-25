@@ -29,6 +29,7 @@ export class FlexibleTableComponent implements OnInit {
 
     @Input("vocabulary")
     public vocabulary = {
+		printTable: "Print Table",
 		configureTable: "Configure Table",
 		configureColumns: "Configure Columns",
 		clickSort: "Click to Sort",

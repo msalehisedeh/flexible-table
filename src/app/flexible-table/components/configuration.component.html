@@ -2,6 +2,13 @@
 <div class="shim"
     [style.display]="showConfigurationView ? 'block':'none'"
     (click)="showConfigurationView = !showConfigurationView"></div>
+
+<a  [attr.tabindex]="0" *ngIf="printTable"
+    (keyup)="keyup($event)"
+    (click)="print($event)">
+    <span class="icon fa fa-print" aria-hidden="true"></span>
+    <span class="off-screen" [textContent]="print"></span>
+</a>
 <a  [attr.tabindex]="0"
     (keyup)="keyup($event)"
     (click)="showConfigurationView = !showConfigurationView">

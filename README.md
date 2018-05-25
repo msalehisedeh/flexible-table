@@ -7,6 +7,12 @@ FlexibleTable is an Angular based code. LockTable will allow you to lock/unlock 
 
 [Source code](https://github.com/msalehisedeh/flexible-table) | [Comments/Requests](https://github.com/msalehisedeh/flexible-table/issues)
 
+# Version 1.3.0
+
+Fixed few issues and added ability to print the content of flexible table.. Did not do the same for lock table as it is not an easy thing to do.
+If you are making a flexible table configurable, you will be able to see two icons side by side.. one for printing and the other for configuring display columns.
+
+
 # Version 1.2.0
 
 flexible table is now getting more flexible... if you do not supply the headers metadata, smart table will generate it for you. This will be a good way of flushing unknown json into the table and have it displayed.
