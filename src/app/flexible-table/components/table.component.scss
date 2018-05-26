@@ -269,6 +269,14 @@ table.alert-danger {
             &:last-child {
               border-bottom: 0;
             }
+            &.filter {
+                input {
+                    width: 50% !important;
+                }
+                .fa {
+                    right: 7px !important;
+                }
+            }
             &:before {
               content: attr(data-label);
               float: left;

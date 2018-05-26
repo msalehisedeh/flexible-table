@@ -54,6 +54,31 @@ export class TableHeadersGenerator {
     return this.headers;
   }
 
+  retreiveHeaders(key, trackingkey) {
+    let result: any;
+    try {
+      result = localStorage.getItem(trackingkey);
+
+      if (!result || result != key) {
+        result = undefined; // we have a newer version and it will override saved data.
+      } else {
+        result = localStorage.getItem(key);
+        result = result ? JSON.parse(result) : result;
+      }
+    } catch (e) {
+    }
+    return result;
+  }
+
+  persistHeaders(key, trackingkey, headers) {
+    try {
+      localStorage.removeItem(trackingkey);
+      localStorage.setItem(trackingkey, key);
+      localStorage.setItem(key, JSON.stringify(headers));
+    } catch (e) {
+    }
+  }
+
   private makeWords(name) {
     return name
             .replace(/\./g,' ~ ')

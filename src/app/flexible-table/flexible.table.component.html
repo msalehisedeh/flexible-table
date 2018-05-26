@@ -1,7 +1,8 @@
 
 <div class="flexible-table">
     <table-configuration
-        *ngIf="configurable" 
+        *ngIf="configurable && items && items.length"
+        class="table-configuration" 
         [headers]="headers" 
         [title]="vocabulary.configureColumns" 
         [printTable]="vocabulary.printTable"
@@ -24,6 +25,7 @@
         [actionable]="actionable"
         [expandable]="expandable"
         (onDrop)="onDrop($event)"
+        (onchange)="reconfigure($event)"
 		(onaction)="tableAction($event)"></table-view>
 </div>
 <table-pagination 

@@ -42,6 +42,12 @@ export class LockTableComponent implements OnInit {
 		previousPage: "Previous"
 	};
 
+    @Input("persistanceId")
+    public persistanceId: string;
+
+    @Input("persistanceKey")
+    public persistanceKey: string;
+
     @Input("caption")
     public caption: string;
 
@@ -95,13 +101,24 @@ export class LockTableComponent implements OnInit {
 				event.target.scrollLeft+"px");
 	}
 
-	constructor(
+    constructor(
+		private generator: TableHeadersGenerator,
 		private renderer: Renderer
 	) {}
 
 	ngOnInit() {
+		if (this.persistanceKey) {
+			const headers:any = this.generator.retreiveHeaders(this.persistanceKey, this.persistanceId);
+
+			if (headers) {
+				this.headers = headers;
+			}
+		}
 		if (!this.headers) {
-			this.headers = new TableHeadersGenerator().generateHeadersFor(this.items[0],"", 5, this.enableFiltering);
+			this.headers = this.generator.generateHeadersFor(this.items[0],"", 5, this.enableFiltering);
+			if (this.persistanceKey) {
+				this.generator.persistHeaders(this.persistanceKey, this.persistanceId, this.headers);
+			}
 		}
 		this.filteredItems = this.items;
 		this.reconfigure(this.headers);
@@ -121,6 +138,9 @@ export class LockTableComponent implements OnInit {
 		this.unlockedHeaders = this.headers.filter( (item) => item.locked !== true  && item.present);	
 		this.onconfigurationchange.emit(event);
 
+		if (this.persistanceKey) {
+			this.generator.persistHeaders(this.persistanceKey, this.persistanceId, this.headers);
+		}
 		setTimeout(this.evaluatePositioning.bind(this),111);
 	}
 
@@ -129,6 +149,9 @@ export class LockTableComponent implements OnInit {
 		this.unlockedHeaders = this.headers.filter( (item) => item.locked !== true  && item.present);	
 		this.onconfigurationchange.emit(event);
 
+		if (this.persistanceKey) {
+			this.generator.persistHeaders(this.persistanceKey, this.persistanceId, this.headers);
+		}
 		setTimeout(this.evaluatePositioning.bind(this),111);
 	}
 	changeLockedTableFilteredItems(event) {

@@ -1,6 +1,6 @@
 {
   "name": "flexible-table",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -16,6 +16,8 @@
     "grid",
     "sort",
     "sortable",
+    "persistence enabled",
+    "print enabled",
     "pagination",
     "filter",
     "filterable",

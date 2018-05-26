@@ -23,6 +23,7 @@ export interface FlexibleTableHeader {
 	value: string,
 	present: boolean,
 	width?: string,
+	minwidth?: string,
 	format?: string,
 	filter?: string,
 	dragable?: boolean,

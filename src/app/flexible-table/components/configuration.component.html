@@ -4,12 +4,14 @@
     (click)="showConfigurationView = !showConfigurationView"></div>
 
 <a  [attr.tabindex]="0" *ngIf="printTable"
+    class="print-table"
     (keyup)="keyup($event)"
     (click)="print($event)">
     <span class="icon fa fa-print" aria-hidden="true"></span>
     <span class="off-screen" [textContent]="print"></span>
 </a>
 <a  [attr.tabindex]="0"
+    class="configure-table"
     (keyup)="keyup($event)"
     (click)="showConfigurationView = !showConfigurationView">
     <span class="icon fa fa-gear" aria-hidden="true"></span>

@@ -13,6 +13,7 @@
                 (onDrop)="onDrop($event)"
                 [id]="header.key"
                 [attr.width]="header.width ? header.width : null" 
+                [style.min-width]="header.minwidth ? header.minwidth : ''" 
                 [attr.tabindex]="header.sortable ? 0 : -1"
                 (keydown)="keydown($event, th)" (click)="sort(header, icon)">
                 <span *ngIf="!printMode && header.sortable" class="off-screen"  [textContent]="vocabulary.clickSort"></span>
@@ -40,7 +41,10 @@
             <td scope="row" *ngIf="enableIndexing && !printMode" class="index filter">
                 <input type="text" disabled style="opacity:0" />
             </td>
-            <td scope="row" *ngFor="let header of headers; let i=index" class="filter">
+            <td scope="row" 
+                        *ngFor="let header of headers; let i=index" 
+                        [attr.data-label]="header.value" 
+                        class="filter">
                 <span *ngIf="header.filter === undefined">&nbsp;</span>
                 <input  *ngIf="header.filter !== undefined"
                         id="filter-{{i}}"

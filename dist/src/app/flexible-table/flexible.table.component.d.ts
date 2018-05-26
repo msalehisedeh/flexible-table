@@ -1,6 +1,8 @@
 import { OnInit } from '@angular/core';
 import { DropEvent } from 'drag-enabled';
+import { TableHeadersGenerator } from './components/table-headers-generator';
 export declare class FlexibleTableComponent implements OnInit {
+    private generator;
     subItems: any;
     subHeaders: any;
     vocabulary: {
@@ -13,6 +15,8 @@ export declare class FlexibleTableComponent implements OnInit {
         lastPage: string;
         previousPage: string;
     };
+    persistanceId: string;
+    persistanceKey: string;
     caption: string;
     action: string;
     actionKeys: any;
@@ -30,7 +34,7 @@ export declare class FlexibleTableComponent implements OnInit {
     rowDetailerHeaders: any;
     private onaction;
     private onconfigurationchange;
-    constructor();
+    constructor(generator: TableHeadersGenerator);
     ngOnInit(): void;
     updateLimits(): void;
     reconfigure(event: any): void;

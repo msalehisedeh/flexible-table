@@ -1,6 +1,8 @@
 import { OnInit, Renderer } from '@angular/core';
 import { DropEvent } from 'drag-enabled';
+import { TableHeadersGenerator } from './components/table-headers-generator';
 export declare class LockTableComponent implements OnInit {
+    private generator;
     private renderer;
     lockedHeaders: any;
     unlockedHeaders: any;
@@ -14,6 +16,8 @@ export declare class LockTableComponent implements OnInit {
         lastPage: string;
         previousPage: string;
     };
+    persistanceId: string;
+    persistanceKey: string;
     caption: string;
     action: string;
     actionKeys: any;
@@ -30,7 +34,7 @@ export declare class LockTableComponent implements OnInit {
     private lockedTable;
     private unlockedTable;
     scroll(event: any): void;
-    constructor(renderer: Renderer);
+    constructor(generator: TableHeadersGenerator, renderer: Renderer);
     ngOnInit(): void;
     evaluatePositioning(): void;
     reconfigure(event: any): void;

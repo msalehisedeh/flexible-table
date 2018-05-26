@@ -10,6 +10,7 @@ import { PaginationComponent } from './components/pagination.component';
 import { ConfigurationComponent } from './components/configuration.component';
 import { TableViewComponent } from './components/table.component';
 
+import { TableHeadersGenerator } from './components/table-headers-generator';
 import { FlexibleTableComponent } from './flexible.table.component';
 import { LockTableComponent } from './lock.table.component';
 
@@ -33,6 +34,7 @@ import { LockTableComponent } from './lock.table.component';
     entryComponents: [
     ],
     providers: [
+        TableHeadersGenerator
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

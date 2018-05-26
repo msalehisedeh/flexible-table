@@ -47,10 +47,11 @@
         padding: 15px;
         right: 0px;
         box-shadow: 6px 8px 6px -6px #1b1b1b;
-        z-index: 5;
+        z-index: 6;
 
         li {
           white-space: nowrap;
+          text-align: left;
         }
     }
 }

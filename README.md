@@ -5,7 +5,46 @@ Have you ever wanted a simple way of flushing your data in a all versatile table
 
 FlexibleTable is an Angular based code. LockTable will allow you to lock/unlock columns. Both tables are fully configurable with pagination and ability to re-order table columns through drag/drop operation.
 
+Please send your requests or comments through the link provided below:
+
 [Source code](https://github.com/msalehisedeh/flexible-table) | [Comments/Requests](https://github.com/msalehisedeh/flexible-table/issues)
+
+
+# Version 1.4.0
+
+Fixed few issues and added persistance to table configuration. As a result, if you enable persistance, you will need to give a versioning number through "persistanceId". This is necessary for the persistance mechanism to decide if it has to take the stored data or ovrride it because of difference in versioning number. If persistance is enabled and you are not supplying headers metadata and flexible table auto generates the headers for you, then auto generation will happen only once and future generations will be lost because persisted headers will override generation of new headers. If you are modifying the headers by adding, removing, or replacing header methadata; then you have to change the "persistanceId" as well.
+
+```javascript
+<flexible-table 
+      caption="total records found {{unknownJsonList.length}}" 
+      enableFiltering="true"
+      enableIndexing="true"
+      persistanceId="usersRecordsTable"
+      persistanceKey="users-headers-102018"
+      configurable="true"
+      [items]="unknownJsonList"
+      [pageInfo]="pageInfo"
+      (onconfigurationchange)="onconfigurationchange($event)"
+      (onaction)="onaction($event)"></flexible-table>
+```
+
+Also, an optional minwidth attribute is added to table headers metadata. this can become handy if you are setting a width on some headers and not others..
+
+```javascript
+export interface FlexibleTableHeader {
+	key: string,
+	value: string,
+	present: boolean,
+	width?: string,
+	minwidth?: string,
+	format?: string,
+	filter?: string,
+	dragable?: boolean,
+	sortable?: boolean,
+	class?:string,
+	locked?:boolean
+}
+```
 
 # Version 1.3.0
 
