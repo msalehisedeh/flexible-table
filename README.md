@@ -1,7 +1,7 @@
 
 # Welcome to Flexible table!
 
-Have you ever wanted a simple way of flushing your data in a all versatile table and pass in a few metadata just to get your data displayed the way you wanted? AND how about adding graphics into the resulting table with some nifty formatting rules just by mapping your JSON data into table column headers! Ha? Say it again!!
+Have you ever wanted a simple way of flushing your data in a all versatile table and pass in a few meta-data just to get your data displayed the way you wanted? AND how about adding graphics into the resulting table with some nifty formatting rules just by mapping your JSON data into table column headers! Ha? Say it again!!
 
 FlexibleTable is an Angular based code. LockTable will allow you to lock/unlock columns. Both tables are fully configurable with pagination and ability to re-order table columns through drag/drop operation.
 
@@ -12,15 +12,15 @@ Please send your requests or comments through the link provided below:
 
 # Version 1.4.0
 
-Fixed few issues and added persistance to table configuration. As a result, if you enable persistance, you will need to give a versioning number through "persistanceId". This is necessary for the persistance mechanism to decide if it has to take the stored data or ovrride it because of difference in versioning number. If persistance is enabled and you are not supplying headers metadata and flexible table auto generates the headers for you, then auto generation will happen only once and future generations will be lost because persisted headers will override generation of new headers. If you are modifying the headers by adding, removing, or replacing header methadata; then you have to change the "persistanceId" as well.
+Fixed few issues and added persistence to table configuration. As a result, if you enable persistence, you will need to give a version number through "persistanceId". This is necessary for the persistence mechanism to decide if it has to take the stored data or override it because of difference in version number. If persistence is enabled and you are not supplying headers meta-data and flexible table auto generates the headers for you, then auto generation will happen only once and future generations will be lost because persisted headers will override generation of new headers. If you are modifying the headers by adding, removing, or replacing header meta-data; then you have to change the "persistanceId" as well.
 
 ```javascript
 <flexible-table 
       caption="total records found {{unknownJsonList.length}}" 
       enableFiltering="true"
       enableIndexing="true"
-      persistanceId="usersRecordsTable"
-      persistanceKey="users-headers-102018"
+      persistenceId="usersRecordsTable"
+      persistenceKey="users-headers-102018"
       configurable="true"
       [items]="unknownJsonList"
       [pageInfo]="pageInfo"
@@ -28,7 +28,7 @@ Fixed few issues and added persistance to table configuration. As a result, if y
       (onaction)="onaction($event)"></flexible-table>
 ```
 
-Also, an optional minwidth attribute is added to table headers metadata. this can become handy if you are setting a width on some headers and not others..
+Also, an optional minwidth attribute is added to table headers meta-data. this can become handy if you are setting a width on some headers and not others..
 
 ```javascript
 export interface FlexibleTableHeader {
@@ -54,8 +54,8 @@ If you are making a flexible table configurable, you will be able to see two ico
 
 # Version 1.2.0
 
-flexible table is now getting more flexible... if you do not supply the headers metadata, smart table will generate it for you. This will be a good way of flushing unknown json into the table and have it displayed.
-In addition, a filtering mechanism is added. If you enable filtering of a column, then you can filter rows based on what is typed in the filter for that columns. You will need to specifically add blank filter (filter: "") atteribute in headers metadata or enable filter for each header through configuration panel. If smart table is generating headers automatically, it will include filters attribute if filtering is enabled. When requesting to filter on a column, you have option of including the following operands:
+flexible table is now getting more flexible... if you do not supply the headers meta-data, smart table will generate it for you. This will be a good way of flushing unknown JSON into the table and have it displayed.
+In addition, a filtering mechanism is added. If you enable filtering of a column, then you can filter rows based on what is typed in the filter for that columns. You will need to specifically add blank filter (filter: "") attribute in headers meta-data or enable filter for each header through configuration panel. If smart table is generating headers automatically, it will include filters attribute if filtering is enabled. When requesting to filter on a column, you have option of including the following operands:
 
 | Operand  | Example      | Description                                 |
 |----------|--------------|---------------------------------------------|
@@ -81,7 +81,7 @@ In addition, a filtering mechanism is added. If you enable filtering of a column
       (onaction)="onaction($event)"></flexible-table>
 ```
 
-And the header metadata will be:
+And the header meta-data will be:
 ```javascript
 FlexibleTableHeader {
 	key: string,       // JSON path to a value
@@ -99,7 +99,7 @@ FlexibleTableHeader {
 
 # Version 1.1.0
 
-With this release you will be able to make table cells editable / interactable.. For more information read into-pipes documentation.
+With this release you will be able to make table cells editable / intractable.. For more information read into-pipes documentation.
 
 ```javascript
 MODULE:
@@ -143,18 +143,18 @@ DEPENDENCIES:
 |action              |off-screen message to be displayed if click on a row results in an action. If supplied, action column will be displayed and will take effect on user click                   |
 |actionKeys          |parameters to feed the action.  parameters should exist in headers mapping.            |
 |tableClass          |class name to be assigned to the table.     |
-|headers             |mapping of items to be displayed as headers including insturctions on formatting, dragging, ...                               |
+|headers             |mapping of items to be displayed as headers including instructions on formatting, dragging, ...                               |
 |items               |items to be displayed                       |
-|pageInfo            |pagination information. If is not supplied, paggination will not take place.            |
+|pageInfo            |pagination information. If is not supplied, pagination will not take place.            |
 |tableInfo           |Information about component owning the table. this information will be passed to the component that will display when a row is expanded.                                |
-|configurable        |flag to allow hidding/displaying of specific headers.                                    |
+|configurable        |flag to allow hiding/displaying of specific headers.                                    |
 |enableIndexing      |flag to display index of rows.              |
 
 ## Events
 | Event                |Description                                     |
 |----------------------|------------------------------------------------|
 |onaction              |Will be published on a click action of a row    |
-|onconfigurationchange |Will be called when user selects to hide/unhide some of headers on configuration popup          |
+|onconfigurationchange |Will be called when user selects to hide/un-hide some of headers on configuration pop-up          |
 
 Sample table tag in your HTML content:
 ```javascript
@@ -176,7 +176,7 @@ Sample table tag in your HTML content:
 
 # Version 0.1.0
 
-This release is basically performance improvements and internal arangement of components to make it possible to provide additional functionalities which will be released soon. 
+This release is basically performance improvements and internal arrangement of components to make it possible to provide additional functionalities which will be released soon. 
 
 ```javascript
 MODULE:
@@ -225,22 +225,22 @@ We are using "into-pipes" library. to see available formatting options, please f
 |action              |off-screen message to be displayed if click on a row results in an action. If supplied, action column will be displayed and will take effect on user click                   |
 |actionKeys          |parameters to feed the action.  parameters should exist in headers mapping.            |
 |tableClass          |class name to be assigned to the table.     |
-|headers             |mapping of items to be displayed as headers including insturctions on formatting, dragging, ...                               |
+|headers             |mapping of items to be displayed as headers including instructions on formatting, dragging, ...                               |
 |items               |items to be displayed                       |
-|pageInfo            |pagination information. If is not supplied, paggination will not take place.            |
+|pageInfo            |pagination information. If is not supplied, pagination will not take place.            |
 |tableInfo           |Information about component owning the table. this information will be passed to the component that will display when a row is expanded.                                |
-|configurable        |flag to allow hidding/displaying of specific headers.                                    |
+|configurable        |flag to allow hiding/displaying of specific headers.                                    |
 |enableIndexing      |flag to display index of rows.              |
 |rowDetailer         |reference to template that should be displayed when a row is expanded.           |
-|expandable          |function in component that owns the table which determines in a specific row is expandable. This function is called twice with a flag argument. If flag is false, call is to determine if action icon should be displayed on row. othwerwise is to give before expanssion opportunity to the owner to perform possible operation before expanssion on the table take effect.        |
+|expandable          |function in component that owns the table which determines in a specific row is expandable. This function is called twice with a flag argument. If flag is false, call is to determine if action icon should be displayed on row. otherwise is to give before expansion opportunity to the owner to perform possible operation before expansion on the table take effect.        |
 |expandIf            |flag to override calling of expandable function.                                   |
-|rowDetailerHeaders  |If the expanding row should be displayed in another table inside, then this attribute will be passed to the expanssion template.  |
+|rowDetailerHeaders  |If the expanding row should be displayed in another table inside, then this attribute will be passed to the expansion template.  |
 
 ## Events
 | Event                |Description                                     |
 |----------------------|------------------------------------------------|
 |onaction              |Will be published on a click action of a row    |
-|onconfigurationchange |Will be called when user selects to hide/unhide some of headers on configuration popup          |
+|onconfigurationchange |Will be called when user selects to hide/un-hide some of headers on configuration pop-up          |
 
 ## How to do it?
 It is very simple. You have a JSON data to display and you want to allow user to configure columns, plus having ability to paginate, and sort/drag specific columns.
@@ -298,7 +298,7 @@ Let's say you have the following data to be displayed:
 }
 ```
 
-And you want user ID, name, username, the city he/she lives in, and the company works for. All you need is to map your data as it follows:
+And you want user ID, name, user-name, the city he/she lives in, and the company works for. All you need is to map your data as it follows:
 ```javascript
 [
 	  {key: "name",value: "Name",present: true, dragable:true, sortable: true},  
@@ -308,7 +308,7 @@ And you want user ID, name, username, the city he/she lives in, and the company 
 	  {key: "company",value: "Company",present: true, dragable:true, sortable: true} 
   ]
 ```
-The above will instruct the table to make the mentioned columns visible and sortable.  You can hide anyone of them or disable sorting on any columns.  You can make them draggable or have the content of a cell formatted if you add a "format" attribute to the column metadata you want to be formatted. 
+The above will instruct the table to make the mentioned columns visible and sortable.  You can hide anyone of them or disable sorting on any columns.  You can make them draggable or have the content of a cell formatted if you add a "format" attribute to the column meta-data you want to be formatted. 
 
 For example: "format: 'date:MM/dd/yyyy'" or "format: 'currency'"
 

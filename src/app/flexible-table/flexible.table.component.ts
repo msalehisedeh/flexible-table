@@ -39,11 +39,11 @@ export class FlexibleTableComponent implements OnInit {
 		previousPage: "Previous"
 	};
 	
-    @Input("persistanceId")
-    public persistanceId: string;
+    @Input("persistenceId")
+    public persistenceId: string;
 
-	@Input("persistanceKey")
-    public persistanceKey: string;
+	@Input("persistenceKey")
+    public persistenceKey: string;
 
     @Input("caption")
     public caption: string;
@@ -99,8 +99,8 @@ export class FlexibleTableComponent implements OnInit {
     constructor(private generator: TableHeadersGenerator) {}
 
 	ngOnInit() {
-		if (this.persistanceKey) {
-			const headers:any = this.generator.retreiveHeaders(this.persistanceKey, this.persistanceId);
+		if (this.persistenceKey) {
+			const headers:any = this.generator.retreiveHeaders(this.persistenceKey, this.persistenceId);
 
 			if (headers) {
 				this.headers = headers;
@@ -108,8 +108,8 @@ export class FlexibleTableComponent implements OnInit {
 		}
 		if (!this.headers || this.headers.length === 0) {
 			this.headers = this.generator.generateHeadersFor(this.items[0],"", 5, this.enableFiltering);
-			if (this.persistanceKey) {
-				this.generator.persistHeaders(this.persistanceKey, this.persistanceId, this.headers);
+			if (this.persistenceKey) {
+				this.generator.persistHeaders(this.persistenceKey, this.persistenceId, this.headers);
 			}
         }
 		if (!this.rowDetailer && this.expandable) {
@@ -129,8 +129,8 @@ export class FlexibleTableComponent implements OnInit {
 		this.updateLimits();
 		this.onconfigurationchange.emit(event);
 
-		if (this.persistanceKey) {
-			this.generator.persistHeaders(this.persistanceKey, this.persistanceId, this.headers);
+		if (this.persistenceKey) {
+			this.generator.persistHeaders(this.persistenceKey, this.persistenceId, this.headers);
 		}
 	}
 

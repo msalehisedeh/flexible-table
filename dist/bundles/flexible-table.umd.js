@@ -102,16 +102,16 @@ var FlexibleTableComponent = /** @class */ (function () {
         this.onconfigurationchange = new core.EventEmitter();
     }
     FlexibleTableComponent.prototype.ngOnInit = function () {
-        if (this.persistanceKey) {
-            var headers = this.generator.retreiveHeaders(this.persistanceKey, this.persistanceId);
+        if (this.persistenceKey) {
+            var headers = this.generator.retreiveHeaders(this.persistenceKey, this.persistenceId);
             if (headers) {
                 this.headers = headers;
             }
         }
         if (!this.headers || this.headers.length === 0) {
             this.headers = this.generator.generateHeadersFor(this.items[0], "", 5, this.enableFiltering);
-            if (this.persistanceKey) {
-                this.generator.persistHeaders(this.persistanceKey, this.persistanceId, this.headers);
+            if (this.persistenceKey) {
+                this.generator.persistHeaders(this.persistenceKey, this.persistenceId, this.headers);
             }
         }
         if (!this.rowDetailer && this.expandable) {
@@ -128,8 +128,8 @@ var FlexibleTableComponent = /** @class */ (function () {
         this.headers = event;
         this.updateLimits();
         this.onconfigurationchange.emit(event);
-        if (this.persistanceKey) {
-            this.generator.persistHeaders(this.persistanceKey, this.persistanceId, this.headers);
+        if (this.persistenceKey) {
+            this.generator.persistHeaders(this.persistenceKey, this.persistenceId, this.headers);
         }
     };
     FlexibleTableComponent.prototype.onPaginationChange = function (event) {
@@ -154,8 +154,8 @@ FlexibleTableComponent.ctorParameters = function () { return [
 ]; };
 FlexibleTableComponent.propDecorators = {
     "vocabulary": [{ type: core.Input, args: ["vocabulary",] },],
-    "persistanceId": [{ type: core.Input, args: ["persistanceId",] },],
-    "persistanceKey": [{ type: core.Input, args: ["persistanceKey",] },],
+    "persistenceId": [{ type: core.Input, args: ["persistenceId",] },],
+    "persistenceKey": [{ type: core.Input, args: ["persistenceKey",] },],
     "caption": [{ type: core.Input, args: ["caption",] },],
     "action": [{ type: core.Input, args: ["action",] },],
     "actionKeys": [{ type: core.Input, args: ["actionKeys",] },],
@@ -750,16 +750,16 @@ var LockTableComponent = /** @class */ (function () {
         this.renderer.setElementStyle(this.lockedTable.el.nativeElement, "left", event.target.scrollLeft + "px");
     };
     LockTableComponent.prototype.ngOnInit = function () {
-        if (this.persistanceKey) {
-            var headers = this.generator.retreiveHeaders(this.persistanceKey, this.persistanceId);
+        if (this.persistenceKey) {
+            var headers = this.generator.retreiveHeaders(this.persistenceKey, this.persistenceId);
             if (headers) {
                 this.headers = headers;
             }
         }
         if (!this.headers) {
             this.headers = this.generator.generateHeadersFor(this.items[0], "", 5, this.enableFiltering);
-            if (this.persistanceKey) {
-                this.generator.persistHeaders(this.persistanceKey, this.persistanceId, this.headers);
+            if (this.persistenceKey) {
+                this.generator.persistHeaders(this.persistenceKey, this.persistenceId, this.headers);
             }
         }
         this.filteredItems = this.items;
@@ -773,8 +773,8 @@ var LockTableComponent = /** @class */ (function () {
         this.lockedHeaders = this.headers.filter(function (item) { return item.locked === true && item.present; });
         this.unlockedHeaders = this.headers.filter(function (item) { return item.locked !== true && item.present; });
         this.onconfigurationchange.emit(event);
-        if (this.persistanceKey) {
-            this.generator.persistHeaders(this.persistanceKey, this.persistanceId, this.headers);
+        if (this.persistenceKey) {
+            this.generator.persistHeaders(this.persistenceKey, this.persistenceId, this.headers);
         }
         setTimeout(this.evaluatePositioning.bind(this), 111);
     };
@@ -782,8 +782,8 @@ var LockTableComponent = /** @class */ (function () {
         this.lockedHeaders = this.headers.filter(function (item) { return item.locked === true && item.present; });
         this.unlockedHeaders = this.headers.filter(function (item) { return item.locked !== true && item.present; });
         this.onconfigurationchange.emit(event);
-        if (this.persistanceKey) {
-            this.generator.persistHeaders(this.persistanceKey, this.persistanceId, this.headers);
+        if (this.persistenceKey) {
+            this.generator.persistHeaders(this.persistenceKey, this.persistenceId, this.headers);
         }
         setTimeout(this.evaluatePositioning.bind(this), 111);
     };
@@ -817,8 +817,8 @@ LockTableComponent.ctorParameters = function () { return [
 ]; };
 LockTableComponent.propDecorators = {
     "vocabulary": [{ type: core.Input, args: ["vocabulary",] },],
-    "persistanceId": [{ type: core.Input, args: ["persistanceId",] },],
-    "persistanceKey": [{ type: core.Input, args: ["persistanceKey",] },],
+    "persistenceId": [{ type: core.Input, args: ["persistenceId",] },],
+    "persistenceKey": [{ type: core.Input, args: ["persistenceKey",] },],
     "caption": [{ type: core.Input, args: ["caption",] },],
     "action": [{ type: core.Input, args: ["action",] },],
     "actionKeys": [{ type: core.Input, args: ["actionKeys",] },],
