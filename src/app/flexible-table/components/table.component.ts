@@ -240,7 +240,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 				if (this.enableFiltering) {
 					this.filterItems();
 				} else {
-					this.filteredItems = this.items;
+					this.filteredItems = this.items ? this.items : [];
 				}
 			}
 		}
@@ -264,7 +264,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 		if (this.enableFiltering) {
 			this.filterItems();
 		} else {
-			this.filteredItems = this.items;
+			this.filteredItems = this.items ? this.items : [];
 		}
         if (this.actionKeys) {
             this.actionKeys = this.actionKeys.split(",");
@@ -424,7 +424,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 		return result;
 	}
 	filterItems() {
-		this.filteredItems = this.items.filter((item) => {
+		this.filteredItems = this.items ? this.items.filter((item) => {
 			let keepItem = true;
 
 			for (let i = 0; i < this.headers.length; i++) {
@@ -440,7 +440,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 				}
 			}
 			return keepItem;
-		});
+		}) : [];
 		this.onfilter.emit(this.filteredItems);
 	}
 

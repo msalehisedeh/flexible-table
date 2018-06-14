@@ -1,4 +1,4 @@
-import { Injectable, Component, Input, Output, EventEmitter, ViewChild, ViewContainerRef, ElementRef, Renderer, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Injectable, Component, Input, Output, EventEmitter, ViewChild, ViewContainerRef, ElementRef, Renderer, Directive, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IntoPipeModule } from 'into-pipes';
 import { DragDropModule } from 'drag-enabled';
@@ -530,7 +530,7 @@ ConfigurationComponent.decorators = [
                     [checked]="header.filter !== undefined"
                     (keyup)="keyup($event)"
                     (click)="enableFilter(filter, header)" />
-            <span>Filrer</span>
+            <span>Filter</span>
         </label>
         <label for="{{header.key ? header.key+'c':'c'}}">
             <input type="checkbox" #checkbox
@@ -541,12 +541,11 @@ ConfigurationComponent.decorators = [
                     (click)="reconfigure(checkbox, header)" />
             <span>Show</span>
         </label>
-        <span>: </span>
-        <span [textContent]="header.value"></span>
+        <span class="title" [textContent]="header.value | uppercase"></span>
     </li>
 </ul>
 `,
-                styles: [`:host{-webkit-box-sizing:border-box;box-sizing:border-box;padding:2px;position:absolute;right:8px;top:18px;z-index:2}:host a{display:block;float:left;padding:0 0 0 10px;cursor:pointer;z-index:5}:host a .icon{color:#00925b}:host a .off-screen{display:block;text-indent:-9999px;width:0;height:0;overflow:hidden}:host .shim{background-color:rgba(255,255,255,.2);width:100vw;height:100vh;position:fixed;top:0;left:0;z-index:2}:host ul{background-color:#fff;border:1px solid #999;border-radius:4px;display:block;list-style:none;max-height:300px;margin:2px 0;min-width:200px;overflow-y:auto;position:absolute;padding:15px;right:0;-webkit-box-shadow:6px 8px 6px -6px #1b1b1b;box-shadow:6px 8px 6px -6px #1b1b1b;z-index:6}:host ul li{white-space:nowrap;text-align:left}`]
+                styles: [`:host{-webkit-box-sizing:border-box;box-sizing:border-box;padding:2px;position:absolute;right:8px;top:18px;z-index:2}:host a{display:block;float:left;padding:0 0 0 10px;cursor:pointer;z-index:5}:host a .icon{color:#00925b}:host a .off-screen{display:block;text-indent:-9999px;width:0;height:0;overflow:hidden}:host .shim{background-color:rgba(255,255,255,.2);width:100vw;height:100vh;position:fixed;top:0;left:0;z-index:2}:host ul{background-color:#fff;border:1px solid #999;border-radius:4px;display:-webkit-box;display:-ms-flexbox;display:flex;list-style:none;max-height:200px;margin:0 2px;min-width:200px;overflow-y:auto;position:absolute;padding:0 0 8px;right:0;-webkit-box-shadow:6px 8px 6px -6px #1b1b1b;box-shadow:6px 8px 6px -6px #1b1b1b;z-index:6}:host ul p{margin:0;padding:1px 5px;background-color:#5f9ea0;color:#fff}:host ul li{white-space:nowrap;text-align:left;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row;padding:1px 5px}:host ul li label input{-webkit-box-flex:0;-ms-flex:0 0 30%;flex:0 0 30%;margin-top:4px}:host ul li .title{-webkit-box-flex:0;-ms-flex:0 0 30%;flex:0 0 30%;font-weight:700}`]
             },] },
 ];
 /** @nocollapse */
@@ -743,7 +742,7 @@ class TableViewComponent {
                     this.filterItems();
                 }
                 else {
-                    this.filteredItems = this.items;
+                    this.filteredItems = this.items ? this.items : [];
                 }
             }
         }
@@ -770,7 +769,7 @@ class TableViewComponent {
             this.filterItems();
         }
         else {
-            this.filteredItems = this.items;
+            this.filteredItems = this.items ? this.items : [];
         }
         if (this.actionKeys) {
             this.actionKeys = this.actionKeys.split(",");
@@ -979,7 +978,7 @@ class TableViewComponent {
      * @return {?}
      */
     filterItems() {
-        this.filteredItems = this.items.filter((item) => {
+        this.filteredItems = this.items ? this.items.filter((item) => {
             let /** @type {?} */ keepItem = true;
             for (let /** @type {?} */ i = 0; i < this.headers.length; i++) {
                 const /** @type {?} */ header = this.headers[i];
@@ -993,7 +992,7 @@ class TableViewComponent {
                 }
             }
             return keepItem;
-        });
+        }) : [];
         this.onfilter.emit(this.filteredItems);
     }
     /**
@@ -1084,8 +1083,7 @@ TableViewComponent.decorators = [
                 <span class="title"
                         [class.dragable]="header.dragable"
                         [textContent]="header.value"></span>
-                <span class="icon fa"
-                        *ngIf="!printMode && items && items.length" #icon
+                <span class="icon fa" [class.hidden]="printMode || !items || items.length === 0" #icon
                         [class.fa-sort]="header.sortable"
                         [class.fa-sort-asc]="header.assending"
                         [class.fa-sort-desc]="header.desending"></span>
@@ -1158,7 +1156,7 @@ TableViewComponent.decorators = [
     </tbody>
 </table>
 `,
-                styles: [`:host{display:inline-block!important;width:100%;position:relative;margin:0 auto;border-spacing:0;border-collapse:collapse}:host .off-screen{display:block;float:left;height:0;overflow:hidden;text-indent:-99999px;width:0}:host table{margin:1rem auto;padding:0;width:100%;table-layout:fixed;max-width:99%;background-color:transparent;border-collapse:collapse}:host table caption{background-color:#c3e5e2;border-radius:2px;color:#1b1b1b;caption-side:top;font-size:14px;padding:5px 6px;margin-bottom:15px;text-align:left}:host table thead{border-top:1px solid #bbb;border-bottom:1px solid #bbb;background-color:#eee}:host table tr{border:0}:host table tr.expanded td{font-weight:700}:host table td{padding-left:3px}:host table td:first-child{padding-left:5px}:host table td .off-screen{display:block;float:left;height:0;overflow:hidden;text-indent:-99999px;width:0}:host table td.filter{padding:0;position:relative}:host table td.filter input{-webkit-box-sizing:border-box;box-sizing:border-box;width:100%;padding:5px}:host table td.filter .fa{position:absolute;top:7px;right:2px;color:#bad}:host table td ::ng-deep img{height:24px}:host table td.index{background-color:#eee;border-right:1px solid #bbb}:host table th{cursor:default;-webkit-user-select:none;-moz-user-select:none;-o-user-select:none;-ms-user-select:none;user-select:none;height:24px;position:relative;white-space:nowrap;font-weight:400;text-transform:uppercase;font-size:14px;padding-top:6px;padding-bottom:6px;text-align:left}:host table th.drag-over{background-color:#9b9b9b}:host table th.drag-over .icon,:host table th.drag-over .title{color:#eee}:host table th:first-child{padding-left:5px}:host table th.ascending,:host table th.descending,:host table th.sortable{cursor:pointer;height:12px}:host table th.indexable{width:33px}:host table th.actionable{width:24px}:host table th .title{color:#254a4d;display:inline-block;height:20px;white-space:nowrap}:host table th .dragable{cursor:move}:host table th .icon{width:22px;display:inline-block;height:20px;color:#254a4d}:host .fa.fa-angle-right{font-size:18px}table tr.expanded td{border-bottom:0}table tr.detail td{border-top:0;cursor:default}table tr.expanded td a.expanded{background-position:right 2px}table tbody tr.hover,table tbody tr:hover{background-color:#ffeed2}table tbody tr.detail.hover,table tbody tr.detail.hover td table thead tr,table tbody tr.detail:hover,table tbody tr.detail:hover td table thead tr{background-color:inherit}table tr td a.actionable{display:inline-table;height:32px;vertical-align:middle;width:25px;line-height:30px;color:#254a4d}table tbody tr.detail.hover td:last-child,table tbody tr.detail:hover td:last-child{border-right:0}table tbody tr.detail.hover td:first-child,table tbody tr.detail:hover td:first-child{border-left:0}table tr td{border-bottom:1px solid #b1b3b3;color:#254a5d;font-size:15px;text-transform:capitalize}table tbody tr.pointer{cursor:pointer}table.alert-danger{border:0}table.alert-danger caption{background-color:transparent;font-weight:700;margin-bottom:0}table.alert-danger td{border-bottom:0;display:block}table.alert-danger td:first-child{padding-left:0}table.alert-danger td:last-child{border-bottom:0}table.alert-danger td:before{content:attr(data-label);float:left;font-weight:700;text-transform:uppercase;width:20%}table.alert-danger td a span.icon{width:100%}table.alert-danger thead{border:none;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}table.alert-danger tr{border:2px solid #fff;display:block;margin-bottom:.625em;padding:5px;border-radius:5px}table.alert-danger tr th.actionable{width:inherit}table.alert-danger tr td{border-bottom:0}@media screen and (max-width:600px){table{border:0}table td{border-bottom:0;display:block;text-align:right}table td:first-child{padding-left:0}table td:last-child{border-bottom:0}table td.filter input{width:50%!important}table td.filter .fa{right:7px!important}table td:before{content:attr(data-label);float:left;font-weight:700;text-transform:uppercase}table td a span.icon{width:100%}table thead{border:none;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}table tr{border-bottom:3px solid #ddd;display:block;margin-bottom:.625em}table tr th.actionable{width:inherit}table tr td{border-bottom:0}table.alert-danger td:before{width:inherit}}`]
+                styles: [`:host{display:inline-block!important;width:100%;position:relative;margin:0 auto;border-spacing:0;border-collapse:collapse}:host .off-screen{display:block;float:left;height:0;overflow:hidden;text-indent:-99999px;width:0}:host table{margin:1rem auto;padding:0;width:100%;table-layout:fixed;max-width:99%;background-color:transparent;border-collapse:collapse}:host table caption{background-color:#c3e5e2;border-radius:2px;color:#1b1b1b;caption-side:top;font-size:14px;padding:5px 6px;margin-bottom:15px;text-align:left}:host table thead{border-top:1px solid #bbb;border-bottom:1px solid #bbb;background-color:#eee}:host table tr{border:0}:host table tr.expanded td{font-weight:700}:host table td{padding-left:3px}:host table td:first-child{padding-left:5px}:host table td .off-screen{display:block;float:left;height:0;overflow:hidden;text-indent:-99999px;width:0}:host table td.filter{padding:0;position:relative}:host table td.filter input{-webkit-box-sizing:border-box;box-sizing:border-box;width:100%;padding:1px 5px}:host table td.filter .fa{position:absolute;top:4px;right:2px;color:#bad}:host table td ::ng-deep img{height:24px}:host table td.index{background-color:#eee;border-right:1px solid #bbb}:host table th{cursor:default;-webkit-user-select:none;-moz-user-select:none;-o-user-select:none;-ms-user-select:none;user-select:none;height:24px;position:relative;white-space:nowrap;font-weight:400;text-transform:uppercase;font-size:14px;padding-top:6px;padding-bottom:6px;text-align:left}:host table th.drag-over{background-color:#9b9b9b}:host table th.drag-over .icon,:host table th.drag-over .title{color:#eee}:host table th:first-child{padding-left:5px}:host table th.ascending,:host table th.descending,:host table th.sortable{cursor:pointer;height:12px}:host table th.indexable{width:33px}:host table th.actionable{width:24px}:host table th .hidden{display:none}:host table th .title{color:#254a4d;display:inline-block;height:20px;white-space:nowrap}:host table th .dragable{cursor:move}:host table th .icon{width:22px;display:inline-block;height:20px;color:#254a4d}:host .fa.fa-angle-right{font-size:18px}table tr.expanded td{border-bottom:0}table tr.detail td{border-top:0;cursor:default}table tr.expanded td a.expanded{background-position:right 2px}table tbody tr.hover,table tbody tr:hover{background-color:#ffeed2}table tbody tr.detail.hover,table tbody tr.detail.hover td table thead tr,table tbody tr.detail:hover,table tbody tr.detail:hover td table thead tr{background-color:inherit}table tr td a.actionable{display:inline-table;height:32px;vertical-align:middle;width:25px;line-height:30px;color:#254a4d}table tbody tr.detail.hover td:last-child,table tbody tr.detail:hover td:last-child{border-right:0}table tbody tr.detail.hover td:first-child,table tbody tr.detail:hover td:first-child{border-left:0}table tr td{border-bottom:1px solid #b1b3b3;color:#254a5d;font-size:15px;text-transform:capitalize}table tbody tr.pointer{cursor:pointer}table.alert-danger{border:0}table.alert-danger caption{background-color:transparent;font-weight:700;margin-bottom:0}table.alert-danger td{border-bottom:0;display:block}table.alert-danger td:first-child{padding-left:0}table.alert-danger td:last-child{border-bottom:0}table.alert-danger td:before{content:attr(data-label);float:left;font-weight:700;text-transform:uppercase;width:20%}table.alert-danger td a span.icon{width:100%}table.alert-danger thead{border:none;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}table.alert-danger tr{border:2px solid #fff;display:block;margin-bottom:.625em;padding:5px;border-radius:5px}table.alert-danger tr th.actionable{width:inherit}table.alert-danger tr td{border-bottom:0}@media screen and (max-width:600px){table{border:0}table td{border-bottom:0;display:block;text-align:right}table td:first-child{padding-left:0}table td:last-child{border-bottom:0}table td.filter input{width:50%!important}table td.filter .fa{right:7px!important}table td:before{content:attr(data-label);float:left;font-weight:700;text-transform:uppercase}table td a span.icon{width:100%}table thead{border:none;clip:rect(0 0 0 0);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px}table tr{border-bottom:3px solid #ddd;display:block;margin-bottom:.625em}table tr th.actionable{width:inherit}table tr td{border-bottom:0}table.alert-danger td:before{width:inherit}}`]
             },] },
 ];
 /** @nocollapse */
@@ -1383,6 +1381,95 @@ LockTableComponent.propDecorators = {
  * @fileoverview added by tsickle
  * @suppress {checkTypes} checked by tsc
  */
+class TableSortDirective {
+    /**
+     * @param {?} renderer
+     * @param {?} el
+     */
+    constructor(renderer, el) {
+        this.renderer = renderer;
+        this.el = el;
+        this.dropEffect = "move";
+        this.tableSort = (path) => { };
+    }
+    /**
+     * @return {?}
+     */
+    headerColumnElements() {
+        return this.el.nativeElement.parentNode.children;
+    }
+    /**
+     * @param {?} id
+     * @return {?}
+     */
+    findColumnWithID(id) {
+        const /** @type {?} */ list = this.headerColumnElements();
+        let /** @type {?} */ column = null;
+        for (let /** @type {?} */ i = 0; i < list.length; i++) {
+            if (list[i].getAttribute("id") === id) {
+                column = list[i];
+                break;
+            }
+        }
+        return column;
+    }
+    /**
+     * @param {?} icon
+     * @return {?}
+     */
+    sort(icon) {
+        if (this.medium.sortable) {
+            for (let /** @type {?} */ i = 0; i < this.headers.length; i++) {
+                const /** @type {?} */ h = this.headers[i];
+                if (h.key !== this.medium.key) {
+                    const /** @type {?} */ item = this.findColumnWithID(h.key);
+                    if (item) {
+                        this.renderer.setElementClass(item, "ascending", false);
+                        this.renderer.setElementClass(item, "descending", false);
+                        this.renderer.setElementClass(item, "sortable", true);
+                    }
+                    h.descending = false;
+                    h.ascending = false;
+                }
+            }
+            this.renderer.setElementClass(icon, "fa-sort", false);
+            if (this.medium.ascending || (!this.medium.ascending && !this.medium.descending)) {
+                this.medium.descending = true;
+                this.medium.ascending = false;
+                this.renderer.setElementClass(icon, "fa-sort-asc", false);
+                this.renderer.setElementClass(icon, "fa-sort-desc", true);
+            }
+            else {
+                this.medium.descending = false;
+                this.medium.ascending = true;
+                this.renderer.setElementClass(icon, "fa-sort-desc", false);
+                this.renderer.setElementClass(icon, "fa-sort-asc", true);
+            }
+            this.tableSort(this.medium.key.split("."));
+        }
+    }
+}
+TableSortDirective.decorators = [
+    { type: Directive, args: [{
+                selector: '[tableSort]'
+            },] },
+];
+/** @nocollapse */
+TableSortDirective.ctorParameters = () => [
+    { type: Renderer, },
+    { type: ElementRef, },
+];
+TableSortDirective.propDecorators = {
+    "medium": [{ type: Input, args: ['medium',] },],
+    "headers": [{ type: Input, args: ['headers',] },],
+    "dropEffect": [{ type: Input },],
+    "tableSort": [{ type: Input, args: ["tableSort",] },],
+};
+
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes} checked by tsc
+ */
 class FlexibleTableModule {
 }
 FlexibleTableModule.decorators = [
@@ -1397,7 +1484,8 @@ FlexibleTableModule.decorators = [
                     LockTableComponent,
                     ConfigurationComponent,
                     PaginationComponent,
-                    TableViewComponent
+                    TableViewComponent,
+                    TableSortDirective
                 ],
                 exports: [
                     FlexibleTableComponent,
@@ -1426,5 +1514,5 @@ FlexibleTableModule.ctorParameters = () => [];
  * Generated bundle index. Do not edit.
  */
 
-export { FlexibleTableComponent, FlexibleTableModule, ConfigurationComponent as ɵc, PaginationComponent as ɵd, TableHeadersGenerator as ɵa, TableViewComponent as ɵe, LockTableComponent as ɵb };
+export { FlexibleTableComponent, FlexibleTableModule, ConfigurationComponent as ɵc, PaginationComponent as ɵd, TableHeadersGenerator as ɵa, TableViewComponent as ɵe, TableSortDirective as ɵf, LockTableComponent as ɵb };
 //# sourceMappingURL=flexible-table.js.map

@@ -26,7 +26,7 @@
                     [checked]="header.filter !== undefined"
                     (keyup)="keyup($event)"
                     (click)="enableFilter(filter, header)" />
-            <span>Filrer</span>
+            <span>Filter</span>
         </label>
         <label for="{{header.key ? header.key+'c':'c'}}">
             <input type="checkbox" #checkbox
@@ -37,7 +37,6 @@
                     (click)="reconfigure(checkbox, header)" />
             <span>Show</span>
         </label>
-        <span>: </span>
-        <span [textContent]="header.value"></span>
+        <span class="title" [textContent]="header.value | uppercase"></span>
     </li>
 </ul>

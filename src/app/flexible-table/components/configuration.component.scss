@@ -37,21 +37,41 @@
         background-color: #fff;
         border: 1px solid #999;
         border-radius: 4px;
-        display: block;
+        display: flex;
         list-style: none;
-        max-height: 300px;
-        margin: 2px 0;
+        max-height: 200px;
+        margin: 0 2px;
         min-width: 200px;
         overflow-y: auto;
         position: absolute;
-        padding: 15px;
+        padding: 0 0 8px 0;
         right: 0px;
         box-shadow: 6px 8px 6px -6px #1b1b1b;
         z-index: 6;
 
+        p {
+            margin: 0;
+            padding: 1px 5px;
+            background-color: cadetblue;
+            color: #fff;
+        }
+
         li {
           white-space: nowrap;
           text-align: left;
+          flex-direction: row;
+          padding: 1px 5px;
+
+          label {
+              input {
+                flex: 0 0 30%;
+                margin-top: 4px;
+            }
+          }
+          .title {
+              flex: 0 0 30%;
+              font-weight: bold;
+          }
         }
     }
 }

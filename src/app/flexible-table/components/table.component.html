@@ -27,8 +27,7 @@
                 <span class="title"
                         [class.dragable]="header.dragable"
                         [textContent]="header.value"></span>
-                <span class="icon fa" 
-                        *ngIf="!printMode && items && items.length" #icon
+                <span class="icon fa" [class.hidden]="printMode || !items || items.length === 0" #icon
                         [class.fa-sort]="header.sortable"
                         [class.fa-sort-asc]="header.assending"
                         [class.fa-sort-desc]="header.desending"></span>

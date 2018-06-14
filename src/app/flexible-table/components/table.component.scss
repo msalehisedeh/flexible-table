@@ -71,11 +71,11 @@
                 input {
                     box-sizing: border-box;
                     width: 100%;
-                    padding: 5px;
+                    padding: 1px 5px;
                 }
                 .fa {
                     position: absolute;
-                    top: 7px;
+                    top: 4px;
                     right: 2px;
                     color: #bad;
                 }
@@ -129,6 +129,10 @@
 
             &.actionable {
                 width: 24px;
+            }
+
+            .hidden {
+                display: none;
             }
 
             .title {

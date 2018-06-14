@@ -13,6 +13,7 @@ import { TableViewComponent } from './components/table.component';
 import { TableHeadersGenerator } from './components/table-headers-generator';
 import { FlexibleTableComponent } from './flexible.table.component';
 import { LockTableComponent } from './lock.table.component';
+import { TableSortDirective } from './directives/table-sort.directive';
 
 @NgModule({
     imports: [
@@ -25,7 +26,8 @@ import { LockTableComponent } from './lock.table.component';
         LockTableComponent,
         ConfigurationComponent,
         PaginationComponent,
-        TableViewComponent
+        TableViewComponent,
+        TableSortDirective
     ],
     exports: [
         FlexibleTableComponent,
