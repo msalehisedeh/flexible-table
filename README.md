@@ -10,6 +10,9 @@ Please send your requests or comments through the link provided below:
 [Source code](https://github.com/msalehisedeh/flexible-table) | [Comments/Requests](https://github.com/msalehisedeh/flexible-table/issues)
 
 
+# Version 1.4.5
+Compiled with AOT option and resolved issues.
+
 # Version 1.4.0
 
 Fixed few issues and added persistence to table configuration. As a result, if you enable persistence, you will need to give a version number through "persistenceKey". This is necessary for the persistence mechanism to decide if it has to take the stored data or override it because of difference in version number. "persistenceId" is necessary if you are using multiple persistent tables in your application. If persistence is enabled and you are not supplying headers meta-data and flexible table auto generates the headers for you, then auto generation will happen only once and future generations will be lost because persisted headers will override generation of new headers. If you are modifying the headers by adding, removing, or replacing header meta-data; then you have to change the "persistenceKey" as well.

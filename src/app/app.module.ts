@@ -1,3 +1,4 @@
+import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import {IntoPipeModule} from 'into-pipes';
@@ -11,6 +12,7 @@ import { FlexibleTableModule } from './flexible-table/flexible-table-module';
     AppComponent
   ],
   imports: [
+	BrowserModule,
     IntoPipeModule,
     HttpModule,
     FlexibleTableModule

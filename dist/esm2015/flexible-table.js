@@ -230,7 +230,6 @@ FlexibleTableComponent.decorators = [
 		[enableIndexing]="enableIndexing"
 		[enableFiltering]="enableFiltering"
         [rowDetailer]="rowDetailer"
-        [actionable]="actionable"
         [expandable]="expandable"
         (onDrop)="onDrop($event)"
         (onchange)="reconfigure($event)"
@@ -1326,7 +1325,6 @@ LockTableComponent.decorators = [
 		[enableIndexing]="enableIndexing"
 		[enableFiltering]="enableFiltering"
         [rowDetailer]="rowDetailer"
-		[actionable]="actionable"
 		(onchange)="onlock($event)"
 		(onDrop)="onDrop($event)"
 		(onfilter)="changeUnlockedTableFilteredItems($event)"
@@ -1340,7 +1338,6 @@ LockTableComponent.decorators = [
         [vocabulary]="vocabulary"
 		[enableFiltering]="enableFiltering"
         [rowDetailer]="rowDetailer"
-        [actionable]="actionable"
 		(onDrop)="onDrop($event)"
 		(onchange)="onlock($event)"
 		(onfilter)="changeLockedTableFilteredItems($event)"
@@ -1368,6 +1365,7 @@ LockTableComponent.propDecorators = {
     "items": [{ type: Input, args: ["items",] },],
     "pageInfo": [{ type: Input, args: ["pageInfo",] },],
     "tableInfo": [{ type: Input, args: ["tableInfo",] },],
+    "rowDetailer": [{ type: Input, args: ["rowDetailer",] },],
     "configurable": [{ type: Input, args: ["configurable",] },],
     "enableFiltering": [{ type: Input, args: ["enableFiltering",] },],
     "enableIndexing": [{ type: Input, args: ["enableIndexing",] },],
