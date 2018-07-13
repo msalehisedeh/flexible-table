@@ -31,6 +31,7 @@ export declare class FlexibleTableComponent implements OnInit {
     rowDetailer: any;
     expandable: any;
     expandIf: boolean;
+    filterwhiletyping: boolean;
     rowDetailerHeaders: any;
     private onaction;
     private onconfigurationchange;

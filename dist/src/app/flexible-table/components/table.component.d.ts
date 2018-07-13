@@ -43,6 +43,7 @@ export declare class TableViewComponent implements OnInit, OnChanges {
     rowDetailer: any;
     expandable: any;
     expandIf: boolean;
+    filterwhiletyping: boolean;
     rowDetailerHeaders: any;
     private onaction;
     private onchange;

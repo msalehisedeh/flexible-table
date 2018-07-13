@@ -84,6 +84,9 @@ export class LockTableComponent implements OnInit {
     @Input("enableIndexing")
     public enableIndexing: boolean;
 
+    @Input("filterwhiletyping")
+    public filterwhiletyping: boolean;
+
 
 	@Output('onaction')
 	private onaction = new EventEmitter();

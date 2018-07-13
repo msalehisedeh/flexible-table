@@ -97,6 +97,9 @@ export class TableViewComponent implements OnInit, OnChanges {
     @Input("expandIf")
     public expandIf: boolean;
 
+    @Input("filterwhiletyping")
+    public filterwhiletyping: boolean;
+
     @Input("rowDetailerHeaders")
     public rowDetailerHeaders: any;
 
@@ -353,7 +356,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 
 		header.filter = event.target.value;
 
-		if (code === 13) {
+		if (this.filterwhiletyping || code === 13) {
 			this.filterItems();
 		}
 	}

@@ -10,6 +10,9 @@ Please send your requests or comments through the link provided below:
 [Source code](https://github.com/msalehisedeh/flexible-table) | [Comments/Requests](https://github.com/msalehisedeh/flexible-table/issues)
 
 
+# Version 1.4.6
+Added a flag for filtering lookup to filter while tying vs. filter after a hit return.
+
 # Version 1.4.5
 Compiled with AOT option and resolved issues.
 
@@ -25,6 +28,7 @@ Fixed few issues and added persistence to table configuration. As a result, if y
       persistenceId="usersRecordsTable"
       persistenceKey="users-headers-102018"
       configurable="true"
+      filterwhiletyping="true"
       [items]="unknownJsonList"
       [pageInfo]="pageInfo"
       (onconfigurationchange)="onconfigurationchange($event)"
@@ -152,6 +156,8 @@ DEPENDENCIES:
 |tableInfo           |Information about component owning the table. this information will be passed to the component that will display when a row is expanded.                                |
 |configurable        |flag to allow hiding/displaying of specific headers.                                    |
 |enableIndexing      |flag to display index of rows.              |
+|filterwhiletyping   |flag to perform filtering while typing in a filter field. If not set will filter only on a hit return after typing. |
+
 
 ## Events
 | Event                |Description                                     |

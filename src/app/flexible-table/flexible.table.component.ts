@@ -87,6 +87,9 @@ export class FlexibleTableComponent implements OnInit {
     @Input("expandIf")
     public expandIf: boolean;
 
+    @Input("filterwhiletyping")
+    public filterwhiletyping: boolean;
+
     @Input("rowDetailerHeaders")
     public rowDetailerHeaders: any;
 

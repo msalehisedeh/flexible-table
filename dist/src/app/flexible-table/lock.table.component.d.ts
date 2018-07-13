@@ -30,6 +30,7 @@ export declare class LockTableComponent implements OnInit {
     configurable: boolean;
     enableFiltering: boolean;
     enableIndexing: boolean;
+    filterwhiletyping: boolean;
     private onaction;
     private onconfigurationchange;
     private lockedTable;

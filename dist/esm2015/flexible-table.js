@@ -224,7 +224,8 @@ FlexibleTableComponent.decorators = [
 		[tableClass]="tableClass"
 		[caption]="caption"
 		[headers]="subHeaders"
-		[items]="items"
+        [items]="items"
+        [filterwhiletyping]="filterwhiletyping"
         [pageInfo]="pageInfo"
         [vocabulary]="vocabulary"
 		[enableIndexing]="enableIndexing"
@@ -265,6 +266,7 @@ FlexibleTableComponent.propDecorators = {
     "rowDetailer": [{ type: Input, args: ["rowDetailer",] },],
     "expandable": [{ type: Input, args: ["expandable",] },],
     "expandIf": [{ type: Input, args: ["expandIf",] },],
+    "filterwhiletyping": [{ type: Input, args: ["filterwhiletyping",] },],
     "rowDetailerHeaders": [{ type: Input, args: ["rowDetailerHeaders",] },],
     "onaction": [{ type: Output, args: ['onaction',] },],
     "onconfigurationchange": [{ type: Output, args: ['onconfigurationchange',] },],
@@ -886,7 +888,7 @@ class TableViewComponent {
     changeFilter(event, header) {
         const /** @type {?} */ code = event.which;
         header.filter = event.target.value;
-        if (code === 13) {
+        if (this.filterwhiletyping || code === 13) {
             this.filterItems();
         }
     }
@@ -1178,6 +1180,7 @@ TableViewComponent.propDecorators = {
     "rowDetailer": [{ type: Input, args: ["rowDetailer",] },],
     "expandable": [{ type: Input, args: ["expandable",] },],
     "expandIf": [{ type: Input, args: ["expandIf",] },],
+    "filterwhiletyping": [{ type: Input, args: ["filterwhiletyping",] },],
     "rowDetailerHeaders": [{ type: Input, args: ["rowDetailerHeaders",] },],
     "onaction": [{ type: Output, args: ['onaction',] },],
     "onchange": [{ type: Output, args: ['onchange',] },],
@@ -1322,6 +1325,7 @@ LockTableComponent.decorators = [
 		[items]="filteredItems"
         [pageInfo]="pageInfo"
         [vocabulary]="vocabulary"
+        [filterwhiletyping]="filterwhiletyping"
 		[enableIndexing]="enableIndexing"
 		[enableFiltering]="enableFiltering"
         [rowDetailer]="rowDetailer"
@@ -1336,6 +1340,7 @@ LockTableComponent.decorators = [
 		[items]="filteredItems"
         [pageInfo]="pageInfo"
         [vocabulary]="vocabulary"
+        [filterwhiletyping]="filterwhiletyping"
 		[enableFiltering]="enableFiltering"
         [rowDetailer]="rowDetailer"
 		(onDrop)="onDrop($event)"
@@ -1369,6 +1374,7 @@ LockTableComponent.propDecorators = {
     "configurable": [{ type: Input, args: ["configurable",] },],
     "enableFiltering": [{ type: Input, args: ["enableFiltering",] },],
     "enableIndexing": [{ type: Input, args: ["enableIndexing",] },],
+    "filterwhiletyping": [{ type: Input, args: ["filterwhiletyping",] },],
     "onaction": [{ type: Output, args: ['onaction',] },],
     "onconfigurationchange": [{ type: Output, args: ['onconfigurationchange',] },],
     "lockedTable": [{ type: ViewChild, args: ['lockedTable',] },],
