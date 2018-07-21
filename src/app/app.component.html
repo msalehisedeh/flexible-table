@@ -17,6 +17,7 @@
       dragColumns="true" 
       enableIndexing="true"
       configurable="true"
+      (onCellContentEdit)="onCellEdit($event)"
       (onconfigurationchange)="onconfigurationchange($event)"
       (onaction)="onaction($event)"></lock-table>
 
@@ -38,6 +39,7 @@
       persistenceKey="users-headers-102018"
       [rowDetailer]="detailer"
       [expandable]="allowExpanding"
+      (onCellContentEdit)="onCellEdit($event)"
       (onconfigurationchange)="onconfigurationchange($event)"
       (onaction)="onaction($event)"></flexible-table>
 

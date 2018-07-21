@@ -32,6 +32,7 @@ export declare class LockTableComponent implements OnInit {
     enableIndexing: boolean;
     filterwhiletyping: boolean;
     private onaction;
+    private onCellContentEdit;
     private onconfigurationchange;
     private lockedTable;
     private unlockedTable;
@@ -45,4 +46,5 @@ export declare class LockTableComponent implements OnInit {
     changeUnlockedTableFilteredItems(event: any): void;
     tableAction(event: any): void;
     onDrop(event: DropEvent): void;
+    onCellEdit(event: any): void;
 }

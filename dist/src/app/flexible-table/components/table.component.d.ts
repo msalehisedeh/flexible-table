@@ -48,6 +48,7 @@ export declare class TableViewComponent implements OnInit, OnChanges {
     private onaction;
     private onchange;
     private onfilter;
+    private onCellContentEdit;
     private table;
     constructor(el: ElementRef);
     private findColumnWithID(id);

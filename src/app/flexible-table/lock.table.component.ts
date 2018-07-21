@@ -91,6 +91,9 @@ export class LockTableComponent implements OnInit {
 	@Output('onaction')
 	private onaction = new EventEmitter();
 
+	@Output('onCellContentEdit')
+	private onCellContentEdit = new EventEmitter();
+
 	@Output('onconfigurationchange')
 	private onconfigurationchange = new EventEmitter();
 
@@ -177,6 +180,9 @@ export class LockTableComponent implements OnInit {
 
 	onDrop(event:DropEvent){
 
+	}
+	onCellEdit(event){
+		this.onCellContentEdit.emit(event);
 	}
 }
 

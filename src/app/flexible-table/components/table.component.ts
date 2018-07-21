@@ -112,6 +112,9 @@ export class TableViewComponent implements OnInit, OnChanges {
 	@Output('onfilter')
 	private onfilter = new EventEmitter();
 
+	@Output('onCellContentEdit')
+	private onCellContentEdit = new EventEmitter();
+
 	@ViewChild('flexible', {read: ViewContainerRef}) private table: ViewContainerRef;
 
     constructor(public el:ElementRef) {}
@@ -449,19 +452,20 @@ export class TableViewComponent implements OnInit, OnChanges {
 
 	onTableCellEdit(event) {
 		const id = event.id.split("-");
-		const name = event.name;
-		const value= event.value;
-		const item = this.items[parseInt(id[1])];
+		const n = event.name;
+		const v= event.value;
+		const t = this.items[parseInt(id[1])];
 
-		if (item) {
+		if (t) {
 			const list = id[0].split(".");
-			let subitem = item[list[0]];
+			let subitem = t[list[0]];
 			for(let i = 1; i < (list.length - 1); i++) {
 				subitem = subitem[list[i]]
 			}
 			if (subitem && list.length > 1){
-				subitem[list[list.length - 1]] = value;
+				subitem[list[list.length - 1]] = v;
 			}
+			this.onCellContentEdit.emit({name: n, value: v, item: t});
 		}
     }
 

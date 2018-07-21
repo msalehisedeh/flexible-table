@@ -10,6 +10,78 @@ Please send your requests or comments through the link provided below:
 [Source code](https://github.com/msalehisedeh/flexible-table) | [Comments/Requests](https://github.com/msalehisedeh/flexible-table/issues)
 
 
+# Version 1.4.7
+Upgraded tolatest version of into-pipes and introduced **onCellContentEdit** event which will be triggered when cell content is editted. To make a cell editable, use format attribute of header meta-data. Look at documentation of into-pipes to decide if you want to fomat a field into a text, a checkbox, a select dropdown or any other formats.  If you want to format a cell in a special way that is not supported by into-pipes, you will need to create a custom pipe component and register it. For example, lets say you want to displlay a link and the link href should point to somewhere with other parameters in the road. You would need to import **ComponentPool**, create your format component, and register it. You will then have to register it and use the registered component name as a format rule.
+
+```javascript
+import { Component, EventEmitter } from '@angular/core';
+import { PipeComponent } from 'into-pipes';
+
+@Component({
+    selector: 'link-component',
+    template: `<a [href]="'http://somewhere.com/?id=' + data.userId" [target]="target" [textContent]="source"></a>`,
+    styles: [
+        `
+        color: blue;
+        `
+    ]
+})
+export class CustomLinkComponent implements PipeComponent {
+  source: string;
+	id: string;
+	data: any;
+	name: string;
+  title: string;
+  target: string;
+	onIntoComponentChange: EventEmitter<any>;
+
+    transform(source: any, data: any, args: any[]) {
+        this.data = data;
+        this.source = source;
+        this.target = (args && args.length) ? args[0] : "";
+        this.title = (args && args.length > 1) ? args[1] : "";
+    }
+}
+```
+
+Then you need to register it
+```javascript
+import { ComponentPool } from 'into-pipes';
+...
+contructor(private pool:ComponentPool){
+  // you can also register this as "link" in which it will override default link component.
+  this.pool.registerComponent("myLink",new CustomLinkComponent())
+}
+```
+then you will need to use your formatter in header meta-data
+```javascript
+{key:'userName', value:'Name', present: true, format:'myLink'}
+```
+
+## Events
+| Event                |Description                                     |
+|----------------------|------------------------------------------------|
+|onaction              |Will be published on a click action of a row    |
+|onCellContentEdit     |Will be published when content of an editable cell is modified    |
+|onconfigurationchange |Will be called when user selects to hide/un-hide some of headers on configuration pop-up          |
+
+
+```javascript
+<flexible-table 
+      caption="total records found {{unknownJsonList.length}}" 
+      enableFiltering="true"
+      enableIndexing="true"
+      persistenceId="usersRecordsTable"
+      persistenceKey="users-headers-102018"
+      configurable="true"
+      filterwhiletyping="true"
+      [items]="unknownJsonList"
+      [pageInfo]="pageInfo"
+      (onCellContentEdit)="onCellModified($event)"
+      (onconfigurationchange)="onconfigurationchange($event)"
+      (onaction)="onaction($event)"></flexible-table>
+```
+
 # Version 1.4.6
 Added a flag for filtering lookup to filter while tying vs. filter after a hit return.
 

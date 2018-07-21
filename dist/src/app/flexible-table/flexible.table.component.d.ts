@@ -34,6 +34,7 @@ export declare class FlexibleTableComponent implements OnInit {
     filterwhiletyping: boolean;
     rowDetailerHeaders: any;
     private onaction;
+    private onCellContentEdit;
     private onconfigurationchange;
     constructor(generator: TableHeadersGenerator);
     ngOnInit(): void;
@@ -42,4 +43,5 @@ export declare class FlexibleTableComponent implements OnInit {
     onPaginationChange(event: any): void;
     tableAction(event: any): void;
     onDrop(event: DropEvent): void;
+    onCellEdit(event: any): void;
 }

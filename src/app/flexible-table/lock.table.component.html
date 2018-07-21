@@ -22,6 +22,7 @@
         [rowDetailer]="rowDetailer"
 		(onchange)="onlock($event)"
 		(onDrop)="onDrop($event)"
+		(onCellContentEdit)="onCellEdit($event)"
 		(onfilter)="changeUnlockedTableFilteredItems($event)"
 		(onaction)="tableAction($event)"></table-view>
 
@@ -37,6 +38,7 @@
         [rowDetailer]="rowDetailer"
 		(onDrop)="onDrop($event)"
 		(onchange)="onlock($event)"
+		(onCellContentEdit)="onCellEdit($event)"
 		(onfilter)="changeLockedTableFilteredItems($event)"
 		(onaction)="tableAction($event)"></table-view>
 	

@@ -140,6 +140,7 @@ class FlexibleTableComponent {
         };
         this.tableClass = 'default-flexible-table';
         this.onaction = new EventEmitter();
+        this.onCellContentEdit = new EventEmitter();
         this.onconfigurationchange = new EventEmitter();
     }
     /**
@@ -203,6 +204,13 @@ class FlexibleTableComponent {
      */
     onDrop(event) {
     }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    onCellEdit(event) {
+        this.onCellContentEdit.emit(event);
+    }
 }
 FlexibleTableComponent.decorators = [
     { type: Component, args: [{
@@ -233,6 +241,7 @@ FlexibleTableComponent.decorators = [
         [rowDetailer]="rowDetailer"
         [expandable]="expandable"
         (onDrop)="onDrop($event)"
+		(onCellContentEdit)="onCellEdit($event)"
         (onchange)="reconfigure($event)"
 		(onaction)="tableAction($event)"></table-view>
 </div>
@@ -269,6 +278,7 @@ FlexibleTableComponent.propDecorators = {
     "filterwhiletyping": [{ type: Input, args: ["filterwhiletyping",] },],
     "rowDetailerHeaders": [{ type: Input, args: ["rowDetailerHeaders",] },],
     "onaction": [{ type: Output, args: ['onaction',] },],
+    "onCellContentEdit": [{ type: Output, args: ['onCellContentEdit',] },],
     "onconfigurationchange": [{ type: Output, args: ['onconfigurationchange',] },],
 };
 
@@ -590,6 +600,7 @@ class TableViewComponent {
         this.onaction = new EventEmitter();
         this.onchange = new EventEmitter();
         this.onfilter = new EventEmitter();
+        this.onCellContentEdit = new EventEmitter();
     }
     /**
      * @param {?} id
@@ -1002,18 +1013,19 @@ class TableViewComponent {
      */
     onTableCellEdit(event) {
         const /** @type {?} */ id = event.id.split("-");
-        const /** @type {?} */ name = event.name;
-        const /** @type {?} */ value = event.value;
-        const /** @type {?} */ item = this.items[parseInt(id[1])];
-        if (item) {
+        const /** @type {?} */ n = event.name;
+        const /** @type {?} */ v = event.value;
+        const /** @type {?} */ t = this.items[parseInt(id[1])];
+        if (t) {
             const /** @type {?} */ list = id[0].split(".");
-            let /** @type {?} */ subitem = item[list[0]];
+            let /** @type {?} */ subitem = t[list[0]];
             for (let /** @type {?} */ i = 1; i < (list.length - 1); i++) {
                 subitem = subitem[list[i]];
             }
             if (subitem && list.length > 1) {
-                subitem[list[list.length - 1]] = value;
+                subitem[list[list.length - 1]] = v;
             }
+            this.onCellContentEdit.emit({ name: n, value: v, item: t });
         }
     }
     /**
@@ -1127,6 +1139,7 @@ TableViewComponent.decorators = [
                     [intoName]="header.value"
                     [intoId]="header.key + '-' + i"
                     [into]="header.format"
+                    [intoData]="item"
                     [rawContent]="cellContent(item, header)"
                     [onComponentChange]="onTableCellEdit.bind(this)"></td>
                 <td scope="row" *ngIf="action && !printMode">
@@ -1185,6 +1198,7 @@ TableViewComponent.propDecorators = {
     "onaction": [{ type: Output, args: ['onaction',] },],
     "onchange": [{ type: Output, args: ['onchange',] },],
     "onfilter": [{ type: Output, args: ['onfilter',] },],
+    "onCellContentEdit": [{ type: Output, args: ['onCellContentEdit',] },],
     "table": [{ type: ViewChild, args: ['flexible', { read: ViewContainerRef },] },],
 };
 
@@ -1212,6 +1226,7 @@ class LockTableComponent {
         };
         this.tableClass = 'default-flexible-table';
         this.onaction = new EventEmitter();
+        this.onCellContentEdit = new EventEmitter();
         this.onconfigurationchange = new EventEmitter();
     }
     /**
@@ -1304,6 +1319,13 @@ class LockTableComponent {
      */
     onDrop(event) {
     }
+    /**
+     * @param {?} event
+     * @return {?}
+     */
+    onCellEdit(event) {
+        this.onCellContentEdit.emit(event);
+    }
 }
 LockTableComponent.decorators = [
     { type: Component, args: [{
@@ -1331,6 +1353,7 @@ LockTableComponent.decorators = [
         [rowDetailer]="rowDetailer"
 		(onchange)="onlock($event)"
 		(onDrop)="onDrop($event)"
+		(onCellContentEdit)="onCellEdit($event)"
 		(onfilter)="changeUnlockedTableFilteredItems($event)"
 		(onaction)="tableAction($event)"></table-view>
     <table-view #unlockedTable
@@ -1345,6 +1368,7 @@ LockTableComponent.decorators = [
         [rowDetailer]="rowDetailer"
 		(onDrop)="onDrop($event)"
 		(onchange)="onlock($event)"
+		(onCellContentEdit)="onCellEdit($event)"
 		(onfilter)="changeLockedTableFilteredItems($event)"
 		(onaction)="tableAction($event)"></table-view>
 </div>
@@ -1376,6 +1400,7 @@ LockTableComponent.propDecorators = {
     "enableIndexing": [{ type: Input, args: ["enableIndexing",] },],
     "filterwhiletyping": [{ type: Input, args: ["filterwhiletyping",] },],
     "onaction": [{ type: Output, args: ['onaction',] },],
+    "onCellContentEdit": [{ type: Output, args: ['onCellContentEdit',] },],
     "onconfigurationchange": [{ type: Output, args: ['onconfigurationchange',] },],
     "lockedTable": [{ type: ViewChild, args: ['lockedTable',] },],
     "unlockedTable": [{ type: ViewChild, args: ['unlockedTable',] },],

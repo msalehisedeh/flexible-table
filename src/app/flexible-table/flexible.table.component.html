@@ -25,6 +25,7 @@
         [rowDetailer]="rowDetailer"
         [expandable]="expandable"
         (onDrop)="onDrop($event)"
+		(onCellContentEdit)="onCellEdit($event)"
         (onchange)="reconfigure($event)"
 		(onaction)="tableAction($event)"></table-view>
 </div>

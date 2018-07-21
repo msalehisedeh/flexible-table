@@ -70,6 +70,7 @@
                     [intoName]="header.value"
                     [intoId]="header.key + '-' + i"
                     [into]="header.format"
+                    [intoData]="item"
                     [rawContent]="cellContent(item, header)"
                     [onComponentChange]="onTableCellEdit.bind(this)"></td>
                 <td scope="row" *ngIf="action && !printMode">
