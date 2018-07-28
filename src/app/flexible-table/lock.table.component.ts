@@ -72,9 +72,6 @@ export class LockTableComponent implements OnInit {
 	@Input("tableInfo")
 	public tableInfo: any;
 
-	@Input("rowDetailer")
-	public rowDetailer: any;
-
     @Input("configurable")
     public configurable: boolean;
 

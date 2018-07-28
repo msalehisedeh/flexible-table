@@ -336,8 +336,10 @@ export class TableViewComponent implements OnInit, OnChanges {
 		}
     }
     offScreenMessage(item) {
-        let message: string = this.action;
-        this.actionKeys.map((key) => { message = message.replace(key, item[key.substring(1, key.length - 1)]); })
+		let message: string = this.action;
+		if (this.actionKeys) {
+			this.actionKeys.map((key) => { message = message.replace(key, item[key.substring(1, key.length - 1)]); })
+		}
         return message;
     }
 

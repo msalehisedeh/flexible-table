@@ -1,17 +1,46 @@
 
 # Welcome to Flexible table!
 
-Have you ever wanted a simple way of flushing your data in a all versatile table and pass in a few meta-data just to get your data displayed the way you wanted? AND how about adding graphics into the resulting table with some nifty formatting rules just by mapping your JSON data into table column headers! Ha? Say it again!!
+Have you ever looked for a simple way of flushing your data in a versatile table by passing in a few meta-data instructions just to get your data displayed the way you wanted with interactive components inside? AND how about adding graphics into the resulting table with some nifty formatting rules just by mapping your JSON data into table column headers! Ha? Say it again!! And all is done without writing much of any code!! On top of that, if you do not want to take time and write meta-data rules, FlexibleTable will generate the rules for you. You can feed any data to the table and see it tabulated!!
 
-FlexibleTable is an Angular based code. LockTable will allow you to lock/unlock columns. Both tables are fully configurable with pagination and ability to re-order table columns through drag/drop operation.
+FlexibleTable and LockTable are Angular based code. LockTable will allow you to lock/unlock columns. Both tables are fully configurable with pagination and ability to re-order table columns through drag/drop operation.
 
 Please send your requests or comments through the link provided below:
 
 [Source code](https://github.com/msalehisedeh/flexible-table) | [Comments/Requests](https://github.com/msalehisedeh/flexible-table/issues)
 
+## Features
+* Responsive
+* map any part of your data to a column in the table
+* Pagination enabled / disabled
+* Indexing enabled / disabled
+* Expand / Collapse rows
+* Configure any column to sort content
+* Configure any column to show / hide
+* Configure any column to format content
+* Configure any column to reorder by drag/drop
+* Configure any column to filter content
+
+## Metadata Rules
+
+## Events
+| Metadata             |Description                                                             |
+|----------------------|------------------------------------------------------------------------|
+|key                   |JSON path to the value to be displayed on a column.                     |
+|value                 |Title of the column on the table.                                       |
+|present               |Display the column if set. Hide it otherwise.                           |
+|width                 |Column width.                                                           |
+|minwidth              |Minimum column with.                                                    |
+|format                |How the cell should be displayed. use into-pipe components to make the cell interactive and editable. |
+|filter                |If undefined, no filtering. Otherwise show filter field for the column. |
+|dragable              |Should column position be reorganized through dran and drop action?     |
+|sortable              |Should the column be sortable?                                          |
+|class                 |Apply the class to the column.                                          |
+|locked                |In a lock table, should the column be locked out.                       |
+
 
 # Version 1.4.7
-Upgraded tolatest version of into-pipes and introduced **onCellContentEdit** event which will be triggered when cell content is editted. To make a cell editable, use format attribute of header meta-data. Look at documentation of into-pipes to decide if you want to fomat a field into a text, a checkbox, a select dropdown or any other formats.  If you want to format a cell in a special way that is not supported by into-pipes, you will need to create a custom pipe component and register it. For example, lets say you want to displlay a link and the link href should point to somewhere with other parameters in the road. You would need to import **ComponentPool**, create your format component, and register it. You will then have to register it and use the registered component name as a format rule.
+Upgraded to latest version of into-pipes and introduced **onCellContentEdit** event which will be triggered when cell content is editted. To make a cell editable, use format attribute of header meta-data. Look at documentation of into-pipes to decide if you want to fomat a field into a text, a checkbox, a select dropdown or any other formats.  If you want to format a cell in a special way that is not supported by into-pipes, you will need to create a custom component and register. For example, lets say you want to displlay a link and the link href should point to somewhere with other parameters in the road. You would need to import **ComponentPool**, create your format component, and register it. You will then have to register it and use the registered component name as a format rule. When a cell content is edited, you will receive onCellContentEdit event where you will have opportunity to save the changed cell content in your data source.
 
 ```javascript
 import { Component, EventEmitter } from '@angular/core';
@@ -287,17 +316,6 @@ DEPENDENCIES:
 
 We are using "into-pipes" library. to see available formatting options, please follow what is supported by the library.
 
-## Features
-* Responsive
-* map any part of your data to a column in the table
-* Pagination enabled / disabled
-* Indexing enabled / disabled
-* Expand / Collapse rows
-* Configure any column to sort content
-* Configure any column to show / hide
-* Configure any column to format content
-* Configure any column to reorder by drag/drop
-* Configure any column to filter content
 
 ## Attributes (FlexibleTableComponent)
 | Attribute          |Description                                 |

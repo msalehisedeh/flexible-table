@@ -230,6 +230,7 @@ FlexibleTableComponent.decorators = [
         [action]="action"
         [actionKeys]="actionKeys"
 		[tableClass]="tableClass"
+		[tableInfo]="tableInfo"
 		[caption]="caption"
 		[headers]="subHeaders"
         [items]="items"
@@ -239,7 +240,9 @@ FlexibleTableComponent.decorators = [
 		[enableIndexing]="enableIndexing"
 		[enableFiltering]="enableFiltering"
         [rowDetailer]="rowDetailer"
+        [rowDetailerHeaders]="rowDetailerHeaders"
         [expandable]="expandable"
+        [expandIf]="expandIf"
         (onDrop)="onDrop($event)"
 		(onCellContentEdit)="onCellEdit($event)"
         (onchange)="reconfigure($event)"
@@ -868,7 +871,9 @@ class TableViewComponent {
      */
     offScreenMessage(item) {
         let /** @type {?} */ message = this.action;
-        this.actionKeys.map((key) => { message = message.replace(key, item[key.substring(1, key.length - 1)]); });
+        if (this.actionKeys) {
+            this.actionKeys.map((key) => { message = message.replace(key, item[key.substring(1, key.length - 1)]); });
+        }
         return message;
     }
     /**
@@ -1348,9 +1353,8 @@ LockTableComponent.decorators = [
         [pageInfo]="pageInfo"
         [vocabulary]="vocabulary"
         [filterwhiletyping]="filterwhiletyping"
-		[enableIndexing]="enableIndexing"
 		[enableFiltering]="enableFiltering"
-        [rowDetailer]="rowDetailer"
+		[enableIndexing]="enableIndexing"
 		(onchange)="onlock($event)"
 		(onDrop)="onDrop($event)"
 		(onCellContentEdit)="onCellEdit($event)"
@@ -1365,7 +1369,6 @@ LockTableComponent.decorators = [
         [vocabulary]="vocabulary"
         [filterwhiletyping]="filterwhiletyping"
 		[enableFiltering]="enableFiltering"
-        [rowDetailer]="rowDetailer"
 		(onDrop)="onDrop($event)"
 		(onchange)="onlock($event)"
 		(onCellContentEdit)="onCellEdit($event)"
@@ -1394,7 +1397,6 @@ LockTableComponent.propDecorators = {
     "items": [{ type: Input, args: ["items",] },],
     "pageInfo": [{ type: Input, args: ["pageInfo",] },],
     "tableInfo": [{ type: Input, args: ["tableInfo",] },],
-    "rowDetailer": [{ type: Input, args: ["rowDetailer",] },],
     "configurable": [{ type: Input, args: ["configurable",] },],
     "enableFiltering": [{ type: Input, args: ["enableFiltering",] },],
     "enableIndexing": [{ type: Input, args: ["enableIndexing",] },],

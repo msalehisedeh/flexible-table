@@ -26,7 +26,6 @@ export declare class LockTableComponent implements OnInit {
     items: any[];
     pageInfo: any;
     tableInfo: any;
-    rowDetailer: any;
     configurable: boolean;
     enableFiltering: boolean;
     enableIndexing: boolean;
