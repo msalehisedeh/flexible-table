@@ -66,6 +66,7 @@
                 <td scope="row" class="index" *ngIf="enableIndexing && !printMode">{{i + 1}}</td>
                 <td scope="row" 
                     *ngFor="let header of headers" 
+                    [class]="toCssClass(header)"
                     [attr.data-label]="header.value" 
                     [intoName]="header.value"
                     [intoId]="header.key + '-' + i"

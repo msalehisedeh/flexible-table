@@ -64,6 +64,7 @@ export declare class TableViewComponent implements OnInit, OnChanges {
     headerById(id: any): any;
     columnsCount(): number;
     hover(item: any, flag: any): void;
+    toCssClass(header: any): any;
     keydown(event: any, item: any): void;
     offScreenMessage(item: any): string;
     cellContent(item: any, header: any): string;

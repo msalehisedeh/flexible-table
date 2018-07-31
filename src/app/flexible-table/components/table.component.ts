@@ -329,6 +329,9 @@ export class TableViewComponent implements OnInit, OnChanges {
 		}
 	}
 
+	toCssClass(header) {
+		return header.key.replace(/\./g,'-');
+	}
     keydown(event, item) {
         const code = event.which;
         if ((code === 13) || (code === 32)) {

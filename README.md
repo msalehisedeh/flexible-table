@@ -20,10 +20,10 @@ Please send your requests or comments through the link provided below:
 * Configure any column to format content
 * Configure any column to reorder by drag/drop
 * Configure any column to filter content
+* ADA Compliant
 
 ## Metadata Rules
 
-## Events
 | Metadata             |Description                                                             |
 |----------------------|------------------------------------------------------------------------|
 |key                   |JSON path to the value to be displayed on a column.                     |
