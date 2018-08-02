@@ -72,7 +72,10 @@ export class FlexibleTableComponent implements OnInit {
     @Input("configurable")
     public configurable: boolean;
 
-    @Input("enableIndexing")
+	@Input("configAddon")
+	public configAddon: any;
+
+	@Input("enableIndexing")
     public enableIndexing: boolean;
 
     @Input("enableFiltering")

@@ -39,12 +39,16 @@
       configurable="true"
       persistenceId="usersRecordsTable"
       persistenceKey="users-headers-102018"
+      [configAddon]="configAddon"
       [rowDetailer]="detailer"
       [expandable]="allowExpanding"
       (onCellContentEdit)="onCellEdit($event)"
       (onconfigurationchange)="onconfigurationchange($event)"
       (onaction)="onaction($event)"></flexible-table>
 
+<ng-template #configAddon>
+  <a (click)="log('hay!!')"><span class="fa fa-flag"></span></a>
+</ng-template>
 <ng-template #detailer let-detail="data">
   <div class="custom-class">
     <h3>Detail information about {{detail.name}}</h3>

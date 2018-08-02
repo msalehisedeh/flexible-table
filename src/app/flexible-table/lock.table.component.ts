@@ -75,7 +75,10 @@ export class LockTableComponent implements OnInit {
     @Input("configurable")
     public configurable: boolean;
 
-    @Input("enableFiltering")
+	@Input("configAddon")
+	public configAddon: any;
+
+	@Input("enableFiltering")
     public enableFiltering: boolean;
 
     @Input("enableIndexing")

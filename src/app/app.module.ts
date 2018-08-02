@@ -8,14 +8,14 @@ import { AppService } from './app.service';
 import { FlexibleTableModule } from './flexible-table/flexible-table-module';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
   imports: [
 	BrowserModule,
     IntoPipeModule,
     HttpModule,
     FlexibleTableModule
+  ],
+  declarations: [
+    AppComponent
   ],
   providers: [
     AppService

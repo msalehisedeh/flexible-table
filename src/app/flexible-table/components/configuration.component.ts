@@ -24,6 +24,9 @@ export class ConfigurationComponent {
 	@Input("headers")
 	public headers: any[];
 
+	@Input("configAddon")
+	public configAddon: any;
+
 	@Output('onchange')
 	private onchange = new EventEmitter();
 

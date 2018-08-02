@@ -4,6 +4,7 @@
 		[headers]="headers" 
 		[title]="vocabulary.configureColumns" 
 		[action]="vocabulary.configureTable"
+		[configAddon]="configAddon"
 		(onchange)="reconfigure($event)"></table-configuration>
 
 	<div *ngIf="caption" [textContent]="caption"></div>

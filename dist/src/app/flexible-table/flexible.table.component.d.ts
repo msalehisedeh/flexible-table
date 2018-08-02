@@ -26,6 +26,7 @@ export declare class FlexibleTableComponent implements OnInit {
     pageInfo: any;
     tableInfo: any;
     configurable: boolean;
+    configAddon: any;
     enableIndexing: boolean;
     enableFiltering: boolean;
     rowDetailer: any;

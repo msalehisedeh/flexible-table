@@ -39,6 +39,9 @@ Please send your requests or comments through the link provided below:
 |locked                |In a lock table, should the column be locked out.                       |
 
 
+# Version 1.5.1
+Provided **configAddon** attribute to include additional control items along side the print and configuration buttons.  Consider a situation where you want to have a add row to a table inside a table expandable row. in such a case you would want to place the buttons in right place for each table. to make this happen, create a ng-template for the additional controls and pass a reference to it to the corresponding table thruog **configAddon** attribute,
+
 # Version 1.4.7
 Upgraded to latest version of into-pipes and introduced **onCellContentEdit** event which will be triggered when cell content is editted. To make a cell editable, use format attribute of header meta-data. Look at documentation of into-pipes to decide if you want to fomat a field into a text, a checkbox, a select dropdown or any other formats.  If you want to format a cell in a special way that is not supported by into-pipes, you will need to create a custom component and register. For example, lets say you want to displlay a link and the link href should point to somewhere with other parameters in the road. You would need to import **ComponentPool**, create your format component, and register it. You will then have to register it and use the registered component name as a format rule. When a cell content is edited, you will receive onCellContentEdit event where you will have opportunity to save the changed cell content in your data source.
 
@@ -258,6 +261,7 @@ DEPENDENCIES:
 |configurable        |flag to allow hiding/displaying of specific headers.                                    |
 |enableIndexing      |flag to display index of rows.              |
 |filterwhiletyping   |flag to perform filtering while typing in a filter field. If not set will filter only on a hit return after typing. |
+|configAddon         |Template to include additional control items alongside print and configute actions. |
 
 
 ## Events
@@ -334,6 +338,7 @@ We are using "into-pipes" library. to see available formatting options, please f
 |expandable          |function in component that owns the table which determines in a specific row is expandable. This function is called twice with a flag argument. If flag is false, call is to determine if action icon should be displayed on row. otherwise is to give before expansion opportunity to the owner to perform possible operation before expansion on the table take effect.        |
 |expandIf            |flag to override calling of expandable function.                                   |
 |rowDetailerHeaders  |If the expanding row should be displayed in another table inside, then this attribute will be passed to the expansion template.  |
+|configAddon         |Template to include additional control items alongside print and configute actions. |
 
 ## Events
 | Event                |Description                                     |

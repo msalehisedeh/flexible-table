@@ -224,6 +224,7 @@ FlexibleTableComponent.decorators = [
         [title]="vocabulary.configureColumns"
         [printTable]="vocabulary.printTable"
         [action]="vocabulary.configureTable"
+        [configAddon]="configAddon"
         (onprint)="viewTable.print()"
         (onchange)="reconfigure($event)"></table-configuration>
     <table-view #viewTable
@@ -273,6 +274,7 @@ FlexibleTableComponent.propDecorators = {
     "pageInfo": [{ type: Input, args: ["pageInfo",] },],
     "tableInfo": [{ type: Input, args: ["tableInfo",] },],
     "configurable": [{ type: Input, args: ["configurable",] },],
+    "configAddon": [{ type: Input, args: ["configAddon",] },],
     "enableIndexing": [{ type: Input, args: ["enableIndexing",] },],
     "enableFiltering": [{ type: Input, args: ["enableFiltering",] },],
     "rowDetailer": [{ type: Input, args: ["rowDetailer",] },],
@@ -535,6 +537,7 @@ ConfigurationComponent.decorators = [
     <span class="icon fa fa-gear" aria-hidden="true"></span>
     <span class="off-screen" [textContent]="action"></span>
 </a>
+<ng-container *ngIf="configAddon" [ngTemplateOutlet]="configAddon"></ng-container>
 <ul role="list" [style.display]="showConfigurationView ? 'block':'none'">
     <p [textContent]="title"></p>
     <li  *ngFor="let header of headers" role="listitem">
@@ -569,6 +572,7 @@ ConfigurationComponent.propDecorators = {
     "action": [{ type: Input, args: ["action",] },],
     "printTable": [{ type: Input, args: ["printTable",] },],
     "headers": [{ type: Input, args: ["headers",] },],
+    "configAddon": [{ type: Input, args: ["configAddon",] },],
     "onchange": [{ type: Output, args: ['onchange',] },],
     "onprint": [{ type: Output, args: ['onprint',] },],
 };
@@ -1349,6 +1353,7 @@ LockTableComponent.decorators = [
 		[headers]="headers"
 		[title]="vocabulary.configureColumns"
 		[action]="vocabulary.configureTable"
+		[configAddon]="configAddon"
 		(onchange)="reconfigure($event)"></table-configuration>
 	<div *ngIf="caption" [textContent]="caption"></div>
 </div>
@@ -1406,6 +1411,7 @@ LockTableComponent.propDecorators = {
     "pageInfo": [{ type: Input, args: ["pageInfo",] },],
     "tableInfo": [{ type: Input, args: ["tableInfo",] },],
     "configurable": [{ type: Input, args: ["configurable",] },],
+    "configAddon": [{ type: Input, args: ["configAddon",] },],
     "enableFiltering": [{ type: Input, args: ["enableFiltering",] },],
     "enableIndexing": [{ type: Input, args: ["enableIndexing",] },],
     "filterwhiletyping": [{ type: Input, args: ["filterwhiletyping",] },],

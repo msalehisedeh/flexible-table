@@ -17,6 +17,8 @@
     <span class="icon fa fa-gear" aria-hidden="true"></span>
     <span class="off-screen" [textContent]="action"></span>
 </a>
+<ng-container *ngIf="configAddon" [ngTemplateOutlet]="configAddon"></ng-container>
+
 <ul role="list" [style.display]="showConfigurationView ? 'block':'none'">
     <p [textContent]="title"></p>
     <li  *ngFor="let header of headers" role="listitem">
