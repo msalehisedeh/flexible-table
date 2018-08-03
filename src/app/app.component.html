@@ -5,24 +5,6 @@
   </h1>
 </div>
 
-<lock-table 
-      *ngIf="users" 
-      caption="total records found {{users.length}}" 
-      action="View details of %name% where ID is %id%"
-      actionKeys="%name%,%id%"
-      enableFiltering="true"
-      [headers]="usersHeader" 
-      [items]="users" 
-      [pageInfo]="pageInfo"
-      [filterwhiletyping]="true"
-      dragColumns="true" 
-      enableIndexing="true"
-      configurable="true"
-      (onCellContentEdit)="onCellEdit($event)"
-      (onconfigurationchange)="onconfigurationchange($event)"
-      (onaction)="onaction($event)"></lock-table>
-
-
 <flexible-table 
       *ngIf="users" 
       caption="total records found {{users.length}}" 
@@ -38,7 +20,7 @@
       enableFiltering="true"
       configurable="true"
       persistenceId="usersRecordsTable"
-      persistenceKey="users-headers-102018"
+      persistenceKey="users-headers-08022018"
       [configAddon]="configAddon"
       [rowDetailer]="detailer"
       [expandable]="allowExpanding"
@@ -62,7 +44,26 @@
     </ol>
   </div>
 </ng-template>
-    
+
+
+<lock-table 
+      *ngIf="users" 
+      caption="total records found {{users.length}}" 
+      action="View details of %name% where ID is %id%"
+      actionKeys="%name%,%id%"
+      enableFiltering="true"
+      [headers]="usersHeader" 
+      [items]="users" 
+      [pageInfo]="pageInfo"
+      [filterwhiletyping]="true"
+      dragColumns="true" 
+      enableIndexing="true"
+      configurable="true"
+      (onCellContentEdit)="onCellEdit($event)"
+      (onconfigurationchange)="onconfigurationchange($event)"
+      (onaction)="onaction($event)"></lock-table>
+
+
 <ul class="logger">
   <li *ngFor="let x of events" [textContent]="x | json"></li>
 </ul>

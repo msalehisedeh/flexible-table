@@ -39,6 +39,9 @@ Please send your requests or comments through the link provided below:
 |locked                |In a lock table, should the column be locked out.                       |
 
 
+# Version 1.5.2
+Upgraded into-pipes version.
+
 # Version 1.5.1
 Provided **configAddon** attribute to include additional control items along side the print and configuration buttons.  Consider a situation where you want to have a add row to a table inside a table expandable row. in such a case you would want to place the buttons in right place for each table. to make this happen, create a ng-template for the additional controls and pass a reference to it to the corresponding table thruog **configAddon** attribute,
 
