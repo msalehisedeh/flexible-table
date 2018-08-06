@@ -11,6 +11,11 @@
     width: 100%;
 }
 
+.fa-flag {
+    margin: 0 5px;
+    color: red;
+}
+
 ol {
     display: inline-block;
     margin: 0;
@@ -20,14 +25,6 @@ ol {
 
         span {
     
-            ::ng-deep .off-screen {
-                display: block;
-                float: left;
-                height: 0;
-                overflow: hidden;
-                text-indent: -99999px;
-                width: 0;
-            }
             ::ng-deep .fa {
                 padding: 0 3px;
             }
@@ -39,4 +36,12 @@ ol {
             }
         }
     }
+}
+::ng-deep .off-screen {
+    display: block;
+    float: left;
+    height: 0;
+    overflow: hidden;
+    text-indent: -99999px;
+    width: 0;
 }
