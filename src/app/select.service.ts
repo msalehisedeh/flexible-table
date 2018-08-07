@@ -2,7 +2,10 @@ import { Component } from '@angular/core';
 import { PipeServiceComponent } from 'into-pipes';
 
 
-@Component({})
+@Component({
+    template: ``,
+    styles:[``]
+})
 export class SelectService implements PipeServiceComponent {
 
     getDataFor(name, id, data) {

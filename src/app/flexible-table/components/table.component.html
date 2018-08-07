@@ -55,8 +55,7 @@
             <td scope="row" *ngIf="action && !printMode"></td>
         </tr>
        <ng-template ngFor let-item [ngForOf]="filteredItems" let-i="index">
-            <tr *ngIf="i >= pageInfo.from && i <= pageInfo.to "
-                (click)="actionClick($event, item)"
+            <tr (click)="actionClick($event, item)"
                 (mouseover)="hover(item, true)"
                 (mouseout)="hover(item, false)"
                 [class.pointer]="action"

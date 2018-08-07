@@ -37,6 +37,15 @@ ol {
         }
     }
 }
+::ng-deep .calendar-box {
+    a {
+        float: right;
+        margin: 0 10px 0 0;
+    }
+    .date {
+        float: left;
+    }
+}
 ::ng-deep .off-screen {
     display: block;
     float: left;

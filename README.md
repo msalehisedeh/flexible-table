@@ -39,6 +39,18 @@ Please send your requests or comments through the link provided below:
 |locked                |In a lock table, should the column be locked out.                       |
 
 
+## Events
+| Event                |Description                                     |
+|----------------------|------------------------------------------------|
+|onaction              |Will be published on a click action of a row    |
+|onCellContentEdit     |Will be published when content of an editable cell is modified    |
+|onconfigurationchange |Will be called when user selects to hide/un-hide some of headers on configuration pop-up          |
+
+
+
+# Version 1.5.5
+Made performance improvements. Upgraded into-pipes version.
+
 # Version 1.5.2
 Upgraded into-pipes version.
 
@@ -92,13 +104,6 @@ then you will need to use your formatter in header meta-data
 ```javascript
 {key:'userName', value:'Name', present: true, format:'myLink'}
 ```
-
-## Events
-| Event                |Description                                     |
-|----------------------|------------------------------------------------|
-|onaction              |Will be published on a click action of a row    |
-|onCellContentEdit     |Will be published when content of an editable cell is modified    |
-|onconfigurationchange |Will be called when user selects to hide/un-hide some of headers on configuration pop-up          |
 
 
 ```javascript

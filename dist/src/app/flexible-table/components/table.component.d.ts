@@ -55,6 +55,7 @@ export declare class TableViewComponent implements OnInit, OnChanges {
     private swapColumns(source, destination);
     private getColumnIndex(id);
     private itemValue(item, hpath);
+    private initVisibleRows();
     lock(header: FlexibleTableHeader, event: any): void;
     sort(header: FlexibleTableHeader, icon: any): void;
     offsetWidth(): any;

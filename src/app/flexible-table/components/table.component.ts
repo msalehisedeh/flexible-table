@@ -187,6 +187,15 @@ export class TableViewComponent implements OnInit, OnChanges {
 		})
 		return subitem === undefined || subitem === null || subitem === "null" ? "" : String(subitem);
 	}
+	private initVisibleRows() {
+		const result = [];
+		for (let i = 0; i < this.filteredItems.length; i++) {
+			if (i >= this.pageInfo.from && i <= this.pageInfo.to) {
+				result.push(this.filteredItems[i]);
+			}
+		}
+		this.filteredItems = result;
+	}
 
 	lock(header: FlexibleTableHeader, event) {
         event.stopPropagation();	
@@ -224,6 +233,12 @@ export class TableViewComponent implements OnInit, OnChanges {
 				icon.classList.add("fa-sort-asc");
 			}
 			const hpath = header.key.split(".");
+
+			if (this.enableFiltering) {
+				this.filterItems();
+			} else {
+				this.filteredItems = this.items ? this.items : [];
+			}
 			this.filteredItems.sort((a, b) => {
 				const v1 = this.itemValue(a, hpath);
 				const v2 = this.itemValue(b, hpath);
@@ -233,6 +248,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 				}
 				return v1 < v2 ? 1 : -1;
 			});
+			this.initVisibleRows();
 		}
 	}
 
@@ -241,25 +257,28 @@ export class TableViewComponent implements OnInit, OnChanges {
 	}
 
 	ngOnChanges(changes:any) {
-		if (changes.items) {
-			if (this.enableFiltering) {
-				if (this.enableFiltering) {
-					this.filterItems();
-				} else {
-					this.filteredItems = this.items ? this.items : [];
-				}
-			}
-		}
+		// if (changes.items) {
+		// 	if (this.enableFiltering) {
+		// 		this.filterItems();
+		// 	} else {
+		// 		this.filteredItems = this.items ? this.items : [];
+		// 	}
+		// 	this.initVisibleRows();
+		// }
 	}
 
 	ngOnInit() {
-		if (!this.pageInfo) {
+		if (this.pageInfo) {
+			if (!this.pageInfo.to) {
+				this.pageInfo.to = this.pageInfo.pageSize;
+			}
+		} else {
 			this.pageInfo = { 
-                contentSize: 1000, 
-                pageSize: 1000, 
+                contentSize: 100000, 
+                pageSize: 100000, 
                 pages: 1, 
                 from: 0, 
-                to: 1000, 
+                to: 100000, 
                 currentPage: 1, 
                 maxWidth: "0" 
             };
@@ -272,6 +291,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 		} else {
 			this.filteredItems = this.items ? this.items : [];
 		}
+		this.initVisibleRows();
         if (this.actionKeys) {
             this.actionKeys = this.actionKeys.split(",");
 		}

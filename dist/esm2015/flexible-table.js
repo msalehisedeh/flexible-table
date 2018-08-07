@@ -690,6 +690,18 @@ class TableViewComponent {
         return subitem === undefined || subitem === null || subitem === "null" ? "" : String(subitem);
     }
     /**
+     * @return {?}
+     */
+    initVisibleRows() {
+        const /** @type {?} */ result = [];
+        for (let /** @type {?} */ i = 0; i < this.filteredItems.length; i++) {
+            if (i >= this.pageInfo.from && i <= this.pageInfo.to) {
+                result.push(this.filteredItems[i]);
+            }
+        }
+        this.filteredItems = result;
+    }
+    /**
      * @param {?} header
      * @param {?} event
      * @return {?}
@@ -734,6 +746,12 @@ class TableViewComponent {
                 icon.classList.add("fa-sort-asc");
             }
             const /** @type {?} */ hpath = header.key.split(".");
+            if (this.enableFiltering) {
+                this.filterItems();
+            }
+            else {
+                this.filteredItems = this.items ? this.items : [];
+            }
             this.filteredItems.sort((a, b) => {
                 const /** @type {?} */ v1 = this.itemValue(a, hpath);
                 const /** @type {?} */ v2 = this.itemValue(b, hpath);
@@ -742,6 +760,7 @@ class TableViewComponent {
                 }
                 return v1 < v2 ? 1 : -1;
             });
+            this.initVisibleRows();
         }
     }
     /**
@@ -755,28 +774,31 @@ class TableViewComponent {
      * @return {?}
      */
     ngOnChanges(changes) {
-        if (changes.items) {
-            if (this.enableFiltering) {
-                if (this.enableFiltering) {
-                    this.filterItems();
-                }
-                else {
-                    this.filteredItems = this.items ? this.items : [];
-                }
-            }
-        }
+        // if (changes.items) {
+        // 	if (this.enableFiltering) {
+        // 		this.filterItems();
+        // 	} else {
+        // 		this.filteredItems = this.items ? this.items : [];
+        // 	}
+        // 	this.initVisibleRows();
+        // }
     }
     /**
      * @return {?}
      */
     ngOnInit() {
-        if (!this.pageInfo) {
+        if (this.pageInfo) {
+            if (!this.pageInfo.to) {
+                this.pageInfo.to = this.pageInfo.pageSize;
+            }
+        }
+        else {
             this.pageInfo = {
-                contentSize: 1000,
-                pageSize: 1000,
+                contentSize: 100000,
+                pageSize: 100000,
                 pages: 1,
                 from: 0,
-                to: 1000,
+                to: 100000,
                 currentPage: 1,
                 maxWidth: "0"
             };
@@ -790,6 +812,7 @@ class TableViewComponent {
         else {
             this.filteredItems = this.items ? this.items : [];
         }
+        this.initVisibleRows();
         if (this.actionKeys) {
             this.actionKeys = this.actionKeys.split(",");
         }
@@ -1140,8 +1163,7 @@ TableViewComponent.decorators = [
             <td scope="row" *ngIf="action && !printMode"></td>
         </tr>
        <ng-template ngFor let-item [ngForOf]="filteredItems" let-i="index">
-            <tr *ngIf="i >= pageInfo.from && i <= pageInfo.to "
-                (click)="actionClick($event, item)"
+            <tr (click)="actionClick($event, item)"
                 (mouseover)="hover(item, true)"
                 (mouseout)="hover(item, false)"
                 [class.pointer]="action"
