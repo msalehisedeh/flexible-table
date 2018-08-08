@@ -595,10 +595,18 @@ var TableViewComponent = /** @class */ (function () {
         };
     };
     TableViewComponent.prototype.changeFilter = function (event, header) {
+        var _this = this;
         var code = event.which;
         header.filter = event.target.value;
         if (this.filterwhiletyping || code === 13) {
-            this.filterItems();
+            if (this.filteringTimerId) {
+                clearTimeout(this.filteringTimerId);
+            }
+            this.filteringTimerId = setTimeout(function () {
+                _this.filterItems();
+                _this.initVisibleRows();
+                _this.filteringTimerId = undefined;
+            }, 123);
         }
     };
     TableViewComponent.prototype.actionClick = function (event, item) {
@@ -656,18 +664,18 @@ var TableViewComponent = /** @class */ (function () {
             }
             else if (filterBy[0] === '*' && filterBy[filterBy.length - 1] !== '*') {
                 var f = filterBy.substring(1);
-                result = value.toLowerCase().indexOf(f) !== value.length - f.length;
+                result = value.indexOf(f) !== value.length - f.length;
             }
             else if (filterBy[0] !== '*' && filterBy[filterBy.length - 1] === '*') {
                 var f = filterBy.substring(0, filterBy.length - 1);
-                result = value.toLowerCase().indexOf(f) !== 0;
+                result = value.indexOf(f) !== 0;
             }
             else if (filterBy[0] === '*' && filterBy[filterBy.length - 1] === '*') {
                 var f = filterBy.substring(1, filterBy.length - 1);
-                result = value.toLowerCase().indexOf(f) < 0;
+                result = value.indexOf(f) < 0;
             }
             else {
-                result = value.toLowerCase().indexOf(filterBy) < 0;
+                result = value.indexOf(filterBy) < 0;
             }
         }
         return result;
@@ -679,9 +687,8 @@ var TableViewComponent = /** @class */ (function () {
             for (var i = 0; i < _this.headers.length; i++) {
                 var header = _this.headers[i];
                 if (header.filter && header.filter.length) {
-                    var v2 = header.filter.toLowerCase();
                     var v = _this.itemValue(item, header.key.split("."));
-                    if (_this.shouldSkipItem(v, v2)) {
+                    if (_this.shouldSkipItem(v, header.filter)) {
                         keepItem = false;
                         break;
                     }

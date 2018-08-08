@@ -20,6 +20,7 @@ export declare class TableViewComponent implements OnInit, OnChanges {
     dragging: boolean;
     printMode: boolean;
     filteredItems: any[];
+    filteringTimerId: any;
     vocabulary: {
         configureTable: string;
         configureColumns: string;

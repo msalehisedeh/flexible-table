@@ -939,7 +939,14 @@ class TableViewComponent {
         const /** @type {?} */ code = event.which;
         header.filter = event.target.value;
         if (this.filterwhiletyping || code === 13) {
-            this.filterItems();
+            if (this.filteringTimerId) {
+                clearTimeout(this.filteringTimerId);
+            }
+            this.filteringTimerId = setTimeout(() => {
+                this.filterItems();
+                this.initVisibleRows();
+                this.filteringTimerId = undefined;
+            }, 123);
         }
     }
     /**
@@ -1009,18 +1016,18 @@ class TableViewComponent {
             }
             else if (filterBy[0] === '*' && filterBy[filterBy.length - 1] !== '*') {
                 const /** @type {?} */ f = filterBy.substring(1);
-                result = value.toLowerCase().indexOf(f) !== value.length - f.length;
+                result = value.indexOf(f) !== value.length - f.length;
             }
             else if (filterBy[0] !== '*' && filterBy[filterBy.length - 1] === '*') {
                 const /** @type {?} */ f = filterBy.substring(0, filterBy.length - 1);
-                result = value.toLowerCase().indexOf(f) !== 0;
+                result = value.indexOf(f) !== 0;
             }
             else if (filterBy[0] === '*' && filterBy[filterBy.length - 1] === '*') {
                 const /** @type {?} */ f = filterBy.substring(1, filterBy.length - 1);
-                result = value.toLowerCase().indexOf(f) < 0;
+                result = value.indexOf(f) < 0;
             }
             else {
-                result = value.toLowerCase().indexOf(filterBy) < 0;
+                result = value.indexOf(filterBy) < 0;
             }
         }
         return result;
@@ -1034,9 +1041,8 @@ class TableViewComponent {
             for (let /** @type {?} */ i = 0; i < this.headers.length; i++) {
                 const /** @type {?} */ header = this.headers[i];
                 if (header.filter && header.filter.length) {
-                    const /** @type {?} */ v2 = header.filter.toLowerCase();
                     const /** @type {?} */ v = this.itemValue(item, header.key.split("."));
-                    if (this.shouldSkipItem(v, v2)) {
+                    if (this.shouldSkipItem(v, header.filter)) {
                         keepItem = false;
                         break;
                     }

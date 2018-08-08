@@ -48,6 +48,9 @@ Please send your requests or comments through the link provided below:
 
 
 
+# Version 1.5.6
+Made performance improvement for filtering. If there are more than 1000 records and you have set the filterWhileTyping, then there could be performance issues. As a result, removed case insensivity to perform bette. Also, introduced delay filtering for those who type fast!!
+
 # Version 1.5.5
 Made performance improvements. Upgraded into-pipes version.
 
