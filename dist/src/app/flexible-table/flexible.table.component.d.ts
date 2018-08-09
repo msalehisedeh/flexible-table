@@ -1,6 +1,7 @@
 import { OnInit } from '@angular/core';
 import { DropEvent } from 'drag-enabled';
 import { TableHeadersGenerator } from './components/table-headers-generator';
+import { TableViewComponent } from './components/table.component';
 export declare class FlexibleTableComponent implements OnInit {
     private generator;
     subItems: any;
@@ -37,6 +38,7 @@ export declare class FlexibleTableComponent implements OnInit {
     private onaction;
     private onCellContentEdit;
     private onconfigurationchange;
+    viewTable: TableViewComponent;
     constructor(generator: TableHeadersGenerator);
     ngOnInit(): void;
     updateLimits(): void;

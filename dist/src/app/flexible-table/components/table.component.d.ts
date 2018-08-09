@@ -56,12 +56,13 @@ export declare class TableViewComponent implements OnInit, OnChanges {
     private swapColumns(source, destination);
     private getColumnIndex(id);
     private itemValue(item, hpath);
-    private initVisibleRows();
+    initVisibleRows(): void;
     lock(header: FlexibleTableHeader, event: any): void;
     sort(header: FlexibleTableHeader, icon: any): void;
     offsetWidth(): any;
     ngOnChanges(changes: any): void;
     ngOnInit(): void;
+    evaluateRows(): void;
     headerColumnElements(): any[];
     headerById(id: any): any;
     columnsCount(): number;

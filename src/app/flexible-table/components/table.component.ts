@@ -190,7 +190,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 		})
 		return subitem === undefined || subitem === null || subitem === "null" ? "" : String(subitem);
 	}
-	private initVisibleRows() {
+	initVisibleRows() {
 		const result = [];
 		for (let i = 0; i < this.filteredItems.length; i++) {
 			if (i >= this.pageInfo.from && i <= this.pageInfo.to) {
@@ -261,12 +261,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 
 	ngOnChanges(changes:any) {
 		// if (changes.items) {
-		// 	if (this.enableFiltering) {
-		// 		this.filterItems();
-		// 	} else {
-		// 		this.filteredItems = this.items ? this.items : [];
-		// 	}
-		// 	this.initVisibleRows();
+		// 	this.evaluateRows();
 		// }
 	}
 
@@ -289,12 +284,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 		if (!this.headers) {
 			this.headers = [];
 		}
-		if (this.enableFiltering) {
-			this.filterItems();
-		} else {
-			this.filteredItems = this.items ? this.items : [];
-		}
-		this.initVisibleRows();
+		this.evaluateRows();
         if (this.actionKeys) {
             this.actionKeys = this.actionKeys.split(",");
 		}
@@ -309,6 +299,14 @@ export class TableViewComponent implements OnInit, OnChanges {
 		if (!this.rowDetailerHeaders) {
 			this.rowDetailerHeaders = (item) => [];
 		}
+	}
+	evaluateRows() {
+		if (this.enableFiltering) {
+			this.filterItems();
+		} else {
+			this.filteredItems = this.items ? this.items : [];
+		}
+		this.initVisibleRows();
 	}
 
     headerColumnElements() {

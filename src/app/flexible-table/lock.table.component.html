@@ -44,4 +44,7 @@
 		(onaction)="tableAction($event)"></table-view>
 	
 </div>
-<table-pagination [info]="pageInfo" [vocabulary]="vocabulary" #pager></table-pagination>
+<table-pagination #pager
+	[info]="pageInfo" 
+	[vocabulary]="vocabulary" 
+    (onchange)="onPaginationChange($event)"></table-pagination>

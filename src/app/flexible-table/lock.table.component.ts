@@ -116,6 +116,21 @@ export class LockTableComponent implements OnInit {
 	) {}
 
 	ngOnInit() {
+		if (this.pageInfo) {
+			if (!this.pageInfo.to) {
+				this.pageInfo.to = this.pageInfo.pageSize;
+			}
+		} else {
+			this.pageInfo = { 
+                contentSize: 100000, 
+                pageSize: 100000, 
+                pages: 1, 
+                from: 0, 
+                to: 100000, 
+                currentPage: 1, 
+                maxWidth: "0" 
+            };
+		}
 		if (this.persistenceKey) {
 			const headers:any = this.generator.retreiveHeaders(this.persistenceKey, this.persistenceId);
 
@@ -166,12 +181,18 @@ export class LockTableComponent implements OnInit {
 	changeLockedTableFilteredItems(event) {
 		if (this.lockedTable) {
 			this.lockedTable.filteredItems = event;
+			this.lockedTable.initVisibleRows();
 		}
 	}
 	changeUnlockedTableFilteredItems(event) {
 		if (this.unlockedTable) {
 			this.unlockedTable.filteredItems = event;
+			this.unlockedTable.initVisibleRows();
 		}
+	}
+	onPaginationChange(event) {
+		this.pageInfo = event;
+		this.unlockedTable.evaluateRows();
 	}
 
 	tableAction(event) {

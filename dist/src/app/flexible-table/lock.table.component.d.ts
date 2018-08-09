@@ -44,6 +44,7 @@ export declare class LockTableComponent implements OnInit {
     onlock(event: any): void;
     changeLockedTableFilteredItems(event: any): void;
     changeUnlockedTableFilteredItems(event: any): void;
+    onPaginationChange(event: any): void;
     tableAction(event: any): void;
     onDrop(event: DropEvent): void;
     onCellEdit(event: any): void;

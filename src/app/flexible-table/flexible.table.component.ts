@@ -16,6 +16,7 @@ import {
 
 import { DropEvent, DragEvent } from 'drag-enabled';
 import { TableHeadersGenerator } from './components/table-headers-generator';
+import { TableViewComponent } from './components/table.component';
 
 @Component({
 	selector: 'flexible-table',
@@ -105,6 +106,9 @@ export class FlexibleTableComponent implements OnInit {
 	@Output('onconfigurationchange')
 	private onconfigurationchange = new EventEmitter();
 
+	@ViewChild('viewTable')
+	viewTable: TableViewComponent;
+
     constructor(private generator: TableHeadersGenerator) {}
 
 	ngOnInit() {
@@ -145,6 +149,7 @@ export class FlexibleTableComponent implements OnInit {
 
 	onPaginationChange(event) {
 		this.pageInfo = event;
+		this.viewTable.evaluateRows();
 	}
 
 	tableAction(event) {

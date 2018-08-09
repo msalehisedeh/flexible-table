@@ -62,7 +62,8 @@
                 [class.hover]="item.hover"
                 [class.expanded]="item.expanded"
                 [class.odd]="i%2">
-                <td scope="row" class="index" *ngIf="enableIndexing && !printMode">{{i + 1}}</td>
+                <td scope="row" class="index" *ngIf="enableIndexing && !printMode">
+                    <span [textContent]="i + pageInfo.from + 1"></span></td>
                 <td scope="row" 
                     *ngFor="let header of headers" 
                     [class]="toCssClass(header)"

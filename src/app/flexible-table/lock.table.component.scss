@@ -50,15 +50,15 @@
                 margin-top: 0;
 
                 th {
+                    td {
+                        white-space: nowrap;
+                    }
+
                     .locker {
                         cursor: pointer;
                         color: #00925b;
                         text-align: center;
                     }
-                }
-                td, th {
-                    white-space: nowrap;
-                    min-height: 23px !important;
                 }
                 tbody {
                     tr {
@@ -90,15 +90,14 @@
                 width:auto;
 
                 th {
+                    td {
+                        white-space: nowrap;
+                    }
                     .locker {
                         cursor: pointer;
                         color: #8b0224;
                         text-align: center;
                     }
-                }
-                td, th {
-                    white-space: nowrap;
-                    min-height: 23px !important;
                 }
                 tbody {
                     tr {
