@@ -411,21 +411,10 @@ export class TableViewComponent implements OnInit, OnChanges {
 	}
 
 	print() {
-		const oldInfo = this.pageInfo;
-		this.pageInfo = { 
-			contentSize: 1000, 
-			pageSize: 1000, 
-			pages: 1, 
-			from: 0, 
-			to: 1000, 
-			currentPage: 1, 
-			maxWidth: "0" 
-		}
 		this.printMode = true;
 		setTimeout(()=>{
 			const content = this.el.nativeElement.innerHTML;
 			this.printMode = false;
-			this.pageInfo = oldInfo;
 			const popupWin = window.open('', '_blank', 'width=300,height=300');
 		
 			popupWin.document.open();
@@ -440,13 +429,13 @@ export class TableViewComponent implements OnInit, OnChanges {
 
 		if (value !== undefined && value !== null && value.length) {			
 			if (filterBy[0] === '<') {
-				result = parseFloat(value) >= parseFloat(filterBy.substring(1));
+				result = filterBy.length > 1 && parseFloat(value) >= parseFloat(filterBy.substring(1));
 			} else if (filterBy[0] === '>') {
-				result = parseFloat(value) <= parseFloat(filterBy.substring(1));
+				result = filterBy.length > 1 && parseFloat(value) <= parseFloat(filterBy.substring(1));
 			} else if (filterBy[0] === '!') {
-				result = parseFloat(value) == parseFloat(filterBy.substring(1));
+				result = filterBy.length > 1 && parseFloat(value) == parseFloat(filterBy.substring(1));
 			} else if (filterBy[0] === '=') {
-				result = parseFloat(value) !== parseFloat(filterBy.substring(1));
+				result = filterBy.length == 1 || parseFloat(value) !== parseFloat(filterBy.substring(1));
 			} else if (filterBy[0] === '*' && filterBy[filterBy.length-1] !== '*') {
 				const f = filterBy.substring(1);
 				result = value.indexOf(f) !== value.length - f.length
@@ -454,8 +443,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 				const f = filterBy.substring(0, filterBy.length-1);
 				result = value.indexOf(f) !== 0;
 			} else if (filterBy[0] === '*' && filterBy[filterBy.length-1] === '*') {
-				const f = filterBy.substring(1, filterBy.length-1);
-				result = value.indexOf(f) < 0;
+				result = filterBy.length > 1 && value.indexOf( filterBy.substring(1, filterBy.length-1) ) < 0;
 			} else {
 				result = value.indexOf(filterBy) < 0;
 			}

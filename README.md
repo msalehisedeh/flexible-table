@@ -47,6 +47,8 @@ Please send your requests or comments through the link provided below:
 |onconfigurationchange |Will be called when user selects to hide/un-hide some of headers on configuration pop-up          |
 
 
+# Version 1.6.0
+Fixed issue with filtering while using operational characters. If allowing filter while typing and if type an opration character like "*", "!","=","<", ">" we do not want to filter any row out of tabulating data.  Also, modified printing mechanism to print only the current page. In case of 4000 records in a table, we definately do not want to print all rows to avoid performance degradation.  
 
 # Version 1.5.6
 Made performance improvement for filtering. If there are more than 1000 records and you have set the filterWhileTyping, then there could be performance issues. As a result, removed case insensivity to perform bette. Also, introduced delay filtering for those who type fast!!
@@ -58,7 +60,7 @@ Made performance improvements. Upgraded into-pipes version.
 Upgraded into-pipes version.
 
 # Version 1.5.1
-Provided **configAddon** attribute to include additional control items along side the print and configuration buttons.  Consider a situation where you want to have a add row to a table inside a table expandable row. in such a case you would want to place the buttons in right place for each table. to make this happen, create a ng-template for the additional controls and pass a reference to it to the corresponding table thruog **configAddon** attribute,
+Provided **configAddon** attribute to include additional control items along side the print and configuration buttons.  Consider a situation where you want to have a add row to a table inside a table expandable row. in such a case you would want to place the buttons in right place for each table. to make this happen, create a ng-template for the additional controls and pass a reference to it to the corresponding table thruogh **configAddon** attribute. For example, You can use the **configAddon** to give information about filtering operations and print policy or for any other reaon you see it fit.
 
 # Version 1.4.7
 Upgraded to latest version of into-pipes and introduced **onCellContentEdit** event which will be triggered when cell content is editted. To make a cell editable, use format attribute of header meta-data. Look at documentation of into-pipes to decide if you want to fomat a field into a text, a checkbox, a select dropdown or any other formats.  If you want to format a cell in a special way that is not supported by into-pipes, you will need to create a custom component and register. For example, lets say you want to displlay a link and the link href should point to somewhere with other parameters in the road. You would need to import **ComponentPool**, create your format component, and register it. You will then have to register it and use the registered component name as a format rule. When a cell content is edited, you will receive onCellContentEdit event where you will have opportunity to save the changed cell content in your data source.

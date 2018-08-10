@@ -377,21 +377,10 @@ var TableViewComponent = /** @class */ (function () {
     };
     TableViewComponent.prototype.print = function () {
         var _this = this;
-        var oldInfo = this.pageInfo;
-        this.pageInfo = {
-            contentSize: 1000,
-            pageSize: 1000,
-            pages: 1,
-            from: 0,
-            to: 1000,
-            currentPage: 1,
-            maxWidth: "0"
-        };
         this.printMode = true;
         setTimeout(function () {
             var content = _this.el.nativeElement.innerHTML;
             _this.printMode = false;
-            _this.pageInfo = oldInfo;
             var popupWin = window.open('', '_blank', 'width=300,height=300');
             popupWin.document.open();
             popupWin.document.write('<html><body onload="window.print()">' + content + '</html>');
@@ -402,16 +391,16 @@ var TableViewComponent = /** @class */ (function () {
         var result = false;
         if (value !== undefined && value !== null && value.length) {
             if (filterBy[0] === '<') {
-                result = parseFloat(value) >= parseFloat(filterBy.substring(1));
+                result = filterBy.length > 1 && parseFloat(value) >= parseFloat(filterBy.substring(1));
             }
             else if (filterBy[0] === '>') {
-                result = parseFloat(value) <= parseFloat(filterBy.substring(1));
+                result = filterBy.length > 1 && parseFloat(value) <= parseFloat(filterBy.substring(1));
             }
             else if (filterBy[0] === '!') {
-                result = parseFloat(value) == parseFloat(filterBy.substring(1));
+                result = filterBy.length > 1 && parseFloat(value) == parseFloat(filterBy.substring(1));
             }
             else if (filterBy[0] === '=') {
-                result = parseFloat(value) !== parseFloat(filterBy.substring(1));
+                result = filterBy.length == 1 || parseFloat(value) !== parseFloat(filterBy.substring(1));
             }
             else if (filterBy[0] === '*' && filterBy[filterBy.length - 1] !== '*') {
                 var f = filterBy.substring(1);
@@ -422,8 +411,7 @@ var TableViewComponent = /** @class */ (function () {
                 result = value.indexOf(f) !== 0;
             }
             else if (filterBy[0] === '*' && filterBy[filterBy.length - 1] === '*') {
-                var f = filterBy.substring(1, filterBy.length - 1);
-                result = value.indexOf(f) < 0;
+                result = filterBy.length > 1 && value.indexOf(filterBy.substring(1, filterBy.length - 1)) < 0;
             }
             else {
                 result = value.indexOf(filterBy) < 0;
@@ -551,6 +539,7 @@ var FlexibleTableComponent = /** @class */ (function () {
                 return { data: item, headers: [] };
             };
         }
+        this.pageInfo.contentSize = this.items.length;
         this.updateLimits();
     };
     FlexibleTableComponent.prototype.updateLimits = function () {
@@ -821,6 +810,7 @@ var LockTableComponent = /** @class */ (function () {
             }
         }
         this.filteredItems = this.items;
+        this.pageInfo.contentSize = this.items.length;
         this.reconfigure(this.headers);
     };
     LockTableComponent.prototype.evaluatePositioning = function () {

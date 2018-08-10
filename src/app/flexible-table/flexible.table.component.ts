@@ -25,7 +25,6 @@ import { TableViewComponent } from './components/table.component';
 })
 export class FlexibleTableComponent implements OnInit {
 
-	subItems:any;
 	subHeaders:any;
 
     @Input("vocabulary")
@@ -130,6 +129,8 @@ export class FlexibleTableComponent implements OnInit {
 				return {data: item, headers: []};
 			};
 		}
+		this.pageInfo.contentSize = this.items.length;
+
 		this.updateLimits();
 	}
 

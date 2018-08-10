@@ -4,7 +4,6 @@ import { TableHeadersGenerator } from './components/table-headers-generator';
 import { TableViewComponent } from './components/table.component';
 export declare class FlexibleTableComponent implements OnInit {
     private generator;
-    subItems: any;
     subHeaders: any;
     vocabulary: {
         printTable: string;

@@ -145,6 +145,8 @@ export class LockTableComponent implements OnInit {
 			}
 		}
 		this.filteredItems = this.items;
+		this.pageInfo.contentSize = this.items.length;
+		
 		this.reconfigure(this.headers);
 
 	}
