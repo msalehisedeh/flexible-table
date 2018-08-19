@@ -5,9 +5,11 @@ Have you ever looked for a simple way of flushing your data in a versatile table
 
 FlexibleTable and LockTable are Angular based code. LockTable will allow you to lock/unlock columns. Both tables are fully configurable with pagination and ability to re-order table columns through drag/drop operation.
 
+**NOTE:** Starting with version 1.7.0 this library is compatible with Angular 6+.
+
 Please send your requests or comments through the link provided below:
 
-[Source code](https://github.com/msalehisedeh/flexible-table) | [Comments/Requests](https://github.com/msalehisedeh/flexible-table/issues)
+[Source code](https://github.com/msalehisedeh/flexible-table/tree/master/src/app) | [Comments/Requests](https://github.com/msalehisedeh/flexible-table/issues)
 
 ## Features
 * Responsive
@@ -46,6 +48,9 @@ Please send your requests or comments through the link provided below:
 |onCellContentEdit     |Will be published when content of an editable cell is modified    |
 |onconfigurationchange |Will be called when user selects to hide/un-hide some of headers on configuration pop-up          |
 
+
+# Version 1.7.0
+Updated libraries to become compatible with Angular 6+. 
 
 # Version 1.6.0
 Fixed issue with filtering while using operational characters. If allowing filter while typing and if type an opration character like "*", "!","=","<", ">" we do not want to filter any row out of tabulating data.  Also, modified printing mechanism to print only the current page. In case of 4000 records in a table, we definately do not want to print all rows to avoid performance degradation.  
