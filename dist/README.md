@@ -5,7 +5,7 @@ Have you ever looked for a simple way of flushing your data in a versatile table
 
 FlexibleTable and LockTable are Angular based code. LockTable will allow you to lock/unlock columns. Both tables are fully configurable with pagination and ability to re-order table columns through drag/drop operation.
 
-**NOTE:** Starting with version 1.7.0 this library is compatible with Angular 6+.
+**NOTE:** If your project still is angular 2, 4, or 5; please luck-down your version reference to flexible table to 1.7.1 version by removing ^ from the version dependency in your package json. Otherwise for Angular 6+, please use 1.7.2 version or higher.
 
 Please send your requests or comments through the link provided below:
 
@@ -49,14 +49,20 @@ Please send your requests or comments through the link provided below:
 |onconfigurationchange |Will be called when user selects to hide/un-hide some of headers on configuration pop-up          |
 
 
+# Version 1.7.2
+rolling to angular 6+ after fixing the dependency issue.
+
+# Version 1.7.1
+Temporary roll-back to angular 5. I forgot to luck-down the dependencies for angular 5 before upgrading to angular 6. this will cause problem if you are still using angular 5. 
+
 # Version 1.7.0
 Updated libraries to become compatible with Angular 6+. 
 
 # Version 1.6.0
-Fixed issue with filtering while using operational characters. If allowing filter while typing and if type an opration character like "*", "!","=","<", ">" we do not want to filter any row out of tabulating data.  Also, modified printing mechanism to print only the current page. In case of 4000 records in a table, we definately do not want to print all rows to avoid performance degradation.  
+Fixed issue with filtering while using operational characters. If allowing filter while typing and if type an operation character like "*", "!","=","<", ">" we do not want to filter any row out of tabulating data.  Also, modified printing mechanism to print only the current page. In case of 4000 records in a table, we definitely do not want to print all rows to avoid performance degradation.  
 
 # Version 1.5.6
-Made performance improvement for filtering. If there are more than 1000 records and you have set the filterWhileTyping, then there could be performance issues. As a result, removed case insensivity to perform bette. Also, introduced delay filtering for those who type fast!!
+Made performance improvement for filtering. If there are more than 1000 records and you have set the filterWhileTyping, then there could be performance issues. As a result, removed case insensitivity to perform better. Also, introduced delay filtering for those who type fast!!
 
 # Version 1.5.5
 Made performance improvements. Upgraded into-pipes version.
@@ -68,7 +74,7 @@ Upgraded into-pipes version.
 Provided **configAddon** attribute to include additional control items along side the print and configuration buttons.  Consider a situation where you want to have a add row to a table inside a table expandable row. in such a case you would want to place the buttons in right place for each table. to make this happen, create a ng-template for the additional controls and pass a reference to it to the corresponding table thruogh **configAddon** attribute. For example, You can use the **configAddon** to give information about filtering operations and print policy or for any other reaon you see it fit.
 
 # Version 1.4.7
-Upgraded to latest version of into-pipes and introduced **onCellContentEdit** event which will be triggered when cell content is editted. To make a cell editable, use format attribute of header meta-data. Look at documentation of into-pipes to decide if you want to fomat a field into a text, a checkbox, a select dropdown or any other formats.  If you want to format a cell in a special way that is not supported by into-pipes, you will need to create a custom component and register. For example, lets say you want to displlay a link and the link href should point to somewhere with other parameters in the road. You would need to import **ComponentPool**, create your format component, and register it. You will then have to register it and use the registered component name as a format rule. When a cell content is edited, you will receive onCellContentEdit event where you will have opportunity to save the changed cell content in your data source.
+Upgraded to latest version of into-pipes and introduced **onCellContentEdit** event which will be triggered when cell content is edited. To make a cell editable, use format attribute of header meta-data. Look at documentation of into-pipes to decide if you want to format a field into a text, a checkbox, a select drop-down or any other formats.  If you want to format a cell in a special way that is not supported by into-pipes, you will need to create a custom component and register. For example, lets say you want to display a link and the link href should point to somewhere with other parameters in the road. You would need to import **ComponentPool**, create your format component, and register it. You will then have to register it and use the registered component name as a format rule. When a cell content is edited, you will receive onCellContentEdit event where you will have opportunity to save the changed cell content in your data source.
 
 ```javascript
 import { Component, EventEmitter } from '@angular/core';
@@ -105,7 +111,7 @@ Then you need to register it
 ```javascript
 import { ComponentPool } from 'into-pipes';
 ...
-contructor(private pool:ComponentPool){
+constructor(private pool:ComponentPool){
   // you can also register this as "link" in which it will override default link component.
   this.pool.registerComponent("myLink",new CustomLinkComponent())
 }
@@ -356,7 +362,7 @@ We are using "into-pipes" library. to see available formatting options, please f
 |expandable          |function in component that owns the table which determines in a specific row is expandable. This function is called twice with a flag argument. If flag is false, call is to determine if action icon should be displayed on row. otherwise is to give before expansion opportunity to the owner to perform possible operation before expansion on the table take effect.        |
 |expandIf            |flag to override calling of expandable function.                                   |
 |rowDetailerHeaders  |If the expanding row should be displayed in another table inside, then this attribute will be passed to the expansion template.  |
-|configAddon         |Template to include additional control items alongside print and configute actions. |
+|configAddon         |Template to include additional control items alongside print and configure actions. |
 
 ## Events
 | Event                |Description                                     |

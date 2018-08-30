@@ -336,7 +336,7 @@ var TableViewComponent = /** @class */ (function () {
     };
     TableViewComponent.prototype.cellContent = function (item, header) {
         var content = this.itemValue(item, header.key.split("."));
-        return (content !== undefined && content != null) ? content : '&nbsp;';
+        return (content !== undefined && content != null && content.length) ? content : '&nbsp;';
     };
     TableViewComponent.prototype.rowDetailerContext = function (item) {
         return {

@@ -369,7 +369,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 
     cellContent(item, header) {
 		let content = this.itemValue(item, header.key.split("."));
-        return (content !== undefined && content != null) ? content : '&nbsp;';
+        return (content !== undefined && content != null && content.length) ? content : '&nbsp;';
 	}
 
 	rowDetailerContext(item) {

@@ -459,7 +459,7 @@ class TableViewComponent {
      */
     cellContent(item, header) {
         let /** @type {?} */ content = this.itemValue(item, header.key.split("."));
-        return (content !== undefined && content != null) ? content : '&nbsp;';
+        return (content !== undefined && content != null && content.length) ? content : '&nbsp;';
     }
     /**
      * @param {?} item
