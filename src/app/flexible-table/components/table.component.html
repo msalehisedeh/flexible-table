@@ -4,7 +4,7 @@
     <thead>
         <tr>
             <th scope="col" *ngIf="enableIndexing && !printMode" id="indexable" class="indexable"></th>
-            <th scope="col" *ngFor="let header of headers"
+            <th scope="col" *ngFor="let header of headers" #th
                 [dragEnabled]="dragEnabled.bind(this)"
                 [dropEnabled]="dropEnabled.bind(this)"
                 [medium]="header"

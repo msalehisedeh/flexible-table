@@ -13,6 +13,7 @@ export declare class PaginationComponent implements OnInit {
     vocabulary: {
         setSize: string;
         firstPage: string;
+        nextPage: string;
         lastPage: string;
         previousPage: string;
     };

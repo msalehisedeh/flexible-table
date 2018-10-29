@@ -129,8 +129,22 @@ export class FlexibleTableComponent implements OnInit {
 				return {data: item, headers: []};
 			};
 		}
-		this.pageInfo.contentSize = this.items.length;
-
+		if (this.pageInfo) {
+			if (!this.pageInfo.to) {
+				this.pageInfo.to = this.pageInfo.pageSize;
+			}
+			this.pageInfo.contentSize = this.items.length;
+		} else {
+			this.pageInfo = {
+                contentSize: 100000,
+                pageSize: 100000,
+                pages: 1,
+                from: 0,
+                to: 100000,
+                currentPage: 1,
+                maxWidth: "0"
+            };
+		}
 		this.updateLimits();
 	}
 

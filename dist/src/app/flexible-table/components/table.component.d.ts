@@ -70,7 +70,7 @@ export declare class TableViewComponent implements OnInit, OnChanges {
     toCssClass(header: any): any;
     keydown(event: any, item: any): void;
     offScreenMessage(item: any): string;
-    cellContent(item: any, header: any): string;
+    cellContent(item: any, header: any): any;
     rowDetailerContext(item: any): {
         data: any;
         tableInfo: any;

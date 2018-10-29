@@ -26,19 +26,19 @@ Please send your requests or comments through the link provided below:
 
 ## Metadata Rules
 
-| Metadata             |Description                                                             |
-|----------------------|------------------------------------------------------------------------|
-|key                   |JSON path to the value to be displayed on a column.                     |
-|value                 |Title of the column on the table.                                       |
-|present               |Display the column if set. Hide it otherwise.                           |
-|width                 |Column width.                                                           |
-|minwidth              |Minimum column with.                                                    |
-|format                |How the cell should be displayed. use into-pipe components to make the cell interactive and editable. |
-|filter                |If undefined, no filtering. Otherwise show filter field for the column. |
-|dragable              |Should column position be reorganized through dran and drop action?     |
-|sortable              |Should the column be sortable?                                          |
-|class                 |Apply the class to the column.                                          |
-|locked                |In a lock table, should the column be locked out.                       |
+| Metadata             |status    |Description                                                             |
+|----------------------|----------|------------------------------------------------------------------------|
+|key                   |Required  |JSON path to the value to be displayed on a column.                     |
+|value                 |Required  |Title of the column on the table.                                       |
+|present               |Optional  |Display the column if set. Hide it otherwise.                           |
+|width                 |Optional  |Column width.                                                           |
+|minwidth              |Optional  |Minimum column with.                                                    |
+|format                |Optional  |How the cell should be displayed. use into-pipe components to make the cell interactive and editable. |
+|filter                |Optional  |If undefined, no filtering. Otherwise show filter field for the column. |
+|dragable              |Optional  |Should column position be reorganized through dran and drop action?     |
+|sortable              |Optional  |Should the column be sortable?                                          |
+|class                 |Optional  |Apply the class to the column.                                          |
+|locked                |Optional  |In a lock table, should the column be locked out.                       |
 
 
 ## Events
@@ -48,6 +48,12 @@ Please send your requests or comments through the link provided below:
 |onCellContentEdit     |Will be published when content of an editable cell is modified    |
 |onconfigurationchange |Will be called when user selects to hide/un-hide some of headers on configuration pop-up          |
 
+
+# Version 1.8.0
+It was brought to my attention that some users have trouble using my components in their angular 6 environment. Since I had only updated few dependencies when moved to Angular 6, I am thinking dependencies are causing issues. So, for this release, I am updating all dependencies to what Angular 6 applications are expecting to have. Please let me know if this is fixing or not fixing any issues you are facing.
+
+# Version 1.7.3
+Fixed problem with table. When pagination is not given to the table, an undefined exception was occuring.
 
 # Version 1.7.2
 rolling to angular 6+ after fixing the dependency issue.
@@ -272,20 +278,20 @@ DEPENDENCIES:
 * Expand / Collapse rows (will not happen for LockTableComponent. But is available on  FlexibleTableComponent)
 
 ## Attributes (LockTableComponent)
-| Attribute          |Description                                 |
-|--------------------|--------------------------------------------|
-|caption             |Caption to be displayed                     |
-|action              |off-screen message to be displayed if click on a row results in an action. If supplied, action column will be displayed and will take effect on user click                   |
-|actionKeys          |parameters to feed the action.  parameters should exist in headers mapping.            |
-|tableClass          |class name to be assigned to the table.     |
-|headers             |mapping of items to be displayed as headers including instructions on formatting, dragging, ...                               |
-|items               |items to be displayed                       |
-|pageInfo            |pagination information. If is not supplied, pagination will not take place.            |
-|tableInfo           |Information about component owning the table. this information will be passed to the component that will display when a row is expanded.                                |
-|configurable        |flag to allow hiding/displaying of specific headers.                                    |
-|enableIndexing      |flag to display index of rows.              |
-|filterwhiletyping   |flag to perform filtering while typing in a filter field. If not set will filter only on a hit return after typing. |
-|configAddon         |Template to include additional control items alongside print and configute actions. |
+| Attribute          |Status    |Description                                 |
+|--------------------|----------|--------------------------------------------|
+|caption             |Optional  |Caption to be displayed                     |
+|action              |Optional  |off-screen message to be displayed if click on a row results in an action. If supplied, action column will be displayed and will take effect on user click                   |
+|actionKeys          |Optional  |parameters to feed the action.  parameters should exist in headers mapping.            |
+|tableClass          |Optional  |class name to be assigned to the table.     |
+|headers             |Optional  |mapping of items to be displayed as headers including instructions on formatting, dragging, ...                               |
+|items               |Required  |items to be displayed                       |
+|pageInfo            |Optional  |pagination information. If is not supplied, pagination will not take place.            |
+|tableInfo           |Optional  |Information about component owning the table. this information will be passed to the component that will display when a row is expanded.                                |
+|configurable        |Optional  |flag to allow hiding/displaying of specific headers.                                    |
+|enableIndexing      |Optional  |flag to display index of rows.              |
+|filterwhiletyping   |Optional  |flag to perform filtering while typing in a filter field. If not set will filter only on a hit return after typing. |
+|configAddon         |Optional  |Template to include additional control items alongside print and configute actions. |
 
 
 ## Events
@@ -346,23 +352,23 @@ We are using "into-pipes" library. to see available formatting options, please f
 
 
 ## Attributes (FlexibleTableComponent)
-| Attribute          |Description                                 |
-|--------------------|--------------------------------------------|
-|caption             |Caption to be displayed                     |
-|action              |off-screen message to be displayed if click on a row results in an action. If supplied, action column will be displayed and will take effect on user click                   |
-|actionKeys          |parameters to feed the action.  parameters should exist in headers mapping.            |
-|tableClass          |class name to be assigned to the table.     |
-|headers             |mapping of items to be displayed as headers including instructions on formatting, dragging, ...                               |
-|items               |items to be displayed                       |
-|pageInfo            |pagination information. If is not supplied, pagination will not take place.            |
-|tableInfo           |Information about component owning the table. this information will be passed to the component that will display when a row is expanded.                                |
-|configurable        |flag to allow hiding/displaying of specific headers.                                    |
-|enableIndexing      |flag to display index of rows.              |
-|rowDetailer         |reference to template that should be displayed when a row is expanded.           |
-|expandable          |function in component that owns the table which determines in a specific row is expandable. This function is called twice with a flag argument. If flag is false, call is to determine if action icon should be displayed on row. otherwise is to give before expansion opportunity to the owner to perform possible operation before expansion on the table take effect.        |
-|expandIf            |flag to override calling of expandable function.                                   |
-|rowDetailerHeaders  |If the expanding row should be displayed in another table inside, then this attribute will be passed to the expansion template.  |
-|configAddon         |Template to include additional control items alongside print and configure actions. |
+| Attribute          |Status    |Description                                 |
+|--------------------|----------|--------- ----------------------------------|
+|caption             |Optional  |Caption to be displayed                     |
+|action              |Optional  |off-screen message to be displayed if click on a row results in an action. If supplied, action column will be displayed and will take effect on user click                   |
+|actionKeys          |Optional  |parameters to feed the action.  parameters should exist in headers mapping.            |
+|tableClass          |Optional  |class name to be assigned to the table.     |
+|headers             |Optional  |mapping of items to be displayed as headers including instructions on formatting, dragging, ...                               |
+|items               |Required  |items to be displayed                       |
+|pageInfo            |Optional  |pagination information. If is not supplied, pagination will not take place.            |
+|tableInfo           |Optional  |Information about component owning the table. this information will be passed to the component that will display when a row is expanded.                                |
+|configurable        |Optional  |flag to allow hiding/displaying of specific headers.                                    |
+|enableIndexing      |Optional  |flag to display index of rows.              |
+|rowDetailer         |Optional  |reference to template that should be displayed when a row is expanded.           |
+|expandable          |Optional  | in component that owns the table which determines in a specific row is expandable. This function is called twice with a flag argument. If flag is false, call is to determine if action icon should be displayed on row. otherwise is to give before expansion opportunity to the owner to perform possible operation before expansion on the table take effect.        |
+|expandIf            |Optional  |flag to override calling of expandable function.                                   |
+|rowDetailerHeaders  |Optional  |If the expanding row should be displayed in another table inside, then this attribute will be passed to the expansion template.  |
+|configAddon         |Optional  |Template to include additional control items alongside print and configure actions. |
 
 ## Events
 | Event                |Description                                     |

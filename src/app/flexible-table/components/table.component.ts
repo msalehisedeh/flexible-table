@@ -188,7 +188,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 				subitem = subitem[subkey];
 			}
 		})
-		return subitem === undefined || subitem === null || subitem === "null" ? "" : String(subitem);
+		return subitem === undefined || subitem === null || subitem === "null" ? "" : subitem;
 	}
 	initVisibleRows() {
 		const result = [];
@@ -369,7 +369,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 
     cellContent(item, header) {
 		let content = this.itemValue(item, header.key.split("."));
-        return (content !== undefined && content != null && content.length) ? content : '&nbsp;';
+        return (content !== undefined && content != null && String(content).length) ? content : '&nbsp;';
 	}
 
 	rowDetailerContext(item) {
@@ -427,25 +427,26 @@ export class TableViewComponent implements OnInit, OnChanges {
 	private shouldSkipItem(value, filterBy) {
 		let result = false;
 
-		if (value !== undefined && value !== null && value.length) {			
+		if (value !== undefined && value !== null && String(value).length) {
+			const v = String(value);
 			if (filterBy[0] === '<') {
-				result = filterBy.length > 1 && parseFloat(value) >= parseFloat(filterBy.substring(1));
+				result = filterBy.length > 1 && parseFloat(v) >= parseFloat(filterBy.substring(1));
 			} else if (filterBy[0] === '>') {
-				result = filterBy.length > 1 && parseFloat(value) <= parseFloat(filterBy.substring(1));
+				result = filterBy.length > 1 && parseFloat(v) <= parseFloat(filterBy.substring(1));
 			} else if (filterBy[0] === '!') {
-				result = filterBy.length > 1 && parseFloat(value) == parseFloat(filterBy.substring(1));
+				result = filterBy.length > 1 && parseFloat(v) == parseFloat(filterBy.substring(1));
 			} else if (filterBy[0] === '=') {
-				result = filterBy.length == 1 || parseFloat(value) !== parseFloat(filterBy.substring(1));
+				result = filterBy.length == 1 || parseFloat(v) !== parseFloat(filterBy.substring(1));
 			} else if (filterBy[0] === '*' && filterBy[filterBy.length-1] !== '*') {
 				const f = filterBy.substring(1);
-				result = value.indexOf(f) !== value.length - f.length
+				result = v.indexOf(f) !== v.length - f.length
 			} else if (filterBy[0] !== '*' && filterBy[filterBy.length-1] === '*') {
 				const f = filterBy.substring(0, filterBy.length-1);
-				result = value.indexOf(f) !== 0;
+				result = v.indexOf(f) !== 0;
 			} else if (filterBy[0] === '*' && filterBy[filterBy.length-1] === '*') {
-				result = filterBy.length > 1 && value.indexOf( filterBy.substring(1, filterBy.length-1) ) < 0;
+				result = filterBy.length > 1 && v.indexOf( filterBy.substring(1, filterBy.length-1) ) < 0;
 			} else {
-				result = value.indexOf(filterBy) < 0;
+				result = v.indexOf(filterBy) < 0;
 			}
 		}
 		return result;

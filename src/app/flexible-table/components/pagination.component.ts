@@ -22,7 +22,7 @@ export interface PaginationInfo {
 export class PaginationComponent implements OnInit {
 
     @Input("vocabulary")
-    public vocabulary = {setSize: "", firstPage: "", lastPage: "", previousPage: ""};
+    public vocabulary = {setSize: "", firstPage: "", nextPage: "", lastPage: "", previousPage: ""};
 
     @Input("info")
     info: PaginationInfo = { contentSize: 0, pageSize: 0, maxWidth: "0" };

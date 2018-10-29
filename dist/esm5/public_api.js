@@ -1,0 +1,8 @@
+/**
+ * @fileoverview added by tsickle
+ * @suppress {checkTypes,extraRequire,uselessCode} checked by tsc
+ */
+export { FlexibleTableComponent } from './src/app/flexible-table/flexible.table.component';
+export { FlexibleTableModule } from './src/app/flexible-table/flexible-table-module';
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHVibGljX2FwaS5qcyIsInNvdXJjZVJvb3QiOiJuZzovL2ZsZXhpYmxlLXRhYmxlLyIsInNvdXJjZXMiOlsicHVibGljX2FwaS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7O0FBQUEsT0FBTyxFQUFFLHNCQUFzQixFQUFFLE1BQU0sbURBQW1ELENBQUM7QUFDM0YsT0FBTyxFQUFFLG1CQUFtQixFQUFFLE1BQU0sZ0RBQWdELENBQUMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgeyBGbGV4aWJsZVRhYmxlQ29tcG9uZW50IH0gZnJvbSAnLi9zcmMvYXBwL2ZsZXhpYmxlLXRhYmxlL2ZsZXhpYmxlLnRhYmxlLmNvbXBvbmVudCc7XHJcbmV4cG9ydCB7IEZsZXhpYmxlVGFibGVNb2R1bGUgfSBmcm9tICcuL3NyYy9hcHAvZmxleGlibGUtdGFibGUvZmxleGlibGUtdGFibGUtbW9kdWxlJztcclxuIl19
