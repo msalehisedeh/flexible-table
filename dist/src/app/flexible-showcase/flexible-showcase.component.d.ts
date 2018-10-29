@@ -1,0 +1,34 @@
+import { AfterContentInit, OnChanges } from '@angular/core';
+export declare class FlexibleShowcaseComponent implements AfterContentInit, OnChanges {
+    private translatedPosition;
+    selectedIndex: number;
+    selectedItem: any;
+    hoverItem: any;
+    paginate: boolean;
+    private largeImage;
+    private slider;
+    position: string;
+    width: number;
+    height: number;
+    productId: string;
+    zoomOnHover: boolean;
+    peekOnHover: boolean;
+    enableEventTracking: boolean;
+    thumbnails: any[];
+    message: string;
+    private onEventTracking;
+    constructor();
+    ngAfterContentInit(): void;
+    ngOnChanges(changes: any): void;
+    hoverOver(event: any, item: any): void;
+    hoverOut(event: any): void;
+    hoverViewPort(event: any): void;
+    shiftDisplay(position: any, toEnd: any): void;
+    keyup(event: any): void;
+    videoPlayed(item: any, trackingTime: any): void;
+    videoPaused(item: any, trackingTime: any): void;
+    videoEnded(item: any, trackingTime: any): void;
+    hoverTab(i: any, onhover: any): void;
+    selectTab(i: any): void;
+    private fireTrackingEvent(name, id, event, track?);
+}

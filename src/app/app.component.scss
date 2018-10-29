@@ -1,56 +1,38 @@
 
+.controllers {
+    width: 100%;
+    display: table;
+}
+.flexible {
+    display: flex;
+}
 .logger {
-    border: 1px solid #888;
-    background-color: #eee;
-    border-radius: 5px;
     box-sizing: border-box;
     display: inline-block;
-    max-height: 222px;
+    max-height: 404px;
     overflow-y: auto;
     margin-bottom: 45px;
     width: 100%;
-}
-
-.fa-flag {
-    margin: 0 5px;
-    color: red;
-}
-
-ol {
-    display: inline-block;
     margin: 0;
-    
-    li {
-        border-bottom: 1px solid #ddd;
-
-        span {
-    
-            ::ng-deep .fa {
-                padding: 0 3px;
-            }
-            ::ng-deep .address {
-                display: inline-block;
-                span {
-                    display: block;
-                }
-            }
-        }
-    }
 }
-::ng-deep .calendar-box {
-    a {
-        float: right;
-        margin: 0 10px 0 0;
-    }
-    .date {
-        float: left;
-    }
+h3 {
+    margin: 0 0 20px 0;
 }
-::ng-deep .off-screen {
-    display: block;
+fieldset {
+    box-sizing: border-box;
+    display: table;
     float: left;
-    height: 0;
-    overflow: hidden;
-    text-indent: -99999px;
-    width: 0;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+.log-field {
+    width: 100%;
+    margin-top:20px;
+}
+
+showcase {
+    display: block;
+    margin: 0 auto;
+    padding: 5px;
+    border-radius: 5px;
 }

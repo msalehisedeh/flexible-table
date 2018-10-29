@@ -4,66 +4,38 @@
     Welcome to {{ title }}!
   </h1>
 </div>
+<div class="controllers">
+<fieldset>
+  <legend>Position</legend>
+  <label for="top-selection"><input id="top-selection" name="myPosition" type="radio" [checked]="myPosition === 'top'" (click)="myPosition = 'top'" />Top</label>
+  <label for="bottom-selection"><input id="bottom-selection" name="myPosition" type="radio" [checked]="myPosition === 'bottom'" (click)="myPosition = 'bottom'" />Bottom</label>
+  <label for="left-selection"><input id="left-selection" name="myPosition" type="radio" [checked]="myPosition === 'left'" (click)="myPosition = 'left'" />Left</label>
+  <label for="right-selection"><input id="right-selection" name="myPosition" type="radio" [checked]="myPosition === 'right'" (click)="myPosition = 'right'" />Right</label>
+</fieldset>
+<fieldset>
+  <legend>Controls</legend>
+  <label for="hover-selection"><input id="hover-selection" name="myHoverOption" type="checkbox" [checked]="( myHoverOption === true )" (change)="myHoverOption = $event.target.checked;" />Zoom Hero Image On Hover</label>
+  <label for="pick-selection"><input id="pick-selection" name="myPickOption" type="checkbox" [checked]="( myPickOption === true )" (change)="myPickOption = $event.target.checked;" />Sneek Peek Side Item On Hover</label>
+  <label for="track-selection"><input id="track-selection" name="myTrackOption" type="checkbox" [checked]="( myTrackOption === true )" (change)="myTrackOption = $event.target.checked;" />Enable Event Tracking</label>
+</fieldset>
+</div>
+<div class="flexible">
+<showcase 
+      width="400" 
+      height="400"
+      message="click to select " 
+      [position]="myPosition" 
+      [thumbnails]="myItems"
+      [enableEventTracking]="myTrackOption"
+      [peekOnHover]="myPickOption"
+      [zoomOnHover]="myHoverOption"
+      [productId]="myProductId"
+      (onEventTracking)="onEventTracking($event)"></showcase>
 
-<flexible-table 
-      *ngIf="users" 
-      caption="total records found {{users.length}}" 
-      action="View details of %name% where ID is %id%"
-      actionKeys="%name%,%id%"
-      [filterwhiletyping]="true"
-      [headers]="usersHeader" 
-      [items]="users" 
-      [pageInfo]="pageInfo"
-      filterwhiletyping="true"
-      dragColumns="true" 
-      enableIndexing="true"
-      enableFiltering="true"
-      configurable="true"
-      persistenceId="usersRecordsTable"
-      persistenceKey="users-headers-08022018"
-      [configAddon]="configAddon"
-      [rowDetailer]="detailer"
-      [expandable]="allowExpanding"
-      (onCellContentEdit)="onCellEdit($event)"
-      (onconfigurationchange)="onconfigurationchange($event)"
-      (onaction)="onaction($event)"></flexible-table>
-
-<ng-template #configAddon>
-  <a (click)="log('hay!!')"><span class="fa fa-flag"></span></a>
-</ng-template>
-<ng-template #detailer let-detail="data">
-  <div class="custom-class">
-    <h3>Detail information about {{detail.name}}</h3>
-    <ol>
-      <li>id: {{detail.guid}}</li>
-      <li>tags: {{detail.tags}}</li>
-      <li>email: <span [innerHTML]="detail.email | into:'email'"></span></li>
-      <li>address: <span [innerHTML]="detail.address | into:'address'"></span></li>
-      <li>phone: {{detail.phone}}</li>
-      <li>company: {{detail.company}}</li>
-    </ol>
-  </div>
-</ng-template>
-
-
-<lock-table 
-      *ngIf="users" 
-      caption="total records found {{users.length}}" 
-      action="View details of %name% where ID is %id%"
-      actionKeys="%name%,%id%"
-      enableFiltering="true"
-      [headers]="usersHeader" 
-      [items]="users" 
-      [pageInfo]="pageInfo"
-      [filterwhiletyping]="true"
-      dragColumns="true" 
-      enableIndexing="true"
-      configurable="true"
-      (onCellContentEdit)="onCellEdit($event)"
-      (onconfigurationchange)="onconfigurationchange($event)"
-      (onaction)="onaction($event)"></lock-table>
-
-
-<ul class="logger">
+<fieldset class="log-field">
+  <legend>Event Logs</legend>
+  <ul class="logger">
   <li *ngFor="let x of events" [textContent]="x | json"></li>
 </ul>
+</fieldset>
+</div>
