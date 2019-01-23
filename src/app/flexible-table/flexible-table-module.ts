@@ -3,8 +3,8 @@
 */
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {IntoPipeModule} from 'into-pipes';
-import { DragDropModule } from 'drag-enabled';
+import {IntoPipeModule} from '@sedeh/into-pipes';
+import { DragDropModule } from '@sedeh/drag-enabled';
 
 import { PaginationComponent } from './components/pagination.component';
 import { ConfigurationComponent } from './components/configuration.component';
@@ -13,7 +13,6 @@ import { TableViewComponent } from './components/table.component';
 import { TableHeadersGenerator } from './components/table-headers-generator';
 import { FlexibleTableComponent } from './flexible.table.component';
 import { LockTableComponent } from './lock.table.component';
-import { TableSortDirective } from './directives/table-sort.directive';
 
 @NgModule({
     imports: [
@@ -26,8 +25,7 @@ import { TableSortDirective } from './directives/table-sort.directive';
         LockTableComponent,
         ConfigurationComponent,
         PaginationComponent,
-        TableViewComponent,
-        TableSortDirective
+        TableViewComponent
     ],
     exports: [
         FlexibleTableComponent,

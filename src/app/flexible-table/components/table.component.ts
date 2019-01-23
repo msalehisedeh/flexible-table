@@ -16,7 +16,7 @@ import {
 	ElementRef
 } from '@angular/core';
 
-import { DropEvent, DragEvent } from 'drag-enabled';
+import { DropEvent, DragEvent } from '@sedeh/drag-enabled';
 import { Timeouts } from '../../../../node_modules/@types/selenium-webdriver';
 import { Time } from '../../../../node_modules/@angular/common';
 

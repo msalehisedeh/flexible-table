@@ -1,20 +1,26 @@
+import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+import {IntoPipeModule} from '@sedeh/into-pipes';
 
 import { AppComponent } from './app.component';
-import { FlexibleShowcaseModule } from './flexible-showcase/flexible-showcase-module';
+import { AppService } from './app.service';
+import { SelectService } from './select.service';
+import { FlexibleTableModule } from './flexible-table/flexible-table-module';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SelectService
   ],
   imports: [
-    CommonModule,
-    FormsModule,
-    FlexibleShowcaseModule
+    BrowserModule,
+    IntoPipeModule,
+    HttpModule,
+    FlexibleTableModule
   ],
   providers: [
+    AppService
   ],
   bootstrap: [AppComponent]
 })

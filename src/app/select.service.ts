@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PipeServiceComponent } from 'into-pipes';
+import { PipeServiceComponent } from '@sedeh/into-pipes';
 
 
 @Component({

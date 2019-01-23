@@ -1,2 +1,2 @@
-export { FlexibleShowcaseComponent } from './src/app/flexible-showcase/flexible-showcase.component';
-export { FlexibleShowcaseModule } from './src/app/flexible-showcase/flexible-showcase-module';
+export { FlexibleTableComponent } from './src/app/flexible-table/flexible.table.component';
+export { FlexibleTableModule } from './src/app/flexible-table/flexible-table-module';

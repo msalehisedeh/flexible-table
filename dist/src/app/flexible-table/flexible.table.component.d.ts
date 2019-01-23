@@ -1,5 +1,5 @@
 import { OnInit } from '@angular/core';
-import { DropEvent } from 'drag-enabled';
+import { DropEvent } from '@sedeh/drag-enabled';
 import { TableHeadersGenerator } from './components/table-headers-generator';
 import { TableViewComponent } from './components/table.component';
 export declare class FlexibleTableComponent implements OnInit {

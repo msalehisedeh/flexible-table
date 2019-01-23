@@ -14,7 +14,7 @@ import {
 	EventEmitter
 } from '@angular/core';
 
-import { DropEvent, DragEvent } from 'drag-enabled';
+import { DropEvent, DragEvent } from '@sedeh/drag-enabled';
 import { TableHeadersGenerator } from './components/table-headers-generator';
 import { TableViewComponent } from './components/table.component';
 

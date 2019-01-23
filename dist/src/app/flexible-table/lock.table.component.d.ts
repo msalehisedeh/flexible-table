@@ -1,5 +1,5 @@
 import { OnInit, Renderer } from '@angular/core';
-import { DropEvent } from 'drag-enabled';
+import { DropEvent } from '@sedeh/drag-enabled';
 import { TableHeadersGenerator } from './components/table-headers-generator';
 export declare class LockTableComponent implements OnInit {
     private generator;

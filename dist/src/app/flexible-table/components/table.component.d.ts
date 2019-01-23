@@ -1,5 +1,5 @@
 import { OnInit, OnChanges, ElementRef } from '@angular/core';
-import { DropEvent, DragEvent } from 'drag-enabled';
+import { DropEvent, DragEvent } from '@sedeh/drag-enabled';
 export interface FlexibleTableHeader {
     key: string;
     value: string;
