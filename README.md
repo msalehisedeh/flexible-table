@@ -207,6 +207,7 @@ export interface FlexibleTableHeader {
 We are using "@sedeh/into-pipes" library. to see available formatting options, please follow what is supported by the library.
 
 ### Attributes (FlexibleTableComponent)
+
 | Attribute          |Status    |Description                                 |
 |--------------------|----------|--------- ----------------------------------|
 |caption             |Optional  |Caption to be displayed                     |
@@ -224,6 +225,7 @@ We are using "@sedeh/into-pipes" library. to see available formatting options, p
 |expandIf            |Optional  |flag to override calling of expandable function.                                   |
 |rowDetailerHeaders  |Optional  |If the expanding row should be displayed in another table inside, then this attribute will be passed to the expansion template.  |
 |configAddon         |Optional  |Template to include additional control items alongside print and configure actions. |
+
 
 ### Attributes (LockTableComponent)
 
