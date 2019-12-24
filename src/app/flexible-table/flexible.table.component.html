@@ -18,7 +18,7 @@
 		[tableInfo]="tableInfo"
 		[caption]="caption" 
 		[headers]="subHeaders" 
-        [items]="items" 
+        [items]="formeditems" 
         [filterwhiletyping]="filterwhiletyping"
         [pageInfo]="pageInfo"
         [vocabulary]="vocabulary"
@@ -29,11 +29,13 @@
         [expandable]="expandable"
         [expandIf]="expandIf"
         (onDrop)="onDrop($event)"
+        (onfilter)="onTableFilter($event)"
 		(onCellContentEdit)="onCellEdit($event)"
         (onchange)="reconfigure($event)"
 		(onaction)="tableAction($event)"></table-view>
 </div>
 <table-pagination 
     [info]="pageInfo" 
+    [inline]="inlinePagination" 
     [vocabulary]="vocabulary"
     (onchange)="onPaginationChange($event)"></table-pagination>

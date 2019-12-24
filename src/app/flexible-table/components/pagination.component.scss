@@ -4,16 +4,22 @@
     border: 1px solid #254A5D;
     border-radius: 2px;
     color: #254A5D;
-    bottom: 5px;
     clear: both;
     display: flex;
     font-size: 1em;
     height: 38px;
     max-width: 100%;
     margin: 0 auto;
-    position: fixed;
-    left: 40%;
-    z-index: 55;
+    &.inliner {
+        width: 191px;
+        float: right;
+    }
+    &.floater {
+        position: fixed;
+        left: 40%;
+        z-index: 55;
+        bottom: 5px;
+    }
 
     .fa {
         padding: 4px 8px;
@@ -73,4 +79,9 @@
         .table-pagination {
             left: 4px;
         }
+}
+@media print {
+    :host {
+        display: none;
+    }
 }

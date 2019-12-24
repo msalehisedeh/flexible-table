@@ -52,12 +52,11 @@
 
         td {
             padding-left: 3px;
-            min-height: 23px;
-            &.index {
-                span {
-                    display: block;
-                    height: 23px;
-                }
+            min-height: 21px;
+            overflow: hidden;
+            span:first-child {
+                min-height: 21px;
+                display: block;
             }
 
             &:first-child {
@@ -100,6 +99,9 @@
         td.index {
             background-color: #eee;
             border-right: 1px solid #bbb;
+            span {
+                padding: 1px 0;
+            }
         }
         th {
             cursor: default;
@@ -132,7 +134,7 @@
 
             &.descending, &.ascending, &.sortable {
                 cursor: pointer;
-                height: 12px;
+                min-height: 12px;
             }
 
             &.indexable {
@@ -151,7 +153,17 @@
                 color: #254A4D;
                 display: inline-block;
                 height: 20px;
+                float: left;
+                width: calc(90% - 22px) !important;
                 white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                &.dragable {
+                    width: auto;
+                }
+                &.lockable {
+                    width: calc(90% - 46px) !important;
+                }
             }
             .dragable {
                 cursor: move;
@@ -161,6 +173,10 @@
                 display: inline-block;
                 height: 20px;
                 color: #254A4D;
+                float: right;
+            }
+            .locker {
+                float: left;
             }
         }
     }
@@ -190,12 +206,11 @@ table tbody tr.detail.hover td table thead tr {
 }
 
 table tr td a.actionable {
-    display: inline-table;
-    height: 32px;
-    vertical-align: middle;
-    width: 25px;
-    line-height: 30px;
     color: #254A4D;
+    .icon {
+        line-height: 22px;
+        text-align: right;
+    }
 }
 table tbody tr.detail:hover td:last-child,
 table tbody tr.detail.hover td:last-child{
@@ -239,7 +254,10 @@ table.alert-danger {
           float: left;
           font-weight: bold;
           text-transform: uppercase;
-          width: 20%;
+          width: 40%;
+          text-align: left;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         a span.icon {
           width: 100%;
@@ -270,15 +288,41 @@ table.alert-danger {
         }
     }
 }
+@media print {
+    table {
+        th, td {
+            text-align: left;
+            .icon {
+                display: none !important;
+            }
+            &.hide-on-print {
+                display: none;
+            }
+        }
+        tr {
+            &.hide-on-print {
+                display: none;
+            }
+        }
+    }
+}
 @media screen and (max-width: 600px) {
     table {
         border: 0;
 
+        th {
+            &.indexable {
+                display: none;
+            }
+        }
         td {
             border-bottom: 0;
             display: block;
             text-align: right;
-
+            
+            &.index {
+                display: none;
+            }
             &:first-child {
                padding-left: 0px;
             }
@@ -293,6 +337,7 @@ table.alert-danger {
                     right: 7px !important;
                 }
             }
+            
             &:before {
               content: attr(data-label);
               float: left;
@@ -301,6 +346,11 @@ table.alert-danger {
             }
             a span.icon {
               width: 100%;
+            }
+            ::ng-deep .into {
+                float: right !important;
+                .calendar { margin-right: 0}
+                .popper { margin-right: 0; }
             }
         }
         thead {

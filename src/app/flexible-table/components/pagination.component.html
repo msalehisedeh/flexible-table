@@ -1,4 +1,8 @@
-<div *ngIf="info && info.pages > 1" [style.width]="info.maxWidth" class="table-pagination" #paginationWrapper>
+<div *ngIf="info && info.pages > 1" 
+    [style.width]="info.maxWidth" 
+    [class.inliner]="inline"
+    [class.floater]="!inline"
+    class="table-pagination" #paginationWrapper>
     <div class="fa fa-angle-left"
          (click)="selectPrev()"
          [class.disabled]="info.currentPage==1">

@@ -17,8 +17,6 @@ import {
 } from '@angular/core';
 
 import { DropEvent, DragEvent } from '@sedeh/drag-enabled';
-import { Timeouts } from '../../../../node_modules/@types/selenium-webdriver';
-import { Time } from '../../../../node_modules/@angular/common';
 
 export interface FlexibleTableHeader {
 	key: string,
@@ -27,6 +25,7 @@ export interface FlexibleTableHeader {
 	width?: string,
 	minwidth?: string,
 	format?: string,
+	hideOnPrint?:boolean,
 	filter?: string,
 	dragable?: boolean,
 	sortable?: boolean,
@@ -45,6 +44,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 	dragging = false;
 	printMode = false;
 	filteredItems = [];
+	sortedItems = [];
 	filteringTimerId: any;
 
     @Input("vocabulary")
@@ -118,7 +118,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 	@Output('onCellContentEdit')
 	private onCellContentEdit = new EventEmitter();
 
-	@ViewChild('flexible', {read: ViewContainerRef}) private table: ViewContainerRef;
+	@ViewChild('flexible', {static: false}) private table: ViewContainerRef;
 
     constructor(public el:ElementRef) {}
 
@@ -190,14 +190,20 @@ export class TableViewComponent implements OnInit, OnChanges {
 		})
 		return subitem === undefined || subitem === null || subitem === "null" ? "" : subitem;
 	}
-	initVisibleRows() {
+	initVisibleRows(filtered: any[]) {
 		const result = [];
-		for (let i = 0; i < this.filteredItems.length; i++) {
-			if (i >= this.pageInfo.from && i <= this.pageInfo.to) {
-				result.push(this.filteredItems[i]);
+		const list = filtered ? filtered : this.filteredItems;
+		if (this.pageInfo) {
+			for (let i = 0; i < list.length; i++) {
+				if (i >= this.pageInfo.from && i <= this.pageInfo.to) {
+					result.push(list[i]);
+				}
 			}
+			this.filteredItems = result;
 		}
-		this.filteredItems = result;
+		if (filtered) {
+			this.onfilter.emit(this.filteredItems);
+		}
 	}
 
 	lock(header: FlexibleTableHeader, event) {
@@ -236,13 +242,13 @@ export class TableViewComponent implements OnInit, OnChanges {
 				icon.classList.add("fa-sort-asc");
 			}
 			const hpath = header.key.split(".");
-
+			let filtered = [];
 			if (this.enableFiltering) {
-				this.filterItems();
+				filtered = this.filterItems();
 			} else {
-				this.filteredItems = this.items ? this.items : [];
+				filtered = this.items ? this.items : [];
 			}
-			this.filteredItems.sort((a, b) => {
+			filtered.sort((a, b) => {
 				const v1 = this.itemValue(a, hpath);
 				const v2 = this.itemValue(b, hpath);
 
@@ -251,7 +257,8 @@ export class TableViewComponent implements OnInit, OnChanges {
 				}
 				return v1 < v2 ? 1 : -1;
 			});
-			this.initVisibleRows();
+			this.sortedItems = filtered;
+			this.initVisibleRows(filtered);
 		}
 	}
 
@@ -301,12 +308,17 @@ export class TableViewComponent implements OnInit, OnChanges {
 		}
 	}
 	evaluateRows() {
-		if (this.enableFiltering) {
-			this.filterItems();
+		let filtered = [];
+		if (this.sortedItems && this.sortedItems.length) {
+			filtered =this.sortedItems;
 		} else {
-			this.filteredItems = this.items ? this.items : [];
+			if (this.enableFiltering) {
+				filtered = this.filterItems();
+			} else {
+				filtered = this.items ? this.items : [];
+			}
 		}
-		this.initVisibleRows();
+		this.initVisibleRows(filtered);
 	}
 
     headerColumnElements() {
@@ -390,8 +402,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 				clearTimeout(this.filteringTimerId);
 			}
 			this.filteringTimerId = setTimeout(()=>{
-				this.filterItems();
-				this.initVisibleRows();
+				this.initVisibleRows(this.filterItems());
 				this.filteringTimerId  = undefined;
 			}, 123);
 		}
@@ -414,11 +425,18 @@ export class TableViewComponent implements OnInit, OnChanges {
 		this.printMode = true;
 		setTimeout(()=>{
 			const content = this.el.nativeElement.innerHTML;
+			const styles: any = document.getElementsByTagName('style');
 			this.printMode = false;
 			const popupWin = window.open('', '_blank', 'width=300,height=300');
+			let copiedContent = '<html>';
+			for(let i = 0; i < styles.length; i++) {
+				copiedContent += styles[i].outerHTML;
+			}
+			copiedContent += '<body onload="window.print()">' + content + '</html>';
+
 		
 			popupWin.document.open();
-        	popupWin.document.write('<html><body onload="window.print()">' + content + '</html>');
+        	popupWin.document.write(copiedContent);
         	popupWin.document.close();
 		},3);
 	}
@@ -452,7 +470,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 		return result;
 	}
 	filterItems() {
-		this.filteredItems = this.items ? this.items.filter((item) => {
+		return this.items ? this.items.filter((item) => {
 			let keepItem = true;
 
 			for (let i = 0; i < this.headers.length; i++) {
@@ -468,7 +486,6 @@ export class TableViewComponent implements OnInit, OnChanges {
 			}
 			return keepItem;
 		}) : [];
-		this.onfilter.emit(this.filteredItems);
 	}
 
 	onTableCellEdit(event) {

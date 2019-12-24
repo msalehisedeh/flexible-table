@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-
-import 'rxjs/add/observable/of';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class AppService {
-    constructor(private http: Http) { }
+    constructor() { }
 
     private users = [
         {
@@ -66,7 +63,7 @@ export class AppService {
           "isActive": false,
           "balance": "$2,070.14",
           "picture": "https://image.flaticon.com/icons/png/128/701/701997.png",
-          "age": 34,
+          "age": 134,
           "eyeColor": "green",
           "name": "Tonya Sweeney",
           "gender": "female",
@@ -116,7 +113,7 @@ export class AppService {
           "isActive": false,
           "balance": "$1,883.90",
           "picture": "https://image.flaticon.com/icons/png/128/145/145862.png",
-          "age": 21,
+          "age": 121,
           "eyeColor": "blue",
           "name": "Nguyen Hubbard",
           "gender": "male",
@@ -266,7 +263,7 @@ export class AppService {
           "isActive": true,
           "balance": "$3,698.24",
           "picture": "https://image.flaticon.com/icons/png/128/701/701997.png",
-          "age": 39,
+          "age": 319,
           "eyeColor": "brown",
           "name": "Bernard Downs",
           "gender": "male",
@@ -813,6 +810,6 @@ export class AppService {
 
     usersList() {
         // return this.http.get('https://jsonplaceholder.typicode.com/users/');
-        return Observable.of(this.users);
+        return new BehaviorSubject(this.users);
     }
 }

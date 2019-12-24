@@ -1,11 +1,14 @@
-import { OnInit, Renderer } from '@angular/core';
+import { OnChanges, OnInit, Renderer } from '@angular/core';
 import { DropEvent } from '@sedeh/drag-enabled';
 import { TableHeadersGenerator } from './components/table-headers-generator';
-export declare class LockTableComponent implements OnInit {
+export declare class LockTableComponent implements OnInit, OnChanges {
     private generator;
     private renderer;
+    holdlocked: boolean;
+    holdunlocked: boolean;
     lockedHeaders: any;
     unlockedHeaders: any;
+    formeditems: any;
     filteredItems: any[];
     vocabulary: {
         configureTable: string;
@@ -24,6 +27,7 @@ export declare class LockTableComponent implements OnInit {
     tableClass: string;
     headers: any[];
     items: any[];
+    inlinePagination: boolean;
     pageInfo: any;
     tableInfo: any;
     configurable: boolean;
@@ -33,11 +37,13 @@ export declare class LockTableComponent implements OnInit {
     filterwhiletyping: boolean;
     private onaction;
     private onCellContentEdit;
+    private onfilter;
     private onconfigurationchange;
     private lockedTable;
     private unlockedTable;
     scroll(event: any): void;
     constructor(generator: TableHeadersGenerator, renderer: Renderer);
+    ngOnChanges(changes: any): void;
     ngOnInit(): void;
     evaluatePositioning(): void;
     reconfigure(event: any): void;
@@ -48,4 +54,5 @@ export declare class LockTableComponent implements OnInit {
     tableAction(event: any): void;
     onDrop(event: DropEvent): void;
     onCellEdit(event: any): void;
+    onTableFilter(event: any): void;
 }

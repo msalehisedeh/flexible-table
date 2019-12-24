@@ -9,10 +9,9 @@ import {
 	Input,
 	Output,
 	ViewChild,
-	ViewContainerRef,
+	OnChanges,
 	OnInit,
 	Renderer,
-	ElementRef,
 	EventEmitter
 } from '@angular/core';
 
@@ -25,10 +24,13 @@ import { TableHeadersGenerator } from './components/table-headers-generator';
 	templateUrl: './lock.table.component.html',
 	styleUrls: ['./lock.table.component.scss']
 })
-export class LockTableComponent implements OnInit {
+export class LockTableComponent implements OnInit, OnChanges {
 
+	holdlocked = false;
+	holdunlocked = false;
 	lockedHeaders:any;
 	unlockedHeaders:any;
+	formeditems:any;
 	filteredItems = [];
 
     @Input("vocabulary")
@@ -66,6 +68,9 @@ export class LockTableComponent implements OnInit {
 	@Input("items")
 	public items: any[];
 
+    @Input('inlinePagination')
+    inlinePagination = false;
+
 	@Input("pageInfo")
 	public pageInfo: any;
 
@@ -94,13 +99,16 @@ export class LockTableComponent implements OnInit {
 	@Output('onCellContentEdit')
 	private onCellContentEdit = new EventEmitter();
 
+	@Output('onfilter')
+	private onfilter = new EventEmitter();
+
 	@Output('onconfigurationchange')
 	private onconfigurationchange = new EventEmitter();
 
-	@ViewChild('lockedTable')
+	@ViewChild('lockedTable', {static: false})
 	private lockedTable: TableViewComponent;
 
-	@ViewChild('unlockedTable')
+	@ViewChild('unlockedTable', {static: false})
 	private unlockedTable: TableViewComponent;
 
     scroll(event) {
@@ -115,6 +123,37 @@ export class LockTableComponent implements OnInit {
 		private renderer: Renderer
 	) {}
 
+	ngOnChanges(changes: any) {
+		if (changes.items) {
+			const list = [];
+			this.items.map(
+				(item: any) => {
+					const copy = Object.assign({}, item);
+					this.headers.map(
+						(header: any) => {
+							if (header.format) {
+								const v = copy[header.key];
+								if (v && typeof v === 'string') {
+									const format = header.format.split(':');
+									if (format[0] === 'calendar') {
+										copy[header.key] = Date.parse(v);
+									} else if (format[0] === 'date') {
+										copy[header.key] = Date.parse(v);
+									} else if (format[0] === 'number') {
+										copy[header.key] = format.length > 2 ? parseFloat(v) : parseInt(v, 10);
+									} else if (format[0] === 'currency') {
+										copy[header.key] = parseFloat(v.replace(/[^0-9\.-]+/g,""));
+									}
+								}
+							}
+						}
+					)
+					list.push(copy);
+				}
+			)
+			this.formeditems = list;
+		}
+	}
 	ngOnInit() {
 		if (this.pageInfo) {
 			if (!this.pageInfo.to) {
@@ -144,7 +183,7 @@ export class LockTableComponent implements OnInit {
 				this.generator.persistHeaders(this.persistenceKey, this.persistenceId, this.headers);
 			}
 		}
-		this.filteredItems = this.items;
+		this.filteredItems = this.formeditems ? this.formeditems: this.items;
 		this.pageInfo.contentSize = this.items.length;
 		
 		this.reconfigure(this.headers);
@@ -181,19 +220,24 @@ export class LockTableComponent implements OnInit {
 		setTimeout(this.evaluatePositioning.bind(this),111);
 	}
 	changeLockedTableFilteredItems(event) {
-		if (this.lockedTable) {
+		if (this.lockedTable && !this.holdlocked) {
 			this.lockedTable.filteredItems = event;
-			this.lockedTable.initVisibleRows();
+			this.lockedTable.initVisibleRows(null);
 		}
+		this.holdlocked = false;
 	}
 	changeUnlockedTableFilteredItems(event) {
-		if (this.unlockedTable) {
+		if (this.unlockedTable && !this.holdunlocked) {
 			this.unlockedTable.filteredItems = event;
-			this.unlockedTable.initVisibleRows();
+			this.unlockedTable.initVisibleRows(null);
 		}
+		this.holdunlocked = false;
 	}
 	onPaginationChange(event) {
 		this.pageInfo = event;
+		this.holdlocked = true;
+		this.holdunlocked = true;
+		this.lockedTable.evaluateRows();
 		this.unlockedTable.evaluateRows();
 	}
 
@@ -206,6 +250,9 @@ export class LockTableComponent implements OnInit {
 	}
 	onCellEdit(event){
 		this.onCellContentEdit.emit(event);
+	}
+	onTableFilter(event){
+		this.onfilter.emit(event);
 	}
 }
 

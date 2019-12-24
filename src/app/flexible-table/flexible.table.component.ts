@@ -9,12 +9,12 @@ import {
 	Input,
 	Output,
 	ViewChild,
-	ViewContainerRef,
 	OnInit,
+	OnChanges,
 	EventEmitter
 } from '@angular/core';
 
-import { DropEvent, DragEvent } from '@sedeh/drag-enabled';
+import { DropEvent } from '@sedeh/drag-enabled';
 import { TableHeadersGenerator } from './components/table-headers-generator';
 import { TableViewComponent } from './components/table.component';
 
@@ -23,9 +23,10 @@ import { TableViewComponent } from './components/table.component';
 	templateUrl: './flexible.table.component.html',
 	styleUrls: ['./flexible.table.component.scss']
 })
-export class FlexibleTableComponent implements OnInit {
+export class FlexibleTableComponent implements OnInit, OnChanges {
 
 	subHeaders:any;
+	formeditems: any[];
 
     @Input("vocabulary")
     public vocabulary = {
@@ -56,6 +57,9 @@ export class FlexibleTableComponent implements OnInit {
 
     @Input("tableClass")
     public tableClass = 'default-flexible-table';
+
+    @Input('inlinePagination')
+    inlinePagination = false;
 
 	@Input("headers")
 	public headers: any[];
@@ -102,14 +106,48 @@ export class FlexibleTableComponent implements OnInit {
 	@Output('onCellContentEdit')
 	private onCellContentEdit = new EventEmitter();
 
+	@Output('onfilter')
+	private onfilter = new EventEmitter();
+
 	@Output('onconfigurationchange')
 	private onconfigurationchange = new EventEmitter();
 
-	@ViewChild('viewTable')
+	@ViewChild('viewTable', {static: false})
 	viewTable: TableViewComponent;
 
     constructor(private generator: TableHeadersGenerator) {}
 
+	ngOnChanges(changes: any) {
+		if (changes.items) {
+			const list = [];
+			this.items.map(
+				(item: any) => {
+					const copy = Object.assign({}, item);
+					this.headers.map(
+						(header: any) => {
+							if (header.format) {
+								const v = copy[header.key];
+								if (v && typeof v === 'string') {
+									const format = header.format.split(':');
+									if (format[0] === 'calendar') {
+										copy[header.key] = Date.parse(v);
+									} else if (format[0] === 'date') {
+										copy[header.key] = Date.parse(v);
+									} else if (format[0] === 'number') {
+										copy[header.key] = format.length > 2 ? parseFloat(v) : parseInt(v, 10);
+									} else if (format[0] === 'currency') {
+										copy[header.key] = parseFloat(v.replace(/[^0-9\.-]+/g,""));
+									}
+								}
+							}
+						}
+					)
+					list.push(copy);
+				}
+			)
+			this.formeditems = list;
+		}
+	}
 	ngOnInit() {
 		if (this.persistenceKey) {
 			const headers:any = this.generator.retreiveHeaders(this.persistenceKey, this.persistenceId);
@@ -176,5 +214,8 @@ export class FlexibleTableComponent implements OnInit {
 	}
 	onCellEdit(event){
 		this.onCellContentEdit.emit(event);
+	}
+	onTableFilter(event){
+		this.onfilter.emit(event);
 	}
 }

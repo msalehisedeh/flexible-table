@@ -27,6 +27,9 @@ export class PaginationComponent implements OnInit {
     @Input("info")
     info: PaginationInfo = { contentSize: 0, pageSize: 0, maxWidth: "0" };
 
+    @Input('inline')
+    inline = false;
+
 	@Output('onchange')
     onchange = new EventEmitter();
 

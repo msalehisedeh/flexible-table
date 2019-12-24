@@ -123,6 +123,7 @@
 
         .unlocked-table {
             margin-left: 0 !important;
+            position: unset !important;
 
             ::ng-deep table {
                 td, th {
@@ -147,7 +148,9 @@
                 td, th {
                     white-space: unset;
                 }
-                
+                td.index {
+                    border-right: 0;
+                }
                 img {
                     height: 30px;
                 }

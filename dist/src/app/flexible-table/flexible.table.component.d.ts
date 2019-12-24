@@ -1,10 +1,11 @@
-import { OnInit } from '@angular/core';
+import { OnInit, OnChanges } from '@angular/core';
 import { DropEvent } from '@sedeh/drag-enabled';
 import { TableHeadersGenerator } from './components/table-headers-generator';
 import { TableViewComponent } from './components/table.component';
-export declare class FlexibleTableComponent implements OnInit {
+export declare class FlexibleTableComponent implements OnInit, OnChanges {
     private generator;
     subHeaders: any;
+    formeditems: any[];
     vocabulary: {
         printTable: string;
         configureTable: string;
@@ -21,6 +22,7 @@ export declare class FlexibleTableComponent implements OnInit {
     action: string;
     actionKeys: any;
     tableClass: string;
+    inlinePagination: boolean;
     headers: any[];
     items: any[];
     pageInfo: any;
@@ -36,9 +38,11 @@ export declare class FlexibleTableComponent implements OnInit {
     rowDetailerHeaders: any;
     private onaction;
     private onCellContentEdit;
+    private onfilter;
     private onconfigurationchange;
     viewTable: TableViewComponent;
     constructor(generator: TableHeadersGenerator);
+    ngOnChanges(changes: any): void;
     ngOnInit(): void;
     updateLimits(): void;
     reconfigure(event: any): void;
@@ -46,4 +50,5 @@ export declare class FlexibleTableComponent implements OnInit {
     tableAction(event: any): void;
     onDrop(event: DropEvent): void;
     onCellEdit(event: any): void;
+    onTableFilter(event: any): void;
 }

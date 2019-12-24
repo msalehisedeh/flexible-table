@@ -38,8 +38,8 @@ EXPORTS:
 
 DEPENDENCIES: 
     "font-awesome": "^4.7.0",
-    "@sedeh/drag-enabled": "^2.0.1",
-    "@sedeh/into-pipes": "^2.1.1"
+    "@sedeh/drag-enabled": "^2.1.0",
+    "@sedeh/into-pipes": "^2.3.10"
 ```
 ## How to do it?
 It is very simple. You have a JSON data to display and you want to allow user to configure columns, plus having ability to paginate, and sort/drag specific columns.
@@ -139,6 +139,7 @@ Now you need to set the table tag in your HTML content:
       caption="total records found {{users.length}}" 
       [headers]="usersHeader" 
       [items]="users" 
+      [inlinePagination]="true"
       [pageInfo]="pageInfo"
       enableIndexing="true"
       actionable="true"
@@ -188,7 +189,8 @@ export interface FlexibleTableHeader {
 	value: string,
 	present: boolean,
 	width?: string,
-	minwidth?: string,
+  minwidth?: string,
+  hideOnPrint?: boolean,
 	format?: string,
 	filter?: string,
 	dragable?: boolean,
@@ -208,79 +210,83 @@ We are using "@sedeh/into-pipes" library. to see available formatting options, p
 
 ### Attributes (FlexibleTableComponent)
 
-| Attribute          |Status    |Description                                                                            |
-|--------------------|----------|--------- -----------------------------------------------------------------------------|
-|caption             |Optional  |Caption to be displayed                                                                |
+| Attribute          |Status    |Description                                                                         |
+|--------------------|----------|--------- --------------------------------------------------------------------------|
+|caption             |Optional  |Caption to be displayed                                                             |
 |action              |Optional  |off-screen message to be displayed if click on a row results in an action. If supplied, action column will be displayed and will take effect on user click |
 |actionKeys          |Optional  |parameters to feed the action.  parameters should exist in headers mapping.            |
-|tableClass          |Optional  |class name to be assigned to the table.                                                |
+|tableClass          |Optional  |class name to be assigned to the table.                                             |
 |headers             |Optional  |mapping of items to be displayed as headers including instructions on formatting, dragging, ...                               |
-|items               |Required  |items to be displayed                                                                  |
-|pageInfo            |Optional  |pagination information. If is not supplied, pagination will not take place.            |
+|items               |Required  |items to be displayed                                                               |
+|pageInfo            |Optional  |pagination information. If is not supplied, pagination will not take place.         |
 |tableInfo           |Optional  |Information about component owning the table. this information will be passed to the component that will display when a row is expanded. |
-|configurable        |Optional  |flag to allow hiding/displaying of specific headers.                                   |
-|enableIndexing      |Optional  |flag to display index of rows.                                                         |
-|rowDetailer         |Optional  |reference to template that should be displayed when a row is expanded.                 |
+|inlinePagination    |Optional  |Flag to make pagination display as a sticky div or stay in a fixed location at the bottom right corner of table. |
+|configurable        |Optional  |flag to allow hiding/displaying of specific headers.                                |
+|enableIndexing      |Optional  |flag to display index of rows.                                                      |
+|rowDetailer         |Optional  |reference to template that should be displayed when a row is expanded.              |
 |expandable          |Optional  | in component that owns the table which determines in a specific row is expandable. This function is called twice with a flag argument. If flag is false, call is to determine if action icon should be displayed on row. otherwise is to give before expansion opportunity to the owner to perform possible operation before expansion on the table take effect. |
-|expandIf            |Optional  |flag to override calling of expandable function.                                       |
+|expandIf            |Optional  |flag to override calling of expandable function.                                    |
 |rowDetailerHeaders  |Optional  |If the expanding row should be displayed in another table inside, then this attribute will be passed to the expansion template. |
-|configAddon         |Optional  |Template to include additional control items alongside print and configure actions.    |
+|configAddon         |Optional  |Template to include additional control items alongside print and configure actions. |
 
 
 ### Attributes (LockTableComponent)
 
-| Attribute          |Status    |Description                                                                            |
-|--------------------|----------|---------------------------------------------------------------------------------------|
-|caption             |Optional  |Caption to be displayed                                                                |
+| Attribute          |Status    |Description                                                                         |
+|--------------------|----------|------------------------------------------------------------------------------------|
+|caption             |Optional  |Caption to be displayed                                                             |
 |action              |Optional  |off-screen message to be displayed if click on a row results in an action. If supplied, action column will be displayed and will take effect on user click |
-|actionKeys          |Optional  |parameters to feed the action.  parameters should exist in headers mapping.            |
-|tableClass          |Optional  |class name to be assigned to the table.                                                |
+|actionKeys          |Optional  |parameters to feed the action.  parameters should exist in headers mapping.         |
+|tableClass          |Optional  |class name to be assigned to the table.                                             |
 |headers             |Optional  |mapping of items to be displayed as headers including instructions on formatting, dragging, ... |
-|items               |Required  |items to be displayed                                                                  |
-|pageInfo            |Optional  |pagination information. If is not supplied, pagination will not take place.            |
+|items               |Required  |items to be displayed                                                               |
+|pageInfo            |Optional  |pagination information. If is not supplied, pagination will not take place.         |
+|inlinePagination    |Optional  |Flag to make pagination display as a sticky div or stay in a fixed location at the bottom right corner of table. |
 |tableInfo           |Optional  |Information about component owning the table. this information will be passed to the component that will display when a row is expanded. |
-|configurable        |Optional  |flag to allow hiding/displaying of specific headers.                                   |
-|enableIndexing      |Optional  |flag to display index of rows.                                                         |
+|configurable        |Optional  |flag to allow hiding/displaying of specific headers.                                |
+|enableIndexing      |Optional  |flag to display index of rows.                                                      |
 |filterwhiletyping   |Optional  |flag to perform filtering while typing in a filter field. If not set will filter only on a hit return after typing. |
-|configAddon         |Optional  |Template to include additional control items alongside print and configute actions.    |
+|configAddon         |Optional  |Template to include additional control items alongside print and configute actions.  |
 
 
 ## Metadata Rules
 
-| Metadata             |status    |Description                                                                          |
-|----------------------|----------|-------------------------------------------------------------------------------------|
-|key                   |Required  |JSON path to the value to be displayed on a column.                                  |
-|value                 |Required  |Title of the column on the table.                                                    |
-|present               |Optional  |Display the column if set. Hide it otherwise.                                        |
-|width                 |Optional  |Column width.                                                                        |
-|minwidth              |Optional  |Minimum column with.                                                                 |
+| Metadata             |status    |Description                                                                       |
+|----------------------|----------|----------------------------------------------------------------------------------|
+|key                   |Required  |JSON path to the value to be displayed on a column.                               |
+|value                 |Required  |Title of the column on the table.                                                 |
+|present               |Optional  |Display the column if set. Hide it otherwise.                                     |
+|width                 |Optional  |Column width.                                                                     |
+|minwidth              |Optional  |Minimum column with.                                                              |
 |format                |Optional  |How the cell should be displayed. use into-pipe components to make the cell interactive and editable. |
-|filter                |Optional  |If undefined, no filtering. Otherwise show filter field for the column.              |
-|dragable              |Optional  |Should column position be reorganized through drag and drop action?                  |
-|sortable              |Optional  |Should the column be sortable?                                                       |
-|class                 |Optional  |Apply the class to the column.                                                       |
-|locked                |Optional  |In a lock table, should the column be locked out.                                    |
+|filter                |Optional  |If undefined, no filtering. Otherwise show filter field for the column.           |
+|dragable              |Optional  |Should column position be reorganized through drag and drop action?               |
+|sortable              |Optional  |Should the column be sortable?                                                    |
+|class                 |Optional  |Apply the class to the column.                                                    |
+|locked                |Optional  |In a lock table, should the column be locked out.                                 |
+|hideOnPrint           |Optional  |Should the column be displayed when prinitinf.                                    |
 
 
 ## Events
-| Event                |Description                                                                                    |
-|----------------------|-----------------------------------------------------------------------------------------------|
-|onaction              |Will be published on a click action of a row                                                   |
-|onCellContentEdit     |Will be published when content of an editable cell is modified                                 |
-|onconfigurationchange |Will be called when user selects to hide/un-hide some of headers on configuration pop-up       |
+| Event                |Description                                                                                  |
+|----------------------|---------------------------------------------------------------------------------------------|
+|onaction              |Will be published on a click action of a row                                                 |
+|onfilter              |Will be published on when user types in something in filter fields to reduce table rows.     |
+|onCellContentEdit     |Will be published when content of an editable cell is modified                               |
+|onconfigurationchange |Will be called when user selects to hide/un-hide some of headers on configuration pop-up     |
 
 ## Filtering rules
 
-| Operand  | Example      | Description                                                                                |
-|----------|--------------|--------------------------------------------------------------------------------------------|
-| <        | <5           | Perform less than operation                                                                |
-| >        | >5           | Perform greater than operation                                                             |
-| !        | !5           | Perform not equal operation                                                                |
-| =        | =5           | Perform equal to operation                                                                 |
-| *        | *Name        | Perform Ends with operation                                                                |
-| *        | Name*        | Perform Starts with operation                                                              |
-| *        | * Name*      | Perform contains with operation                                                            |
-|          | Name         | Same as contains with operation                                                            |
+| Operand  | Example      | Description                                                                              |
+|----------|--------------|------------------------------------------------------------------------------------------|
+| <        | <5           | Perform less than operation                                                              |
+| >        | >5           | Perform greater than operation                                                           |
+| !        | !5           | Perform not equal operation                                                              |
+| =        | =5           | Perform equal to operation                                                               |
+| *        | *Name        | Perform Ends with operation                                                              |
+| *        | Name*        | Perform Starts with operation                                                            |
+| *        | * Name*      | Perform contains with operation                                                          |
+|          | Name         | Same as contains with operation                                                          |
 
 
 ## Adding custom pipe component to create interactive cell items
@@ -342,8 +348,10 @@ Sample table tag in your HTML content:
       persistenceKey="users-headers-102018"
       configurable="true"
       filterwhiletyping="true"
+      [inlinePagination]="true"
       [items]="unknownJsonList"
       [pageInfo]="pageInfo"
+      (onfilter)="onfilter($event)"
       (onCellContentEdit)="onCellModified($event)"
       (onconfigurationchange)="onconfigurationchange($event)"
       (onaction)="onaction($event)"></flexible-table>
@@ -352,12 +360,14 @@ Sample table tag in your HTML content:
       caption="total records found {{users.length}}" 
       action="View details of %name% where ID is %id%"
       actionKeys="%name%,%id%"
+      [inlinePagination]="true"
       [headers]="usersHeader" 
       [items]="users" 
       [pageInfo]="pageInfo"
       enableIndexing="true"
       actionable="true"
       configurable="true"
+      (onfilter)="onfilter($event)"
       (onconfigurationchange)="onconfigurationchange($event)"
       (onaction)="onaction($event)"></lock-table>
 ```
@@ -382,6 +392,14 @@ FlexibleTableHeader {
 
 | Version | Description                                                                                              |
 |---------|----------------------------------------------------------------------------------------------------------|
+| 2.0.0   | Updated to Angular 8.                                                                                    |
+| 1.8.9   | Worked on table printing and improved mobile display. Added hideOnPrint option to have control over printing columns. |
+| 1.8.8   | Updated dependencies.                                                                                    |
+| 1.8.7   | Added fix for sorting if column is number, date, currency formatted.                                     |
+| 1.8.6   | fixed sorting numbers if given as strings. fixed pagination to keep sorting order when paginating table. |
+| 1.8.5   | made filtered event trigger after sort so the items sent would reflect the table row order.              |
+| 1.8.4   | Added onfilter event if there is a need to update some other parts of application when list is filtered. |
+| 1.8.3   | fixed display issues. upgraded into-pipes library to benefit hover effects over interactive cells.       |
 | 1.8.2   | Updated dependencies.                                                                                    |
 | 1.8.0   | It was brought to my attention that some users have trouble using my components in their angular 6 environment. Since I had only updated few dependencies when moved to Angular 6, I am thinking dependencies are causing issues. So, for this release, I am updating all dependencies to what Angular 6 applications are expecting to have. Please let me know if this is fixing or not fixing any issues you are facing. |
 | 1.7.3   | Fixed problem with table. When pagination is not given to the table, an undefined exception was occurring. |

@@ -3,7 +3,7 @@
     <caption *ngIf="caption" [textContent]="caption"></caption>
     <thead>
         <tr>
-            <th scope="col" *ngIf="enableIndexing && !printMode" id="indexable" class="indexable"></th>
+            <th scope="col" *ngIf="enableIndexing && !printMode" id="indexable" class="indexable hide-on-print"></th>
             <th scope="col" *ngFor="let header of headers" #th
                 [dragEnabled]="dragEnabled.bind(this)"
                 [dropEnabled]="dropEnabled.bind(this)"
@@ -15,34 +15,40 @@
                 [attr.width]="header.width ? header.width : null" 
                 [style.min-width]="header.minwidth ? header.minwidth : ''" 
                 [attr.tabindex]="header.sortable ? 0 : -1"
+                [class.hide-on-print]="header.hideOnPrint"
                 (keydown)="keydown($event, th)" (click)="sort(header, icon)">
-                <span *ngIf="!printMode && header.sortable" class="off-screen"  [textContent]="vocabulary.clickSort"></span>
+                <span 
+                    *ngIf="!printMode && header.sortable" 
+                    class="off-screen"  
+                    [textContent]="vocabulary.clickSort"></span>
                 <span class="locker icon fa" #locker
-                        *ngIf="!printMode && lockable && (headers.length > 1 || header.locked)"
-                        tabindex="0"
-                        title="lock/unlock this column"
-                        (keydown)="keydown($event, locker)" (click)="lock(header, $event)"
-                        [class.fa-lock]="header.locked"
-                        [class.fa-unlock]="!header.locked"></span>
+                    *ngIf="!printMode && lockable && (headers.length > 1 || header.locked)"
+                    tabindex="0"
+                    title="lock/unlock this column"
+                    (keydown)="keydown($event, locker)" (click)="lock(header, $event)"
+                    [class.fa-lock]="header.locked"
+                    [class.fa-unlock]="!header.locked"></span>
                 <span class="title"
-                        [class.dragable]="header.dragable"
-                        [textContent]="header.value"></span>
+                    [class.lockable]="lockable"
+                    [class.dragable]="header.dragable"
+                    [textContent]="header.value"></span>
                 <span class="icon fa" [class.hidden]="printMode || !items || items.length === 0" #icon
-                        [class.fa-sort]="header.sortable"
-                        [class.fa-sort-asc]="header.assending"
-                        [class.fa-sort-desc]="header.desending"></span>
+                    [class.fa-sort]="header.sortable"
+                    [class.fa-sort-asc]="header.assending"
+                    [class.fa-sort-desc]="header.desending"></span>
             </th>
-            <th scope="col" *ngIf="action && !printMode" id="actionable" class="actionable"></th>
+            <th scope="col" *ngIf="action && !printMode" id="actionable" class="actionable hide-on-print"></th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngIf="!printMode && enableFiltering && items && items.length">
-            <td scope="row" *ngIf="enableIndexing && !printMode" class="index filter">
+        <tr *ngIf="!printMode && enableFiltering && items && items.length" class="hide-on-print">
+            <td scope="row" *ngIf="enableIndexing && !printMode" class="index filter hide-on-print">
                 <input type="text" disabled style="opacity:0" />
             </td>
             <td scope="row" 
                         *ngFor="let header of headers; let i=index" 
                         [attr.data-label]="header.value" 
+                        [class.hide-on-print]="header.hideOnPrint"
                         class="filter">
                 <span *ngIf="header.filter === undefined">&nbsp;</span>
                 <input  *ngIf="header.filter !== undefined"
@@ -52,9 +58,9 @@
                         [value]="header.filter ? header.filter : ''" />
                 <label *ngIf="header.filter !== undefined" for="filter-{{i}}" ><span class="off-screen" >Filter "{{header.value}}"</span><span class="fa fa-search"></span></label>
             </td>
-            <td scope="row" *ngIf="action && !printMode"></td>
+            <td scope="row" *ngIf="action && !printMode" class="hide-on-print"></td>
         </tr>
-       <ng-template ngFor let-item [ngForOf]="filteredItems" let-i="index">
+       <ng-template ngFor let-item [ngForOf]="printMode ? items: filteredItems" let-i="index">
             <tr (click)="actionClick($event, item)"
                 (mouseover)="hover(item, true)"
                 (mouseout)="hover(item, false)"
@@ -62,11 +68,13 @@
                 [class.hover]="item.hover"
                 [class.expanded]="item.expanded"
                 [class.odd]="i%2">
-                <td scope="row" class="index" *ngIf="enableIndexing && !printMode">
-                    <span [textContent]="i + pageInfo.from + 1"></span></td>
+                <td scope="row" class="index hide-on-print" *ngIf="enableIndexing && !printMode">
+                    <span [textContent]="i + pageInfo.from + 1"></span>
+                </td>
                 <td scope="row" 
                     *ngFor="let header of headers" 
                     [class]="toCssClass(header)"
+                    [class.hide-on-print]="header.hideOnPrint"
                     [attr.data-label]="header.value" 
                     [intoName]="header.value"
                     [intoId]="header.key + '-' + i"
@@ -74,7 +82,7 @@
                     [intoData]="item"
                     [rawContent]="cellContent(item, header)"
                     [onComponentChange]="onTableCellEdit.bind(this)"></td>
-                <td scope="row" *ngIf="action && !printMode">
+                <td scope="row" *ngIf="action && !printMode" class="hide-on-print">
                     <a class="actionable"
                         *ngIf="expandable(item, true)"
                         tabindex="0"

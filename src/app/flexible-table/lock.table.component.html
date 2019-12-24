@@ -23,6 +23,7 @@
         
 		(onchange)="onlock($event)"
 		(onDrop)="onDrop($event)"
+        (onfilter)="onTableFilter($event)"
 		(onCellContentEdit)="onCellEdit($event)"
 		(onfilter)="changeUnlockedTableFilteredItems($event)"
 		(onaction)="tableAction($event)"></table-view>
@@ -38,6 +39,7 @@
 		[enableFiltering]="enableFiltering"
 
 		(onDrop)="onDrop($event)"
+        (onfilter)="onTableFilter($event)"
 		(onchange)="onlock($event)"
 		(onCellContentEdit)="onCellEdit($event)"
 		(onfilter)="changeLockedTableFilteredItems($event)"
@@ -46,5 +48,6 @@
 </div>
 <table-pagination #pager
 	[info]="pageInfo" 
+    [inline]="inlinePagination" 
 	[vocabulary]="vocabulary" 
     (onchange)="onPaginationChange($event)"></table-pagination>

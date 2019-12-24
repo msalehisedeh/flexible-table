@@ -7,6 +7,7 @@ export interface FlexibleTableHeader {
     width?: string;
     minwidth?: string;
     format?: string;
+    hideOnPrint?: boolean;
     filter?: string;
     dragable?: boolean;
     sortable?: boolean;
@@ -20,6 +21,7 @@ export declare class TableViewComponent implements OnInit, OnChanges {
     dragging: boolean;
     printMode: boolean;
     filteredItems: any[];
+    sortedItems: any[];
     filteringTimerId: any;
     vocabulary: {
         configureTable: string;
@@ -52,11 +54,11 @@ export declare class TableViewComponent implements OnInit, OnChanges {
     private onCellContentEdit;
     private table;
     constructor(el: ElementRef);
-    private findColumnWithID(id);
-    private swapColumns(source, destination);
-    private getColumnIndex(id);
-    private itemValue(item, hpath);
-    initVisibleRows(): void;
+    private findColumnWithID;
+    private swapColumns;
+    private getColumnIndex;
+    private itemValue;
+    initVisibleRows(filtered: any[]): void;
     lock(header: FlexibleTableHeader, event: any): void;
     sort(header: FlexibleTableHeader, icon: any): void;
     offsetWidth(): any;
@@ -79,8 +81,8 @@ export declare class TableViewComponent implements OnInit, OnChanges {
     changeFilter(event: any, header: any): void;
     actionClick(event: any, item: any): boolean;
     print(): void;
-    private shouldSkipItem(value, filterBy);
-    filterItems(): void;
+    private shouldSkipItem;
+    filterItems(): any[];
     onTableCellEdit(event: any): void;
     dragEnabled(event: DragEvent): any;
     dropEnabled(event: DropEvent): any;

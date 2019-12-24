@@ -4,7 +4,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {IntoPipeModule} from '@sedeh/into-pipes';
-import { DragDropModule } from '@sedeh/drag-enabled';
+import { DragDropModule } from '../drag-enabled/dragdrop.module';
 
 import { PaginationComponent } from './components/pagination.component';
 import { ConfigurationComponent } from './components/configuration.component';

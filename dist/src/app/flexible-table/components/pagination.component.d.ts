@@ -18,8 +18,9 @@ export declare class PaginationComponent implements OnInit {
         previousPage: string;
     };
     info: PaginationInfo;
-    onchange: EventEmitter<{}>;
-    onready: EventEmitter<{}>;
+    inline: boolean;
+    onchange: EventEmitter<any>;
+    onready: EventEmitter<any>;
     ngOnInit(): void;
     setWidth(width: number): void;
     ready(): void;
