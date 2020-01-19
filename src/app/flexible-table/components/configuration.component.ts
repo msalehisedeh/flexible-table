@@ -12,26 +12,14 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class ConfigurationComponent {
     showConfigurationView: boolean;
 
-	@Input("title")
-	public title: string;
+	@Input() title: string;
+	@Input() action: string;
+	@Input() printTable: string;
+	@Input() headers: any[];
+	@Input() configAddon: any;
 
-	@Input("action")
-	public action: string;
-
-	@Input("printTable")
-	public printTable: string;
-	
-	@Input("headers")
-	public headers: any[];
-
-	@Input("configAddon")
-	public configAddon: any;
-
-	@Output('onchange')
-	private onchange = new EventEmitter();
-
-	@Output('onprint')
-	private onprint = new EventEmitter();
+	@Output() private onchange = new EventEmitter();
+	@Output() private onprint = new EventEmitter();
 
 	reconfigure(item, header) {
         header.present = item.checked;

@@ -392,6 +392,7 @@ FlexibleTableHeader {
 
 | Version | Description                                                                                              |
 |---------|----------------------------------------------------------------------------------------------------------|
+| 2.0.1   | Fixed issue caused by upgarde to angular 8.                                                              |
 | 2.0.0   | Updated to Angular 8.                                                                                    |
 | 1.8.9   | Worked on table printing and improved mobile display. Added hideOnPrint option to have control over printing columns. |
 | 1.8.8   | Updated dependencies.                                                                                    |

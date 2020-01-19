@@ -21,20 +21,12 @@ export interface PaginationInfo {
 })
 export class PaginationComponent implements OnInit {
 
-    @Input("vocabulary")
-    public vocabulary = {setSize: "", firstPage: "", nextPage: "", lastPage: "", previousPage: ""};
+    @Input() vocabulary = {setSize: "", firstPage: "", nextPage: "", lastPage: "", previousPage: ""};
+    @Input() info: PaginationInfo = { contentSize: 0, pageSize: 0, maxWidth: "0" };
+    @Input() inline = false;
 
-    @Input("info")
-    info: PaginationInfo = { contentSize: 0, pageSize: 0, maxWidth: "0" };
-
-    @Input('inline')
-    inline = false;
-
-	@Output('onchange')
-    onchange = new EventEmitter();
-
-    @Output('onready')
-    onready = new EventEmitter();
+	@Output() onchange = new EventEmitter();
+    @Output() onready = new EventEmitter();
 
 	ngOnInit() {
 		if (!this.info) {

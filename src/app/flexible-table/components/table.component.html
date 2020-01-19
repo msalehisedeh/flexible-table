@@ -4,7 +4,7 @@
     <thead>
         <tr>
             <th scope="col" *ngIf="enableIndexing && !printMode" id="indexable" class="indexable hide-on-print"></th>
-            <th scope="col" *ngFor="let header of headers" #th
+            <th scope="col" *ngFor="let header of headers; let hh = index" #th
                 [dragEnabled]="dragEnabled.bind(this)"
                 [dropEnabled]="dropEnabled.bind(this)"
                 [medium]="header"
@@ -16,6 +16,7 @@
                 [style.min-width]="header.minwidth ? header.minwidth : ''" 
                 [attr.tabindex]="header.sortable ? 0 : -1"
                 [class.hide-on-print]="header.hideOnPrint"
+                [class.distict]="headerSeparation && hh < (headers.length -1)"
                 (keydown)="keydown($event, th)" (click)="sort(header, icon)">
                 <span 
                     *ngIf="!printMode && header.sortable" 

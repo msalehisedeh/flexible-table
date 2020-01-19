@@ -40,77 +40,32 @@ export class FlexibleTableComponent implements OnInit, OnChanges {
 		previousPage: "Previous"
 	};
 	
-    @Input("persistenceId")
-    public persistenceId: string;
+	@Input() headerSeparation = true;
+    @Input() persistenceId: string;
+	@Input() persistenceKey: string;
+    @Input() caption: string;
+    @Input() action: string;
+    @Input() actionKeys;
+    @Input() tableClass = 'default-flexible-table';
+    @Input() inlinePagination = false;
+	@Input() headers: any[];
+	@Input() items: any[];
+	@Input() pageInfo: any;
+	@Input() tableInfo: any;
+    @Input() configurable: boolean;
+	@Input() configAddon: any;
+	@Input() enableIndexing: boolean;
+    @Input() enableFiltering: boolean;
+    @Input() rowDetailer: any;
+    @Input() expandable: any;
+    @Input() expandIf: boolean;
+    @Input() filterwhiletyping: boolean;
+    @Input() rowDetailerHeaders: any;
 
-	@Input("persistenceKey")
-    public persistenceKey: string;
-
-    @Input("caption")
-    public caption: string;
-
-    @Input("action")
-    public action: string;
-
-    @Input("actionKeys")
-    public actionKeys;
-
-    @Input("tableClass")
-    public tableClass = 'default-flexible-table';
-
-    @Input('inlinePagination')
-    inlinePagination = false;
-
-	@Input("headers")
-	public headers: any[];
-
-	@Input("items")
-	public items: any[];
-
-	@Input("pageInfo")
-	public pageInfo: any;
-
-	@Input("tableInfo")
-	public tableInfo: any;
-
-    @Input("configurable")
-    public configurable: boolean;
-
-	@Input("configAddon")
-	public configAddon: any;
-
-	@Input("enableIndexing")
-    public enableIndexing: boolean;
-
-    @Input("enableFiltering")
-    public enableFiltering: boolean;
-
-    @Input("rowDetailer")
-    public rowDetailer: any;
-
-    @Input("expandable")
-    public expandable: any;
-
-    @Input("expandIf")
-    public expandIf: boolean;
-
-    @Input("filterwhiletyping")
-    public filterwhiletyping: boolean;
-
-    @Input("rowDetailerHeaders")
-    public rowDetailerHeaders: any;
-
-	@Output('onaction')
-	private onaction = new EventEmitter();
-
-	@Output('onCellContentEdit')
-	private onCellContentEdit = new EventEmitter();
-
-	@Output('onfilter')
-	private onfilter = new EventEmitter();
-
-	@Output('onconfigurationchange')
-	private onconfigurationchange = new EventEmitter();
+	@Output() private onaction = new EventEmitter();
+	@Output() private onCellContentEdit = new EventEmitter();
+	@Output() private onfilter = new EventEmitter();
+	@Output() private onconfigurationchange = new EventEmitter();
 
 	@ViewChild('viewTable', {static: false})
 	viewTable: TableViewComponent;

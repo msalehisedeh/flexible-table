@@ -119,6 +119,7 @@
             padding-top: 6px;
             padding-bottom: 6px;
             text-align: left;
+            padding-left: 5px;
 
             &.drag-over {
                 background-color: #9b9b9b;
@@ -130,6 +131,12 @@
 
             &:first-child {
                 padding-left: 5px;
+            }
+            &.distict {
+                border-right: 1px solid #ccc;
+                &:last-child {
+                    border-right: 0;
+                }
             }
 
             &.descending, &.ascending, &.sortable {

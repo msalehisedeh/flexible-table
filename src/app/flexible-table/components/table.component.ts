@@ -58,67 +58,30 @@ export class TableViewComponent implements OnInit, OnChanges {
 		previousPage: "Previous"
 	};
 
-	@Input("lockable")
-	lockable:boolean;
+	@Input() headerSeparation = true;
+	@Input() lockable:boolean;
+	@Input() caption: string;
+    @Input() action: string;
+    @Input() pageInfo: any;
+    @Input() actionKeys: any;
+    @Input() tableClass = 'default-flexible-table';
+	@Input() headers: any[];
+	@Input() items: any[];
+	@Input() tableInfo: any;
+    @Input() enableIndexing: boolean;
+    @Input() enableFiltering: boolean;
+    @Input() rowDetailer: any;
+    @Input() expandable: any;
+    @Input() expandIf: boolean;
+    @Input() filterwhiletyping: boolean;
+	@Input() rowDetailerHeaders: any;
+	
+	@Output() private onaction = new EventEmitter();
+	@Output() private onchange = new EventEmitter();
+	@Output() private onfilter = new EventEmitter();
+	@Output() private onCellContentEdit = new EventEmitter();
 
-	@Input("caption")
-    public caption: string;
-
-    @Input("action")
-    public action: string;
-
-    @Input("pageInfo")
-    public pageInfo;
-
-    @Input("actionKeys")
-    public actionKeys;
-
-    @Input("tableClass")
-    public tableClass = 'default-flexible-table';
-
-	@Input("headers")
-	public headers: any[];
-
-	@Input("items")
-	public items: any[];
-
-	@Input("tableInfo")
-	public tableInfo: any;
-
-    @Input("enableIndexing")
-    public enableIndexing: boolean;
-
-    @Input("enableFiltering")
-    public enableFiltering: boolean;
-
-    @Input("rowDetailer")
-    public rowDetailer: any;
-
-    @Input("expandable")
-    public expandable: any;
-
-    @Input("expandIf")
-    public expandIf: boolean;
-
-    @Input("filterwhiletyping")
-    public filterwhiletyping: boolean;
-
-    @Input("rowDetailerHeaders")
-    public rowDetailerHeaders: any;
-
-	@Output('onaction')
-	private onaction = new EventEmitter();
-
-	@Output('onchange')
-	private onchange = new EventEmitter();
-
-	@Output('onfilter')
-	private onfilter = new EventEmitter();
-
-	@Output('onCellContentEdit')
-	private onCellContentEdit = new EventEmitter();
-
-	@ViewChild('flexible', {static: false}) private table: ViewContainerRef;
+	@ViewChild('flexible', {static: false}) private table: any;
 
     constructor(public el:ElementRef) {}
 
@@ -263,7 +226,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 	}
 
 	offsetWidth() {
-		return this.table.element.nativeElement.offsetWidth;
+		return this.table.nativeElement.offsetWidth;
 	}
 
 	ngOnChanges(changes:any) {
@@ -324,8 +287,8 @@ export class TableViewComponent implements OnInit, OnChanges {
     headerColumnElements() {
 		let result = [];
 
-		if (this.table.element.nativeElement.children) {
-			const list = this.table.element.nativeElement.children;
+		if (this.table.nativeElement.children) {
+			const list = this.table.nativeElement.children;
 			result = this.caption ? list[1].children[0].children : list[0].children[0].children;
 		}
 		return result;

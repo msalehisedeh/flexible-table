@@ -32,6 +32,7 @@ export declare class TableViewComponent implements OnInit, OnChanges {
         lastPage: string;
         previousPage: string;
     };
+    headerSeparation: boolean;
     lockable: boolean;
     caption: string;
     action: string;

@@ -16,6 +16,7 @@ export declare class FlexibleTableComponent implements OnInit, OnChanges {
         lastPage: string;
         previousPage: string;
     };
+    headerSeparation: boolean;
     persistenceId: string;
     persistenceKey: string;
     caption: string;

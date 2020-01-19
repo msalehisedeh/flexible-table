@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpModule } from '@angular/http';
 import {IntoPipeModule} from '@sedeh/into-pipes';
 
 import { AppComponent } from './app.component';
@@ -9,15 +8,14 @@ import { SelectService } from './select.service';
 import { FlexibleTableModule } from './flexible-table/flexible-table-module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    SelectService
-  ],
   imports: [
     BrowserModule,
     IntoPipeModule,
-    HttpModule,
     FlexibleTableModule
+  ],
+  declarations: [
+    AppComponent,
+    SelectService
   ],
   providers: [
     AppService

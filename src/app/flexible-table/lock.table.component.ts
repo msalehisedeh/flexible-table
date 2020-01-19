@@ -44,66 +44,33 @@ export class LockTableComponent implements OnInit, OnChanges {
 		previousPage: "Previous"
 	};
 
+	@Input() headerSeparation = true;
     @Input("persistenceId")
     public persistenceId: string;
 
     @Input("persistenceKey")
     public persistenceKey: string;
 
-    @Input("caption")
-    public caption: string;
-
-    @Input("action")
-    public action: string;
-
-    @Input("actionKeys")
-    public actionKeys;
-
-    @Input("tableClass")
-    public tableClass = 'default-flexible-table';
-
-	@Input("headers")
-	public headers: any[];
-
-	@Input("items")
-	public items: any[];
-
-    @Input('inlinePagination')
-    inlinePagination = false;
-
-	@Input("pageInfo")
-	public pageInfo: any;
-
-	@Input("tableInfo")
-	public tableInfo: any;
-
-    @Input("configurable")
-    public configurable: boolean;
-
-	@Input("configAddon")
-	public configAddon: any;
-
-	@Input("enableFiltering")
-    public enableFiltering: boolean;
-
-    @Input("enableIndexing")
-    public enableIndexing: boolean;
-
-    @Input("filterwhiletyping")
-    public filterwhiletyping: boolean;
+    @Input() caption: string;
+    @Input() action: string;
+    @Input() actionKeys;
+    @Input() tableClass = 'default-flexible-table';
+	@Input() headers: any[];
+	@Input() items: any[];
+    @Input() inlinePagination = false;
+	@Input() pageInfo: any;
+	@Input() tableInfo: any;
+    @Input() configurable: boolean;
+	@Input() configAddon: any;
+	@Input() enableFiltering: boolean;
+    @Input() enableIndexing: boolean;
+    @Input() filterwhiletyping: boolean;
 
 
-	@Output('onaction')
-	private onaction = new EventEmitter();
-
-	@Output('onCellContentEdit')
-	private onCellContentEdit = new EventEmitter();
-
-	@Output('onfilter')
-	private onfilter = new EventEmitter();
-
-	@Output('onconfigurationchange')
-	private onconfigurationchange = new EventEmitter();
+	@Output() private onaction = new EventEmitter();
+	@Output() private onCellContentEdit = new EventEmitter();
+	@Output() private onfilter = new EventEmitter();
+	@Output() private onconfigurationchange = new EventEmitter();
 
 	@ViewChild('lockedTable', {static: false})
 	private lockedTable: TableViewComponent;
