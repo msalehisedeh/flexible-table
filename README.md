@@ -11,7 +11,7 @@ FlexibleTable and LockTable are Angular based code. LockTable will allow you to 
 
 Please send your requests or comments through the link provided below:
 
-[Live Demo](https://flexible-table.stackblitz.io)  | [Source code](https://github.com/msalehisedeh/flexible-table/tree/master/src/app) | [Comments/Requests](https://github.com/msalehisedeh/flexible-table/issues)
+[Live Demo](https://flexible-table.stackblitz.io)  | [Comments/Requests](https://github.com/msalehisedeh/flexible-table/issues)
 
 ## Features
 * Responsive
