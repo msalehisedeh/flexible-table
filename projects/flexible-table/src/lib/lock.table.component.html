@@ -1,0 +1,75 @@
+<div class="caption">
+	<div *ngIf="caption" class="text" [textContent]="caption"></div>
+	<div class="wrapper">
+		<table-configuration
+			*ngIf="configurable && items && items.length"
+			class="table-configuration" 
+			[headers]="headers" 
+			[title]="vocabulary.configureColumns" 
+			[printTable]="vocabulary.printTable"
+			[action]="vocabulary.configureTable"
+			[configAddon]="configAddon"
+			(onconfigurationchange)="reconfigure($event)">
+		</table-configuration>
+		<table-pagination 
+		*ngIf="showTopPagination()"
+			[info]="pageInfo" 
+			[inline]="isInliner()" 
+			[vocabulary]="vocabulary"
+			(onpaginationchange)="onPaginationChange($event)">
+		</table-pagination>
+	</div>
+</div>
+<div class="smart-table-wrap" (scroll)="scroll($event)">
+	<table-view #lockedTable
+        id="locked"
+		class="locked-table"
+		[headers]="lockedHeaders" 
+		[items]="filteredItems" 
+        [pageInfo]="pageInfo"
+		[tableInfo]="tableInfo"
+        [vocabulary]="vocabulary"
+        [filterwhiletyping]="filterwhiletyping"
+		[enableFiltering]="enableFiltering"
+		[enableIndexing]="indexing"
+		[headerSeparation]="headerSeparation"
+		[showActionable]="false"
+		(onchange)="onlock($event)"
+		(onDrop)="onDrop($event, true)"
+        (onfilter)="onTableFilter($event)"
+		(onCellContentEdit)="onCellEdit($event)"
+		(onfilter)="changeUnlockedTableFilteredItems($event)"
+		(onaction)="tableAction($event)"></table-view>
+
+    <table-view #unlockedTable
+        id="unlocked"
+		class="unlocked-table"
+		[headers]="unlockedHeaders" 
+		[items]="filteredItems" 
+        [pageInfo]="pageInfo"
+        [vocabulary]="vocabulary"
+        [filterwhiletyping]="filterwhiletyping"
+		[enableFiltering]="enableFiltering"
+		[headerSeparation]="headerSeparation"
+		[showActionable]="false"
+		(onDrop)="onDrop($event, false)"
+        (onfilter)="onTableFilter($event)"
+		(onchange)="onlock($event)"
+		(onCellContentEdit)="onCellEdit($event)"
+		(onfilter)="changeLockedTableFilteredItems($event)"
+		(onaction)="tableAction($event)"></table-view>
+	
+</div>
+<div *ngIf="showBottomPagination()" class="caption">
+	<div class="text"></div>
+	<div class="wrapper">
+		<table-pagination 
+			*ngIf="showBottomPagination()"
+			[info]="pageInfo" 
+			[inline]="isInliner()" 
+			[vocabulary]="vocabulary"
+			(onpaginationchange)="onPaginationChange($event)">
+		</table-pagination>
+	</div>
+</div>
+

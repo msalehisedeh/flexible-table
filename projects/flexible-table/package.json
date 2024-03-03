@@ -1,0 +1,43 @@
+{
+  "name": "@sedeh/flexible-table",
+  "version": "3.0.1",
+  "peerDependencies": {
+    "@angular/common": "^15.2.0",
+    "@angular/core": "^15.2.0",
+    "@sedeh/drag-enabled": "^4.3.3",
+    "@sedeh/into-pipes": "^4.4.1",
+    "font-awesome": "^4.7.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "keywords": [
+    "angular 6+",
+    "table",
+    "grid",
+    "sort",
+    "sortable",
+    "interactive",
+    "persistence enabled",
+    "print enabled",
+    "pagination",
+    "filter",
+    "filterable",
+    "format-able",
+    "grid-ng",
+    "Drag drop",
+    "configurable",
+    "auto configure",
+    "flexible",
+    "lockable",
+    "smart",
+    "tabulate",
+    "smart table",
+    "flexible table",
+    "lockable table",
+    "format",
+    "easy to use",
+    "best"
+  ],
+  "sideEffects": false
+}

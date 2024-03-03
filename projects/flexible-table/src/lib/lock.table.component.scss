@@ -1,0 +1,174 @@
+:host {
+    width: 100%;
+    position: relative;
+    margin: 0 auto 10px;
+    display: flex;
+    flex-direction: column;
+
+    .off-screen {
+        display: block;
+        float: left;
+        height: 0;
+        overflow: hidden;
+        text-indent: -99999px;
+        width: 0;
+    }
+    .wrapper {
+        float: right;
+        margin: -5px;
+    }
+    .caption {
+        background-color: #c3e5e2;
+        border-radius: 2px;
+        color: #1b1b1b;
+        caption-side: top;
+        font-size: 14px;
+        text-align: left;
+        justify-content: space-between;
+        display: flex;
+
+        padding: 5px 6px;
+        .text {
+            float: left;
+        }
+        table-configuration {
+            display: block;
+            float: right;
+            position: unset;
+        }
+    }
+    
+    .smart-table-wrap {
+        border-spacing: 0;
+        border-collapse: collapse;
+        border-right: 1px solid #aaa;
+        border-bottom: 1px solid #aaa;
+        box-sizing: border-box;
+        width: 100%;
+        position: relative;
+        overflow-x: auto;    
+
+        .unlocked-table {
+
+            ::ng-deep table {
+                max-width: 100%;
+                margin-bottom: 0;
+                margin-top: 0;
+
+                th {
+                    td {
+                        white-space: nowrap;
+                    }
+
+                    .locker {
+                        cursor: pointer;
+                        color: #00925b;
+                        text-align: center;
+                    }
+                }
+                tbody {
+                    tr {
+                        background-color: #fff;
+                        &:hover, &.hover {
+                            background-color: #FFEED2;
+                        }
+                    }
+                }
+                img {
+                    height: 14px;
+                }
+            }
+        }
+        .locked-table {
+            position: absolute;
+            margin: 0 auto;
+            display: inline-table;
+            border-spacing: 0;
+            border-collapse: collapse;
+            float: left;
+            z-index:2;
+            width: auto;
+            ::ng-deep .locked {
+                white-space: nowrap;
+            }
+            ::ng-deep table {
+                display: inline-block;
+                border-right: 1px solid #aaa;
+                margin: 0;
+                width:auto;
+
+                th {
+                    td {
+                        white-space: nowrap;
+                    }
+                    .locker {
+                        cursor: pointer;
+                        color: #8b0224;
+                        text-align: center;
+                    }
+                }
+                tbody {
+                    tr {
+                        background-color: #fff;
+                        &:hover, &.hover {
+                            background-color: #FFEED2;
+                        }
+                    }
+                }
+                img {
+                    height: 14px;
+                }
+            }
+        }
+        ::ng-deep {
+            select {
+                border: 0;
+                background-color: transparent
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .smart-table-wrap {
+        border: 0!important;
+        position: unset;
+        overflow-x: unset;    
+
+        .unlocked-table {
+            margin-left: 0 !important;
+            position: unset !important;
+
+            ::ng-deep table {
+                td, th {
+                    white-space: unset;
+                }
+                img {
+                    height: 30px;
+                }
+            }
+        }
+        .locked-table {
+            position: unset !important;
+            margin: 0 !important;
+            display: table;
+            left: 0 !important;
+            
+            ::ng-deep table {
+                display: table !important;
+                margin: 0 !important;
+                width: 100% !important;
+
+                td, th {
+                    white-space: unset;
+                }
+                td.index {
+                    border-right: 0;
+                }
+                img {
+                    height: 30px;
+                }
+            }
+        }
+    }
+}

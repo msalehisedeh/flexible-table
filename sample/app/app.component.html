@@ -1,0 +1,259 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1>
+    Welcome to {{ title }}!
+  </h1>
+</div>
+<div class="resources">
+    <a href="https://www.npmjs.com/package/@sedeh/flexible-table">npm install &#64;sedeh/flexible-table</a>
+    <p>Free is a lot less expensive than grid-ng.</p>
+    <p>Tested On Safari, Chrome, Mozilla, and IE11 browsers.</p>
+</div>
+<fieldset class="pick-points">
+  <legend>Flexible options:</legend>
+  <label for="enableRowCount">
+    <input 
+      type="checkbox" 
+      id="enableRowCount" 
+      name="enableRowCount" 
+      [value]="enableRowCount" 
+      [checked]="enableRowCount ? true: null" 
+      (keyup)="keyup($event)"
+      (click)="click($event, 'enableRowCount')" /> 
+    <span>Show row count</span>
+  </label>  
+  <label for="enableFiltering">
+    <input 
+      type="checkbox" 
+      id="enableFiltering" 
+      name="enableFiltering" 
+      [value]="enableFiltering" 
+      [checked]="enableFiltering ? true: null" 
+      (keyup)="keyup($event)"
+      (click)="click($event, 'enableFiltering')" /> 
+    <span>Enable filtering</span>
+  </label>  
+  <label *ngIf="enableFiltering" for="filterTyping">
+    <input 
+      type="checkbox" 
+      id="filterTyping" 
+      name="filterTyping" 
+      [value]="filterTyping" 
+      [checked]="filterTyping ? true: null" 
+      (keyup)="keyup($event)"
+      (click)="click($event, 'filterTyping')" /> 
+    <span>Filter while typing</span>
+  </label>  
+  <label for="configurable">
+    <input 
+      type="checkbox" 
+      id="configurable" 
+      name="configurable" 
+      [value]="configurable" 
+      [checked]="configurable ? true: null" 
+      (keyup)="keyup($event)"
+      (click)="click($event, 'configurable')" /> 
+    <span>Configurable</span>
+  </label>
+  <label for="showActionable">
+    <input 
+      type="checkbox" 
+      id="showActionable" 
+      name="showActionable" 
+      [value]="showActionable" 
+      [checked]="showActionable ? true: null" 
+      (keyup)="keyup($event)"
+      (click)="click($event, 'showActionable')" /> 
+    <span>Show row expand/collapse action icon</span>
+  </label> 
+
+  <br/>
+  
+  <div class="spader">
+    <div class="selection-wrapper">
+      <select (change)="paginationSelection($event)">
+        <option *ngFor="let option of paginationOptions" 
+          [value]="option" 
+          [selected]="selectedPagination===option"
+          [textContent]="option"></option>
+      </select>
+    </div>
+  
+    <div class="selection-wrapper">
+      <select (change)="activationSelection($event)">
+        <option *ngFor="let option of activationOptions" 
+          [value]="option" 
+          [selected]="selectedActivateOption===option"
+          [textContent]="option"></option>
+      </select>
+    </div>
+    <div class="selection-wrapper">
+      <select (change)="editSelection($event)">
+        <option *ngFor="let option of disableEditOptions" 
+          [value]="option" 
+          [selected]="selectedDisableOption===option"
+          [textContent]="option"></option>
+      </select>
+    </div>
+    <div class="selection-wrapper">
+      <select (change)="displayModeSelection($event)">
+        <option *ngFor="let option of displayModeOptions" 
+          [value]="option" 
+          [selected]="selectedDisplayModeOption===option"
+          [textContent]="option"></option>
+      </select>
+    </div>
+    <div class="selection-wrapper">
+      <select (change)="validationSelection($event)">
+        <option *ngFor="let option of validationOptions" 
+          [value]="option" 
+          [selected]="selectedValidationOption===option"
+          [textContent]="option"></option>
+      </select>
+    </div>
+  </div>
+
+</fieldset>
+
+
+<flexible-table 
+      *ngIf="users" 
+      caption="total records found {{users.length}}" 
+      action="View details of %name% where ID is %id%"
+      actionKeys="%name%,%id%"
+      [filterwhiletyping]="filterTyping"
+      [headers]="usersHeader" 
+      [items]="users" 
+      [pageInfo]="userPageInfo"
+      tableInfo="users table"
+      [enableIndexing]="enableRowCount"
+      [showActionable]="showActionable"
+      [enableFiltering]="enableFiltering"
+      [configurable]="configurable"
+      persistenceId="usersRecordsTable"
+      persistenceKey="users-headers-05012019"
+      [inlinePagination]="inlinePagination"
+      [configAddon]="configAddon"
+      [detailers]="{ global: globalDetailer, name: NameDetailer }"
+      [expandable]="allowExpanding"
+      (onfilter)="onfilter($event)"
+      (onCellContentEdit)="onCellEdit($event)"
+      (onconfigurationchange)="onconfigurationchange($event)"
+      (onaction)="onaction($event)"></flexible-table>
+
+<ng-template #configAddon>
+  <a (click)="log('hay!!')"><span class="fa fa-flag"></span></a>
+</ng-template>
+<ng-template #globalDetailer let-detail="data">
+  <div class="custom-class">
+    <h3>Detail information about {{detail.name}}</h3>
+    <ol>
+      <li>id: {{detail.guid}}</li>
+      <li>tags: {{detail.tags}}</li>
+      <li>email: <span [innerHTML]="detail.email | into:'email'"></span></li>
+      <li>address: <span [innerHTML]="detail.address | into:'address'"></span></li>
+      <li>phone: <span [innerHTML]="detail.phone | into:'phone:true:true'"></span></li>
+      <li>company: {{detail.company}}</li>
+    </ol>
+  </div>
+</ng-template>
+<ng-template #NameDetailer let-detail="data">
+  <div class="custom-class">
+    <h3>Detail information about {{detail.name}}</h3>
+  </div>
+</ng-template>
+
+
+<fieldset class="pick-points">
+  <legend>Lock table options:</legend>
+  <label for="enableLockRowCount">
+    <input 
+      type="checkbox" 
+      id="enableLockRowCount" 
+      name="enableLockRowCount" 
+      [value]="enableLockRowCount" 
+      [checked]="enableLockRowCount ? true: null" 
+      (keyup)="keyup($event)"
+      (click)="click($event, 'enableLockRowCount')" /> 
+    <span>Show row count</span>
+  </label>  
+  <label for="enableLockFiltering">
+    <input 
+      type="checkbox" 
+      id="enableLockFiltering" 
+      name="enableLockFiltering" 
+      [value]="enableLockFiltering" 
+      [checked]="enableLockFiltering ? true: null" 
+      (keyup)="keyup($event)"
+      (click)="click($event, 'enableLockFiltering')" /> 
+    <span>Enable filtering</span>
+  </label>  
+  <label *ngIf="enableLockFiltering" for="filterTyping">
+    <input 
+      type="checkbox" 
+      id="filterLockTyping" 
+      name="filterLockTyping" 
+      [value]="filterLockTyping" 
+      [checked]="filterLockTyping ? true: null" 
+      (keyup)="keyup($event)"
+      (click)="click($event, 'filterLockTyping')" /> 
+    <span>Filter while typing</span>
+  </label>
+  <label for="lockConfigurable">
+    <input 
+      type="checkbox" 
+      id="lockConfigurable" 
+      name="lockConfigurable" 
+      [value]="lockConfigurable" 
+      [checked]="lockConfigurable ? true: null" 
+      (keyup)="keyup($event)"
+      (click)="click($event, 'lockConfigurable')" /> 
+    <span>Configurable</span>
+  </label>
+  <br/>
+  
+  <div class="spader">
+    <div class="selection-wrapper">
+      <select (change)="lockPaginationSelection($event)">
+        <option *ngFor="let option of paginationOptions" 
+          [value]="option" 
+          [selected]="selectedLockPagination===option"
+          [textContent]="option"></option>
+      </select>
+    </div>
+    <div class="selection-wrapper">
+      <select (change)="lockSelection($event)">
+        <option *ngFor="let option of lockOptions" 
+          [value]="option" 
+          [selected]="selectedLock===option"
+          [textContent]="option"></option>
+      </select>
+    </div>
+  </div>
+</fieldset>
+
+<lock-table 
+      *ngIf="lockUsers" 
+      caption="total records found {{lockUsers.length}}" 
+      action="View details of %name% where ID is %id%"
+      actionKeys="%name%,%id%"
+      tableInfo="lock users table"
+      [enableIndexing]="enableLockRowCount"
+      [enableFiltering]="enableLockFiltering"
+      [configurable]="lockConfigurable"
+      [filterwhiletyping]="filterLockTyping"
+      [inlinePagination]="inlineLockPagination"
+      [headers]="lockHeader" 
+      [items]="lockUsers" 
+      [pageInfo]="lockPageInfo"
+      (onfilter)="onfilter($event)"
+      (onCellContentEdit)="onCellEdit($event)"
+      (onconfigurationchange)="onconfigurationchange($event)"
+      (onaction)="onaction($event)"></lock-table>
+
+<div class="logger">
+  <ul>
+    <li *ngFor="let x of events" [textContent]="x | json"></li>
+  </ul>
+  <button (click)="events = []">Clear Events list</button>
+</div>

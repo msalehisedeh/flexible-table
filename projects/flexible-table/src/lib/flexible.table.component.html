@@ -1,0 +1,58 @@
+
+<div class="flexible-table">       
+    <table-view #viewTable
+        id="flexible"
+        [action]="action"
+        [actionKeys]="actionKeys"
+		[tableClass]="tableClass"
+		[tableInfo]="tableInfo"
+		[caption]="caption" 
+		[headers]="subHeaders" 
+        [items]="formeditems" 
+        [filterwhiletyping]="filterwhiletyping"
+		[headerSeparation]="headerSeparation"
+        [pageInfo]="pageInfo"
+        [vocabulary]="vocabulary"
+		[enableIndexing]="enableIndexing"
+        [showActionable]="showActionable"
+		[enableFiltering]="enableFiltering"
+        [expandable]="expandable"
+        [detailers]="detailers"
+        (onDrop)="onDrop($event)"
+        (onfilter)="onTableFilter($event)"
+		(onCellContentEdit)="onCellEdit($event)"
+        (onchange)="reconfigure($event)"
+		(onaction)="tableAction($event)">
+        <div class="wrapper">
+            <table-configuration
+                *ngIf="configurable && items && items.length"
+                class="table-configuration" 
+                [headers]="headers" 
+                [title]="vocabulary.configureColumns" 
+                [printTable]="vocabulary.printTable"
+                [action]="vocabulary.configureTable"
+                [configAddon]="configAddon"
+                (onprint)="viewTable.print()"
+                (onconfigurationchange)="reconfigure($event)">
+            </table-configuration>
+            <table-pagination 
+            *ngIf="showTopPagination()"
+                [info]="pageInfo" 
+                [inline]="isInliner()" 
+                [vocabulary]="vocabulary"
+                (onpaginationchange)="onPaginationChange($event)">
+            </table-pagination>
+        </div>
+        
+    </table-view>
+    <div class="caption">
+        <table-pagination 
+            *ngIf="showBottomPagination()"
+            [info]="pageInfo" 
+            [inline]="isInliner()" 
+            [vocabulary]="vocabulary"
+            (onpaginationchange)="onPaginationChange($event)">
+        </table-pagination>
+    </div>
+</div>
+

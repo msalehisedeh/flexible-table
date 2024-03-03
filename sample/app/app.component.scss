@@ -1,0 +1,98 @@
+
+.logger {
+    border: 1px solid #888;
+    background-color: #eee;
+    border-radius: 5px;
+    box-sizing: border-box;
+    display: inline-block;
+    max-height: 222px;
+    overflow-y: auto;
+    margin-bottom: 0;
+    width: 100%;
+    button {
+        float: right;
+    }
+}
+.resources {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #551234;
+    font-weight: bold;
+}
+
+.fa-flag {
+    margin: 0 5px;
+    color: red;
+}
+
+ol {
+    display: inline-block;
+    margin: 0;
+    
+    li {
+        border-bottom: 1px solid #ddd;
+
+        span {
+    
+            ::ng-deep .fa {
+                padding: 0 3px;
+            }
+            ::ng-deep .address {
+                display: inline-block;
+                span {
+                    display: block;
+                }
+            }
+        }
+    }
+}
+::ng-deep .calendar-box {
+    min-width: 144px;
+    a {
+        float: right;
+        margin: 0 10px 0 0;
+    }
+    .date {
+        float: left;
+    }
+}
+::ng-deep .off-screen {
+    display: block;
+    float: left;
+    height: 0;
+    overflow: hidden;
+    text-indent: -99999px;
+    width: 0;
+}
+.spader {
+    width: 96%;
+    margin-top: 10px;
+}
+.pick-points {
+    margin: 16px auto 8px auto;
+    border: 2px groove rgba(0, 0, 0, 0.1);
+    label {
+        margin-right: 5px;
+    }
+}
+.selection-wrapper {
+    box-sizing: border-box;
+    display: table;
+    position: relative;
+    margin: 4px;
+    width: 200px;
+    float: left;
+    padding-right: 5px;
+
+    select {
+      float: left;
+      padding: 5px;
+      border-color: rgba(0, 0, 0, 0.4);
+    }
+  }
+
+flexible-table {
+    margin: 30px auto 70px auto;
+    width: 1111px;
+    display: block !important;
+}

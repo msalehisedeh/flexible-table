@@ -1,0 +1,54 @@
+
+<div class="shim"
+    [style.display]="showConfigurationView ? 'block':'none'"
+    (click)="showConfigurationView = !showConfigurationView"></div>
+
+<a  [attr.tabindex]="0" *ngIf="printTable"
+    class="print-table"
+    (keyup)="keyup($event)"
+    (click)="print($event)">
+    <span class="icon fa fa-print" aria-hidden="true"></span>
+    <span class="off-screen" [textContent]="print"></span>
+</a>
+<a  [attr.tabindex]="0"
+    class="configure-table"
+    (keyup)="keyup($event)"
+    (click)="showConfigurationView = !showConfigurationView">
+    <span class="icon fa fa-gear" aria-hidden="true"></span>
+    <span class="off-screen" [textContent]="action"></span>
+</a>
+<ng-container *ngIf="configAddon" [ngTemplateOutlet]="configAddon"></ng-container>
+
+<ul role="list" [style.display]="showConfigurationView ? 'block':'none'">
+    <p>
+        <span [textContent]="title"></span>
+        <a
+            tabindex="0"
+            role="button"
+            style="cursor:pointer; float: right"
+            (keydown)="keyup($event)" (click)="showConfigurationView = !showConfigurationView">
+            <span class="fa fa-close" aria-hidden="true"></span>
+            <span class="off-screen">Close</span>
+        </a>
+    </p>
+    <li  *ngFor="let header of headers" role="listitem">
+        <label for="{{header.key ? header.key+'f':'f'}}">
+            <input type="checkbox" #filter
+                    [id]="header.key ? header.key+'f':'f'"
+                    [checked]="header.filter !== undefined"
+                    (keyup)="keyup($event)"
+                    (click)="enableFilter(filter, header)" />
+            <span>Filter</span>
+        </label>
+        <label for="{{header.key ? header.key+'c':'c'}}">
+            <input type="checkbox" #checkbox
+                    [id]="header.key ? header.key+'c':'c'"
+                    [value]="header.key"
+                    [checked]="header.present"
+                    (keyup)="keyup($event)"
+                    (click)="reconfigure(checkbox, header)" />
+            <span>Show</span>
+        </label>
+        <span class="title" [textContent]="header.value | uppercase"></span>
+    </li>
+</ul>
