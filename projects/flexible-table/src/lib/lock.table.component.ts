@@ -190,7 +190,7 @@ export class LockTableComponent implements OnInit, OnChanges, AfterViewInit {
 				maxWidth: "300"
 			};
 		}
-		if (this.persistenceKey) {
+		if (this.configurable && this.persistenceKey) {
 			const headers:any = this.generator.retreiveHeaders(this.persistenceKey, this.persistenceId);
 
 			if (headers) {
@@ -199,7 +199,7 @@ export class LockTableComponent implements OnInit, OnChanges, AfterViewInit {
 		}
 		if (!this.headers) {
 			this.headers = this.generator.generateHeadersFor(this.items[0],"", 5, this.enableFiltering);
-			if (this.persistenceKey) {
+			if (this.configurable && this.persistenceKey) {
 				this.generator.persistHeaders(this.persistenceKey, this.persistenceId, this.headers);
 			}
 		}
@@ -222,7 +222,7 @@ export class LockTableComponent implements OnInit, OnChanges, AfterViewInit {
 		this.unlockedHeaders = this.headers.filter( (item) => item.locked !== true  && item.present);	
 		this.onconfigurationchange.emit(event);
 
-		if (this.persistenceKey) {
+		if (this.configurable && this.persistenceKey) {
 			this.generator.persistHeaders(this.persistenceKey, this.persistenceId, this.headers);
 		}
 		setTimeout(this.evaluatePositioning.bind(this),111);
@@ -235,7 +235,7 @@ export class LockTableComponent implements OnInit, OnChanges, AfterViewInit {
 		}
 		this.onconfigurationchange.emit(event);
 	
-		if (this.persistenceKey) {
+		if (this.configurable && this.persistenceKey) {
 			this.generator.persistHeaders(this.persistenceKey, this.persistenceId, this.headers);
 		}
 		setTimeout(this.evaluatePositioning.bind(this),111);

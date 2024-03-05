@@ -33,6 +33,7 @@ export class TableHeadersGenerator {
             dragable: true,
             disabled: false,
             active: true,
+            format: (typeof root[key] === 'string' || typeof root[key] === 'number') ? 'input::false' : 'checkbox:true:true',
             present: (path.length === 0 && this.headers.length < maxVisible)
           }
           if (filteringEnabled) {
@@ -46,7 +47,12 @@ export class TableHeadersGenerator {
           } else {
             this.headers.push({
               key: innerPath,
-              value: this.makeWords(innerPath)
+              value: this.makeWords(innerPath),
+              sortable: true,
+              dragable: true,
+              disabled: false,
+              active: true,
+              format: (typeof root[key] === 'string' || typeof root[key] === 'number') ? 'input::false' : 'checkbox:true:true'
             })
           }
         } else {

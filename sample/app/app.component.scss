@@ -75,6 +75,14 @@ ol {
         margin-right: 5px;
     }
 }
+.autofeed {
+    width: 100%;
+    margin-top: 10px;
+    input {
+        width: 62.5%
+    }
+    float: left;
+}
 .selection-wrapper {
     box-sizing: border-box;
     display: table;

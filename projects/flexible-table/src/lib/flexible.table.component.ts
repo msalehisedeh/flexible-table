@@ -172,7 +172,7 @@ export class FlexibleTableComponent implements OnInit, OnChanges {
 		}
 	}
 	ngOnInit() {
-		if (this.persistenceKey) {
+		if (this.configurable && this.persistenceKey) {
 			const headers: FlexibleTableHeader[] = this.generator.retreiveHeaders(this.persistenceKey, this.persistenceId);
 
 			if (headers) {
@@ -181,7 +181,7 @@ export class FlexibleTableComponent implements OnInit, OnChanges {
 		}
 		if (!this.headers || this.headers.length === 0) {
 			this.headers = this.generator.generateHeadersFor(this.items[0],"", 5, this.enableFiltering);
-			if (this.persistenceKey) {
+			if (this.configurable && this.persistenceKey) {
 				this.generator.persistHeaders(this.persistenceKey, this.persistenceId, this.headers);
 			}
         }
@@ -207,23 +207,23 @@ export class FlexibleTableComponent implements OnInit, OnChanges {
 	}
 
 	updateLimits() {
-		this.subHeaders = this.headers.filter( (header: FlexibleTableHeader) => header.present === true);
+		this.subHeaders = this.headers.filter ? this.headers.filter( (header: FlexibleTableHeader) => header.present === true) : this.headers;
 	}
 
 	change(event: any) {
 		this.updateLimits();
 		this.onconfigurationchange.emit(event);
 
-		if (this.persistenceKey) {
+		if (this.configurable && this.persistenceKey) {
 			this.generator.persistHeaders(this.persistenceKey, this.persistenceId, this.headers);
 		}
 	}
 	reconfigure(event: any) {
-		this.headers = event;
+		this.headers = event.headers;
 		this.updateLimits();
 		this.onconfigurationchange.emit(event);
 
-		if (this.persistenceKey) {
+		if (this.configurable && this.persistenceKey) {
 			this.generator.persistHeaders(this.persistenceKey, this.persistenceId, this.headers);
 		}
 	}

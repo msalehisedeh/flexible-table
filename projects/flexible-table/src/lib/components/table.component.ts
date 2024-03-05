@@ -92,7 +92,6 @@ export class TableViewComponent implements OnInit, OnChanges {
 		});
 	}
 	private emitOnChange(type: string, from: number, to?: number) {
-		const filters = this.headers.map((h) => h.filter)
 		this.onchange.emit({
 			action: type,
 			sourceIndex: from,

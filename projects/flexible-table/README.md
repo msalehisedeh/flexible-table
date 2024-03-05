@@ -5,8 +5,6 @@ Have you ever looked for a simple way of flushing your data in a versatile table
 
 FlexibleTable and LockTable are Angular based code. LockTable will allow you to lock/unlock columns. Both tables are fully configurable with pagination and ability to re-order table columns through drag/drop operation.
 
-**NOTE:** Starting from Angular 15, you can edit/validate a change content on a specific row/column
-
 **NOTE:** If your project still is angular 2, 4, or 5; please luck-down your version reference to flexible table to 1.7.1 version by removing ^ from the version dependency in your package json. Otherwise for Angular 6+, please use 1.7.2 version or higher.
 
 **NOTE:** Starting with version 1.8.2 you need to import this library through @sedeh/flexible-table.
@@ -42,8 +40,8 @@ EXPORTS:
 
 DEPENDENCIES: 
     "font-awesome": "^4.7.0",
-    "@sedeh/drag-enabled": "^4.3.3",
-    "@sedeh/into-pipes": "^4.4.1"
+    "@sedeh/drag-enabled": "^2.1.0",
+    "@sedeh/into-pipes": "^2.3.10"
 ```
 ## How to do it?
 It is very simple. You have a JSON data to display and you want to allow user to configure columns, plus having ability to paginate, and sort/drag specific columns.
@@ -416,6 +414,7 @@ FlexibleTableHeader {
 
 | Version | Description                                                                                              |
 |---------|----------------------------------------------------------------------------------------------------------|
+| 3.1.0   | fixed few issues reated to auto header generation and drag/drop of columns                               |
 | 3.0.0   | Updated to Angular 15 and added functionalities                                                          |
 | 2.0.1   | Fixed issue caused by upgarde to angular 8.                                                              |
 | 2.0.0   | Updated to Angular 8.                                                                                    |

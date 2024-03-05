@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { AppService } from './app.service';
-import { ComponentPool } from '@sedeh/into-pipes';
+import { HttpClient } from '@angular/common/http';
 
-import { SelectService } from './select.service';
+import { ComponentPool } from '@sedeh/into-pipes';
 import { ChangedtemsInfo, FilteredItemsInfo, FlexibleTableHeader, PaginationInfo, PaginationType } from '@sedeh/flexible-table';
+import { TableHeadersGenerator } from '@sedeh/flexible-table';
+
+import { AppService } from './app.service';
+import { SelectService } from './select.service';
 
 @Component({
   selector: 'app-root',
@@ -116,7 +119,12 @@ export class AppComponent implements OnInit {
   
   events: any[] = [];
 
-  constructor(private service: AppService, private pool: ComponentPool) {
+  constructor(
+    private client: HttpClient,
+    private service: AppService, 
+    private generator: TableHeadersGenerator,
+    private pool: ComponentPool
+  ) {
     this.pool.registerServiceForComponent("select", new SelectService());
     this.usersHeader.map((h: FlexibleTableHeader) => h.validate = this.noValidationNeeded.bind(h))
   }
@@ -183,11 +191,15 @@ export class AppComponent implements OnInit {
     }
   }
   onfilter(event: FilteredItemsInfo) {
+    let items = event.items;
+    if (items instanceof Array) {
+      items = event.items?.map((item: any) => item.name);
+    }
     this.events.push({
       time: new Date().getTime(),
       table: event.tableInfo,
       filters: event.filters,
-      data: event.items?.map((item: any) => item.name)
+      data: items
     });
   }
   log(message: string) {
@@ -276,6 +288,27 @@ export class AppComponent implements OnInit {
   paginationSelection(event: any) {
     this.selectedPagination = this.paginationOptions[event.target.selectedIndex];
     this.inlinePagination = this.samplers[event.target.selectedIndex];
+  }
+  feedFrom(input: any) {
+    this.client.get(input.value).subscribe(
+      (result: any) => {
+        if (result) {
+          let file: any;
+          if (result instanceof Object) {
+            file = result;
+          } else {
+            file = JSON.parse(result);
+          }
+          this.users = undefined;
+          setTimeout(() => {
+            this.showActionable = false;
+            this.usersHeader = this.generator.generateHeadersFor(file[0],"", 5, this.enableFiltering);
+            this.users = file;
+          }, 666);
+        }
+      },
+      (error) => alert('Failed to this.lockHeader. please is this URL correct?')
+    )
   }
   click(event: any, attr: any) {
     const checked = event.target.checked;

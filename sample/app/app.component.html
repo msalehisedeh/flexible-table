@@ -112,7 +112,12 @@
       </select>
     </div>
   </div>
-
+  <br/>
+  <div class="autofeed">
+    <label for="autofeed">Feed any JSON you like!</label>
+    <input #autofeed type="text" id="autofeed" placeholder="Type in a JSON URL (i.e, https://api.github.com/users/mralexgray/repos)"/> 
+    <button (click)="feedFrom(autofeed)">Submit</button>
+  </div>
 </fieldset>
 
 
