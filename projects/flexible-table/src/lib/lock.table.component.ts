@@ -217,7 +217,7 @@ export class LockTableComponent implements OnInit, OnChanges, AfterViewInit {
 	}
 
 	reconfigure(event: any) {
-		this.headers = event;
+		this.headers = JSON.parse(JSON.stringify(event.headers ? event.headers : event));
 		this.lockedHeaders = this.headers.filter( (item) => item.locked === true && item.present);
 		this.unlockedHeaders = this.headers.filter( (item) => item.locked !== true  && item.present);	
 		this.onconfigurationchange.emit(event);

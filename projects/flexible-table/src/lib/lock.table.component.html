@@ -5,6 +5,7 @@
 			*ngIf="configurable && items && items.length"
 			class="table-configuration" 
 			[headers]="headers" 
+			[locking]="true"
 			[title]="vocabulary.configureColumns" 
 			[printTable]="vocabulary.printTable"
 			[action]="vocabulary.configureTable"

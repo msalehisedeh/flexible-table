@@ -19,7 +19,7 @@
 </a>
 <ng-container *ngIf="configAddon" [ngTemplateOutlet]="configAddon"></ng-container>
 
-<ul role="list" [style.display]="showConfigurationView ? 'block':'none'">
+<div class="panel" [style.display]="showConfigurationView ? 'block':'none'">
     <p>
         <span [textContent]="title"></span>
         <a
@@ -31,24 +31,51 @@
             <span class="off-screen">Close</span>
         </a>
     </p>
-    <li  *ngFor="let header of headers" role="listitem">
-        <label for="{{header.key ? header.key+'f':'f'}}">
-            <input type="checkbox" #filter
-                    [id]="header.key ? header.key+'f':'f'"
-                    [checked]="header.filter !== undefined"
-                    (keyup)="keyup($event)"
-                    (click)="enableFilter(filter, header)" />
-            <span>Filter</span>
-        </label>
-        <label for="{{header.key ? header.key+'c':'c'}}">
-            <input type="checkbox" #checkbox
-                    [id]="header.key ? header.key+'c':'c'"
-                    [value]="header.key"
-                    [checked]="header.present"
-                    (keyup)="keyup($event)"
-                    (click)="reconfigure(checkbox, header)" />
-            <span>Show</span>
-        </label>
-        <span class="title" [textContent]="header.value | uppercase"></span>
-    </li>
-</ul>
+    <ul role="list" >
+        <li  *ngFor="let header of headers" role="listitem">
+            <label for="{{header.key ? header.key+'f':'f'}}">
+                <input type="checkbox" #filter
+                        [id]="header.key ? header.key+'f':'f'"
+                        [checked]="header.filter !== undefined"
+                        (keyup)="keyup($event)"
+                        (click)="enableFilter(filter, header)" />
+                <span>Filterable</span>
+            </label>
+            <label *ngIf="locking" for="{{header.key ? header.key+'e':'e'}}">
+                <input type="checkbox" #filter
+                        [id]="header.key ? header.key+'e':'e'"
+                        [checked]="header.lockable"
+                        (keyup)="keyup($event)"
+                        (click)="enableLock(filter, header)" />
+                <span>Lockable</span>
+            </label>
+            <label for="{{header.key ? header.key+'c':'c'}}">
+                <input type="checkbox" #checkbox
+                        [id]="header.key ? header.key+'c':'c'"
+                        [value]="header.key"
+                        [checked]="header.present"
+                        (keyup)="keyup($event)"
+                        (click)="reconfigure(checkbox, header)" />
+                <span>Show Column</span>
+            </label>
+            <ng-container *ngIf="!isArray(header.format)">
+                <select (change)="changeFormat($event, header)">
+                    <option value="" [selected]="header.format===''">Select a formatter</option>
+                    <option *ngFor="let option of formatOptions" 
+                      [value]="option.value" 
+                      [selected]="header.format && header.format === option.value"
+                      [textContent]="option.label">
+                    </option>
+                </select>
+            </ng-container>
+            <ng-container *ngIf="isArray(header.format)">
+                <select>
+                    <option disabled value="">Multiple formatters</option>
+                </select>
+            </ng-container>
+    
+            <span class="title" [textContent]="header.value | uppercase"></span>
+        </li>
+    </ul>    
+</div>
+

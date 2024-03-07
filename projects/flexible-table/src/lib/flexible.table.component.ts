@@ -207,7 +207,9 @@ export class FlexibleTableComponent implements OnInit, OnChanges {
 	}
 
 	updateLimits() {
-		this.subHeaders = this.headers.filter ? this.headers.filter( (header: FlexibleTableHeader) => header.present === true) : this.headers;
+		this.subHeaders = (this.headers && this.headers.filter) ? 
+							this.headers.filter( (header: FlexibleTableHeader) => header.present === true) : 
+							this.headers;
 	}
 
 	change(event: any) {
@@ -219,7 +221,7 @@ export class FlexibleTableComponent implements OnInit, OnChanges {
 		}
 	}
 	reconfigure(event: any) {
-		this.headers = event.headers;
+		this.headers = JSON.parse(JSON.stringify(event.headers ? event.headers : event));
 		this.updateLimits();
 		this.onconfigurationchange.emit(event);
 

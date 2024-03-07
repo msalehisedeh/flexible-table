@@ -28,6 +28,7 @@
                 *ngIf="configurable && items && items.length"
                 class="table-configuration" 
                 [headers]="headers" 
+                [locking]="false"
                 [title]="vocabulary.configureColumns" 
                 [printTable]="vocabulary.printTable"
                 [action]="vocabulary.configureTable"

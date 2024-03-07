@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+import { AppService } from './app.service';
 import { ComponentPool } from '@sedeh/into-pipes';
+
+import { SelectService } from './select.service';
 import { ChangedtemsInfo, FilteredItemsInfo, FlexibleTableHeader, PaginationInfo, PaginationType } from '@sedeh/flexible-table';
 import { TableHeadersGenerator } from '@sedeh/flexible-table';
-
-import { AppService } from './app.service';
-import { SelectService } from './select.service';
 
 @Component({
   selector: 'app-root',
@@ -50,62 +50,62 @@ export class AppComponent implements OnInit {
       active: true, disabled: false, 
       value: "Registered On",
       present: true, dragable:true, dropable:true, sortable: true, 
-      format:"calendar:short"
+      format:"calendar:MM/dd/yyyy"
     },  
 	  {
       key: "name", 
       active: true, disabled: false, 
       value: "Name",present: true, 
       dragable:true, dropable:true, sortable: true, 
-      format: ['input::false', 'toggler:name:icon fa fa-plus-square-o:icon fa fa-minus-square-o'], 
+      format: ['input:::false', 'toggler:name:icon fa fa-plus-square-o:icon fa fa-minus-square-o'], 
       filter: ""
     },  
 	  {
       key: "age", 
       active: true, disabled: false, 
       value: "age",present: true, dragable:true, dropable:true, sortable: true, 
-      format: "input::false", 
+      format: "input:::false", 
       filter: ""
     },  
 	  {
       key: "isActive", 
       active: true, disabled: false, 
       value: "Active",present: true, dragable:true, dropable:true, sortable: true, 
-      format: "checkbox:true:true", 
+      format: "checkbox:true:false:false", 
       filterOptions: this.booleanOptions
     },
 	  {
       key: "picture", 
       active: true, disabled: false, 
       value: "Picture",present: true, dragable:true, dropable:true, sortable: true, 
-      format: "image:24px:auto", 
+      format: "image:::::", 
       hideOnPrint: true
     },
 	  {
       key: "address.city", 
       active: true, disabled: false, 
       value: "City", present: true, dragable:true, dropable:true, sortable: true, 
-      format: "input::false", 
+      format: "input:::false", 
       filterOptions: this.cityOptions
     },  
 	  {
       key: "company", 
       active: true, disabled: false, 
       value: "Company",present: true, dragable:true, dropable:true, sortable: true, 
-      format: "select:false:", 
+      format: "select:false:true", 
       filter: ""
     } 
   ];
 
   lockHeader:FlexibleTableHeader[] = [
-	  {key: "registered", lockable: true, active: true, disabled: false, value: "Registered On",present: true, dragable:true, dropable:true, sortable: true, format:"calendar:short"},  
-	  {key: "name", lockable: true, active: true, disabled: false, value: "Name",present: true, dragable:true, dropable:true, sortable: true, format: "input", filter: ""},  
+	  {key: "registered", lockable: true, active: true, disabled: false, value: "Registered On",present: true, dragable:true, dropable:true, sortable: true, format:"calendar:MM/dd/yyyy"},  
+	  {key: "name", lockable: true, active: true, disabled: false, value: "Name",present: true, dragable:true, dropable:true, sortable: true, format: "input:::false", filter: ""},  
 	  {key: "balance", lockable: true, active: true, disabled: false, value: "Balance",present: true, dragable:true, dropable:true, sortable: true, format: "currency", filter: ""},  
-	  {key: "age", lockable: true, active: true, disabled: false, value: "age",present: true, dragable:true, dropable:true, sortable: true, format: "input", filter: ""},  
-	  {key: "isActive", lockable: true, active: true, disabled: false, value: "Active",present: true, dragable:true, dropable:true, sortable: true, format: "checkbox:true:true"},
-	  {key: "picture", lockable: true, active: true, disabled: false, value: "Picture",present: true, dragable:true, dropable:true, sortable: true, format: "image:auto:14px", hideOnPrint: true},
-	  {key: "address.city", lockable: true, active: true, disabled: false, value: "City", present: true, dragable:true, dropable:true, sortable: true, format: "input", filter: ""},  
-	  {key: "company", lockable: true, active: true, disabled: false, value: "Company",present: true, dragable:true, dropable:true, sortable: true, format: "select", filter: ""} 
+	  {key: "age", lockable: true, active: true, disabled: false, value: "age",present: true, dragable:true, dropable:true, sortable: true, format: "input:::falsetrue", filter: ""},  
+	  {key: "isActive", lockable: true, active: true, disabled: false, value: "Active",present: true, dragable:true, dropable:true, sortable: true, format: "checkbox:true:false:false"},
+	  {key: "picture", lockable: true, active: true, disabled: false, value: "Picture",present: true, dragable:true, dropable:true, sortable: true, format: "image:::::", hideOnPrint: true},
+	  {key: "address.city", lockable: true, active: true, disabled: false, value: "City", present: true, dragable:true, dropable:true, sortable: true, format: "input:::falsetrue", filter: ""},  
+	  {key: "company", lockable: true, active: true, disabled: false, value: "Company",present: true, dragable:true, dropable:true, sortable: true, format: "select:false:true", filter: ""} 
   ];
 
   activationOptions = ['Allow tab focus on all formatters', 'Disable tab focus on all formatters', 'Disable tab focus on Name column'];

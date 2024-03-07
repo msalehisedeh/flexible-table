@@ -1,11 +1,11 @@
 {
   "name": "@sedeh/flexible-table",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "peerDependencies": {
     "@angular/common": "^15.2.0",
     "@angular/core": "^15.2.0",
     "@sedeh/drag-enabled": "^4.3.3",
-    "@sedeh/into-pipes": "^4.4.1",
+    "@sedeh/into-pipes": "^4.4.3",
     "font-awesome": "^4.7.0"
   },
   "dependencies": {
