@@ -153,21 +153,17 @@ export class FlexibleTableComponent implements OnInit, OnChanges {
 		if (changes.inlinePagination) {
 			if (this.pageInfo && this.inlinePagination !== PaginationType.none) {
 				this.pageInfo.from = 0;
+				this.pageInfo.currentPage = 1;
 				this.pageInfo.to = this.pageInfo.defaultSize;
 				this.pageInfo.pageSize = this.pageInfo.defaultSize;
 				this.pageInfo.contentSize = this.items.length;
 			} else {
-				this.pageInfo = {
-					defaultSize: 8,
-					contentSize: 100000,
-					pageSize: 100000,
-					resetSize: true,
-					pages: 1,
-					from: 0,
-					to: 100000,
-					currentPage: 1,
-					maxWidth: "300"
-				};
+				this.pageInfo.from = 0;
+				this.pageInfo.currentPage = 1;
+				this.pageInfo.to = 100000000;
+				this.pageInfo.pageSize = 100000000;
+				this.pageInfo.contentSize = 100000000;
+				this.onPaginationChange(this.pageInfo);
 			}
 		}
 	}
@@ -230,9 +226,9 @@ export class FlexibleTableComponent implements OnInit, OnChanges {
 		}
 	}
 
-	onPaginationChange(event: any) {
+	onPaginationChange(event: PaginationInfo) {
 		this.pageInfo = event;
-		this.viewTable.evaluateRows();
+		this.viewTable?.evaluateRows();
 	}
 
 	tableAction(event: any) {

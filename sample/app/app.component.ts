@@ -5,8 +5,14 @@ import { AppService } from './app.service';
 import { ComponentPool } from '@sedeh/into-pipes';
 
 import { SelectService } from './select.service';
-import { ChangedtemsInfo, FilteredItemsInfo, FlexibleTableHeader, PaginationInfo, PaginationType } from '@sedeh/flexible-table';
-import { TableHeadersGenerator } from '@sedeh/flexible-table';
+import { 
+  ChangedtemsInfo, 
+  FilteredItemsInfo, 
+  FlexibleTableHeader, 
+  PaginationInfo, 
+  PaginationType,
+  TableHeadersGenerator 
+} from '@sedeh/flexible-table';
 
 @Component({
   selector: 'app-root',
@@ -71,7 +77,7 @@ export class AppComponent implements OnInit {
       key: "isActive", 
       active: true, disabled: false, 
       value: "Active",present: true, dragable:true, dropable:true, sortable: true, 
-      format: "checkbox:true:false:false", 
+      format: "checkbox:true:false:false:false", 
       filterOptions: this.booleanOptions
     },
 	  {
@@ -102,7 +108,7 @@ export class AppComponent implements OnInit {
 	  {key: "name", lockable: true, active: true, disabled: false, value: "Name",present: true, dragable:true, dropable:true, sortable: true, format: "input:::false", filter: ""},  
 	  {key: "balance", lockable: true, active: true, disabled: false, value: "Balance",present: true, dragable:true, dropable:true, sortable: true, format: "currency", filter: ""},  
 	  {key: "age", lockable: true, active: true, disabled: false, value: "age",present: true, dragable:true, dropable:true, sortable: true, format: "input:::falsetrue", filter: ""},  
-	  {key: "isActive", lockable: true, active: true, disabled: false, value: "Active",present: true, dragable:true, dropable:true, sortable: true, format: "checkbox:true:false:false"},
+	  {key: "isActive", lockable: true, active: true, disabled: false, value: "Active",present: true, dragable:true, dropable:true, sortable: true, format: "checkbox:true:false:false:false"},
 	  {key: "picture", lockable: true, active: true, disabled: false, value: "Picture",present: true, dragable:true, dropable:true, sortable: true, format: "image:::::", hideOnPrint: true},
 	  {key: "address.city", lockable: true, active: true, disabled: false, value: "City", present: true, dragable:true, dropable:true, sortable: true, format: "input:::falsetrue", filter: ""},  
 	  {key: "company", lockable: true, active: true, disabled: false, value: "Company",present: true, dragable:true, dropable:true, sortable: true, format: "select:false:true", filter: ""} 
@@ -307,7 +313,7 @@ export class AppComponent implements OnInit {
           }, 666);
         }
       },
-      (error) => alert('Failed to this.lockHeader. please is this URL correct?')
+      (error) => alert('Failed to load \"' +  input.value + '\". please validate if this URL is correct')
     )
   }
   click(event: any, attr: any) {

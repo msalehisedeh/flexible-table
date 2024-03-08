@@ -414,6 +414,7 @@ FlexibleTableHeader {
 
 | Version | Description                                                                                              |
 |---------|----------------------------------------------------------------------------------------------------------|
+| 3.2.1   | fixed few issues reated to configuration of checkbox and add/remove of pagination.                       |
 | 3.2.0   | fixed few issues reated to configuration of columns                                                      |
 | 3.1.0   | fixed few issues reated to auto header generation and drag/drop of columns                               |
 | 3.0.0   | Updated to Angular 15 and added functionalities                                                          |

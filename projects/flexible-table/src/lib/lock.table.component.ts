@@ -171,6 +171,22 @@ export class LockTableComponent implements OnInit, OnChanges, AfterViewInit {
 			)
 			this.formeditems = list;
 		}
+		if (changes.inlinePagination) {
+			if (this.pageInfo && this.inlinePagination !== PaginationType.none) {
+				this.pageInfo.from = 0;
+				this.pageInfo.currentPage = 1;
+				this.pageInfo.to = this.pageInfo.defaultSize;
+				this.pageInfo.pageSize = this.pageInfo.defaultSize;
+				this.pageInfo.contentSize = this.items.length;
+			} else {
+				this.pageInfo.from = 0;
+				this.pageInfo.currentPage = 1;
+				this.pageInfo.to = 100000000;
+				this.pageInfo.pageSize = 100000000;
+				this.pageInfo.contentSize = 100000000;
+				this.onPaginationChange(this.pageInfo);
+			}
+		}
 	}
 	ngOnInit() {
 		if (this.pageInfo) {
@@ -258,8 +274,8 @@ export class LockTableComponent implements OnInit, OnChanges, AfterViewInit {
 		this.pageInfo = event;
 		this.holdlocked = true;
 		this.holdunlocked = true;
-		this.lockedTable.evaluateRows();
-		this.unlockedTable.evaluateRows();
+		this.lockedTable?.evaluateRows();
+		this.unlockedTable?.evaluateRows();
 	}
 
 	tableAction(event: any) {
