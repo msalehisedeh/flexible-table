@@ -40,8 +40,8 @@ EXPORTS:
 
 DEPENDENCIES: 
     "font-awesome": "^4.7.0",
-    "@sedeh/drag-enabled": "^2.1.0",
-    "@sedeh/into-pipes": "^2.3.10"
+    "@sedeh/drag-enabled": "^4.3.3",
+    "@sedeh/into-pipes": "^4.4.4"
 ```
 ## How to do it?
 It is very simple. You have a JSON data to display and you want to allow user to configure columns, plus having ability to paginate, and sort/drag specific columns.
