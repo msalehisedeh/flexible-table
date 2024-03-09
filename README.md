@@ -51,14 +51,14 @@ LockTableComponent
 TableHeadersGenerator
 
 DEPENDENCIES: 
-    "font-awesome": "^4.7.0",
-    "@sedeh/drag-enabled": "^2.1.0",
-    "@sedeh/into-pipes": "^2.3.10"
+    "@sedeh/drag-enabled": "^4.3.3",
+    "@sedeh/into-pipes": "^4.4.4",
+    "font-awesome": "^4.7.0"
 ```
                                                                                     |
 
-![alt text](https://raw.githubusercontent.com/msalehisedeh/flexible-table/master/sample.png  "What you would see when a flexible table is used")
+![alt text](https://raw.githubusercontent.com/msalehisedeh/flexible-table/master/flexible.png  "What you would see when a flexible table is used")
 
 
-![alt text](https://raw.githubusercontent.com/msalehisedeh/flexible-table/master/sample2.png  "What you would see when a flexible table is used")
+![alt text](https://raw.githubusercontent.com/msalehisedeh/flexible-table/master/locked.png  "What you would see when a flexible table is used")
 
