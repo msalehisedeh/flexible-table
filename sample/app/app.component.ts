@@ -14,6 +14,7 @@ import {
   TableHeadersGenerator 
 } from '@sedeh/flexible-table';
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -118,7 +119,7 @@ export class AppComponent implements OnInit {
   disableEditOptions = ['Allow change/edit on all formatters', 'Disable change/edit on all formatters', 'Disable change/edit on Company column'];
   displayModeOptions = ['Allow edit toggle on all formatters', 'Keep all formatters on edit mode','Keep name column on edit mode'];
   validationOptions = ['No validation on all formatters', 'Validate change on all formatters', 'Validate change on company column'];
-  lockOptions = ['No lock on all columns', 'Disable lock on all columns', 'company and name columns and disable locking'];
+  lockOptions = ['Allow lock on all columns', 'No lock on all columns', 'company and name columns and disable locking'];
 
   users: any[] | undefined;
   lockUsers!: any[] | undefined;
@@ -243,19 +244,19 @@ export class AppComponent implements OnInit {
   }
   lockSelection(event: any) {
     this.selectedLock = event.target.value;
+    const users = this.lockUsers;
     if (event.target.selectedIndex === 0) {
       this.lockHeader.map((h: FlexibleTableHeader) => h.lockable = true)
     } else if (event.target.selectedIndex === 1) {
       this.lockHeader.map((h: FlexibleTableHeader) => h.lockable = false)
     } else if (event.target.selectedIndex === 2) {
-      const users = this.lockUsers;
       this.lockHeader.map((h: FlexibleTableHeader) => h.lockable = false)
       this.lockHeader.map((h: FlexibleTableHeader) => h.locked = (h.key === 'company') || (h.key === 'name'));
-      this.lockUsers = undefined;
-      setTimeout(() => {
-        this.lockUsers = users;
-      }, 0);
-    } 
+    }
+    this.lockUsers = undefined;
+    setTimeout(() => {
+      this.lockUsers = users;
+    }, 0);
   }
   validationSelection(event: any) {
     this.selectedDisplayModeOption = event.target.value;

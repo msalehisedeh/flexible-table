@@ -1,9 +1,11 @@
 
 # Welcome to Flexible table!
 
-Have you ever looked for a simple way of flushing your data in a versatile table by passing in a few meta-data instructions just to get your data displayed the way you wanted with interactive components inside? AND how about adding graphics into the resulting table with some nifty formatting rules just by mapping your JSON data into table column headers! Ha? Say it again!! And all is done without writing much of any code!! On top of that, if you do not want to take time and write meta-data rules, FlexibleTable will generate the rules for you. You can feed any data to the table and see it tabulated!!
+Have you ever looked for a simple way of flushing your data in a versatile table by passing in a few meta-data instructions just to get your data displayed the way you wanted with interactive components inside? AND how about adding graphics into the resulting table with some nifty formatting rules just by mapping your JSON data into table column headers! AND not paying a dime for it? Ha? Say it again!! And all is done without writing much of any code!! On top of that, if you do not want to take time and write meta-data rules, FlexibleTable will generate the rules for you. You can feed any data to the table and see it tabulated!!
 
 FlexibleTable and LockTable are Angular based code. LockTable will allow you to lock/unlock columns. Both tables are fully configurable with pagination and ability to re-order table columns through drag/drop operation.
+
+**NOTE** Current version 3.2.3
 
 **NOTE:** If your project still is angular 2, 4, or 5; please luck-down your version reference to flexible table to 1.7.1 version by removing ^ from the version dependency in your package json. Otherwise for Angular 6+, please use 1.7.2 version or higher.
 
@@ -35,13 +37,23 @@ MODULE:
   FlexibleTableModule
 
 EXPORTS:
-  FlexibleTableComponent
-  LockTableComponent
+VocabularyInterface
+PaginationInfo
+FlexibleTableHeader
+PaginationType
+CellEditInfo
+FilteredItemsInfo
+ActionEventInfo
+ChangedtemsInfo
+VisualizationPoint
+FlexibleTableComponent
+LockTableComponent
+TableHeadersGenerator
 
 DEPENDENCIES: 
     "font-awesome": "^4.7.0",
-    "@sedeh/drag-enabled": "^4.3.3",
-    "@sedeh/into-pipes": "^4.4.4"
+    "@sedeh/drag-enabled": "^2.1.0",
+    "@sedeh/into-pipes": "^2.3.10"
 ```
 ## How to do it?
 It is very simple. You have a JSON data to display and you want to allow user to configure columns, plus having ability to paginate, and sort/drag specific columns.
@@ -187,23 +199,23 @@ You will also need to implement a few functions
 
 ```javascript
 export interface FlexibleTableHeader {
-	key: string; // key to identify column
-	value: string; // column label
-	present: boolean; // if column should be displayrf
-	width?: string; // column width
-	minwidth?: string; // minimum column width
-	format?: string | string[]; // format column content into specified displayable component (use to IntoPipes)
-	hideOnPrint?:boolean; // hide column when printing it
-	filter?: string; // user editted key to filter rows on the column
+  key: string; // key to identify column
+  value: string; // column label
+  present: boolean; // if column should be displayrf
+  width?: string; // column width
+  minwidth?: string; // minimum column width
+  format?: string | string[]; // format column content into specified displayable component (use to IntoPipes)
+  hideOnPrint?:boolean; // hide column when printing it
+  filter?: string; // user editted key to filter rows on the column
   filterOptions?: string[]; // options if filter on column is a dropdown
   selectedFilterOption?: string; // selected option if filter is a dropdown
-	dragable?: boolean; // if column can be dragged on
-	dropable?: boolean; // if column can be dropped on
-	sortable?: boolean; // if column can be sorted
+  dragable?: boolean; // if column can be dragged on
+  dropable?: boolean; // if column can be dropped on
+  sortable?: boolean; // if column can be sorted
   ascending?: boolean;// column soer order
   descending?: boolean;// column sort order
-	class?:string; // apply css class on thecolumn
-	locked?:boolean; // if column is locked in a lock tabled
+  class?:string; // apply css class on thecolumn
+  locked?:boolean; // if column is locked in a lock tabled
   lockable?: boolean;// if column can be locked/unlocked in a lock table
   active: boolean; // if column can receive tab focun on its rows
   disabled: boolean;// if formatted columns are disabled and are not editable
@@ -222,10 +234,10 @@ We are using "@sedeh/into-pipes" library. to see available formatting options, p
 ### Attributes (FlexibleTableComponent)
 
 | Attribute          |Status    |Description                                                                         |
-|--------------------|----------|--------- --------------------------------------------------------------------------|
+|--------------------|----------|------------------------------------------------------------------------------------|
 |caption             |Optional  |Caption to be displayed                                                             |
 |action              |Optional  |off-screen message to be displayed if click on a row results in an action. If supplied, action column will be displayed and will take effect on user click |
-|actionKeys          |Optional  |parameters to feed the action.  parameters should exist in headers mapping.            |
+|actionKeys          |Optional  |parameters to feed the action.  parameters should exist in headers mapping.         |
 |tableClass          |Optional  |class name to be assigned to the table.                                             |
 |headers             |Optional  |mapping of items to be displayed as headers including instructions on formatting, dragging, ...                               |
 |items               |Required  |items to be displayed                                                               |
@@ -257,7 +269,7 @@ We are using "@sedeh/into-pipes" library. to see available formatting options, p
 |configurable        |Optional  |flag to allow hiding/displaying of specific headers.                                |
 |enableIndexing      |Optional  |flag to display index of rows.                                                      |
 |filterwhiletyping   |Optional  |flag to perform filtering while typing in a filter field. If not set will filter only on a hit return after typing. |
-|configAddon         |Optional  |Template to include additional control items alongside print and configute actions.  |
+|configAddon         |Optional  |Template to include additional control items alongside print and configute actions. |
 
 
 ## Metadata Rules
@@ -414,6 +426,7 @@ FlexibleTableHeader {
 
 | Version | Description                                                                                              |
 |---------|----------------------------------------------------------------------------------------------------------|
+| 3.2.3   | Documentation update.                                                                                    |
 | 3.2.1   | fixed few issues reated to configuration of checkbox and add/remove of pagination.                       |
 | 3.2.0   | fixed few issues reated to configuration of columns                                                      |
 | 3.1.0   | fixed few issues reated to auto header generation and drag/drop of columns                               |
