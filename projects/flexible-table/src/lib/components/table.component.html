@@ -4,7 +4,7 @@
         <ng-content></ng-content>
     </caption>
     <thead>
-        <tr>
+        <tr [style]="styler.styleFor({type: 'header'})">
             <th scope="col" *ngIf="enableIndexing && !printMode" id="indexable-{{id}}" class="indexable hide-on-print"></th>
             <th scope="col" *ngFor="let header of headers; let hh = index" #th
                 [dragEnabled]="header.dragable ? true:false"
@@ -15,10 +15,10 @@
                 (onDrop)="onDrop($event)"
                 [id]="header.key"
                 [attr.width]="header.width ? header.width : null" 
-                [style.min-width]="header.minwidth ? header.minwidth : ''" 
+                [style]="(header.minwidth ? 'min-width: ' + header.minwidth + ';' : '') + styler.styleFor({type: 'header', header: header})"
                 [attr.tabindex]="header.sortable ? 0 : -1"
                 [class.hide-on-print]="header.hideOnPrint"
-                [class.distict]="headerSeparation && hh < (headers.length -1)"
+                [class.distinct]="headerSeparation && hh < (headers.length -1)"
                 [class.grabbable]="header.dragable"
                 (keydown)="keydown($event, th)" (click)="sort(header, icon)">
                 <span class="header-wrapper">
@@ -47,7 +47,10 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngIf="!printMode && enableFiltering && items && items.length" class="filters hide-on-print">
+        <tr 
+            *ngIf="!printMode && enableFiltering && items && items.length" 
+            class="filters hide-on-print"
+            [style]="styler.styleFor({type: 'filters'})">
             <td scope="row" *ngIf="enableIndexing && !printMode" class="index filter hide-on-print">
                 <input type="text" disabled style="opacity:0" />
             </td>
@@ -55,7 +58,8 @@
                 *ngFor="let header of headers; let i=index" 
                 [attr.data-label]="header.value" 
                 [class.hide-on-print]="header.hideOnPrint"
-                class="filter">
+                class="filter"
+                [style]="styler.styleFor({type: 'filters', header: header})">
                 <span *ngIf="header.filter === undefined && header.filterOptions === undefined">&nbsp;</span>
                 <ng-container *ngIf="header.filterOptions; else textFilter">
                     <select (change)="changeSelectedFilter($event, header)">
@@ -87,12 +91,13 @@
                 [class.pointer]="action"
                 [class.hover]="item.hover"
                 [class.expanded]="item.expanded"
-                [class.odd]="i%2">
+                [class.odd]="i%2"
+                [style]="styler.styleFor({type: 'row', item: item})">
                 <td scope="row" class="index hide-on-print" *ngIf="enableIndexing && !printMode">
                     <span [textContent]="i + pageInfo.from + 1"></span>
                 </td>
                 <td scope="row" 
-                    *ngFor="let header of headers" 
+                    *ngFor="let header of headers;let j = index" 
                     [class]="toCssClass(header)"
                     [class.hide-on-print]="header.hideOnPrint"
                     [attr.data-label]="header.value" 
@@ -105,7 +110,8 @@
                     [into]="header.format"
                     [intoData]="item"
                     [rawContent]="cellContent(item, header)"
-                    [onComponentChange]="onTableCellEdit.bind(this)"></td>
+                    [onComponentChange]="onTableCellEdit.bind(this)"
+                    [style]="styler.styleFor({type: 'row', item: item, header: header})"></td>
                 <td scope="row" *ngIf="showActionable && !printMode" class="hide-on-print">
                     <a class="actionable"
                         *ngIf="expandable && expandable(item, true)"
@@ -123,7 +129,7 @@
                     </a>
                 </td>
             </tr>
-            <tr *ngIf="rowDetailer && item.expanded" class="detail" [class.odd]="i%2">
+            <tr *ngIf="rowDetailer && item.expanded" class="detail" [class.odd]="i%2" [style]="styler.styleFor({type: 'detail', header: rowDetailer, item: item})">
                 <td scope="row" class="index" *ngIf="enableIndexing && !printMode"></td>
                 <td [attr.colspan]="columnsCount()">
                     <ng-container [ngTemplateOutlet]="rowDetailer" [ngTemplateOutletContext]="detailerContext"></ng-container>

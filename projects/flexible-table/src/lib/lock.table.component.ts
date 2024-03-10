@@ -16,11 +16,13 @@ import {
 	AfterViewInit
 } from '@angular/core';
 
-import { DropEvent, DragEvent } from '@sedeh/drag-enabled';
 import { TableViewComponent } from './components/table.component';
 import { TableHeadersGenerator } from './components/table-headers-generator';
-import { FlexibleTableHeader, PaginationInfo, PaginationType, VocabularyInterface } from './interfaces/flexible-table.interface';
+import { FlexibleTableHeader, PaginationInfo, PaginationType, StylePositionInterface, StyleServiceInterface, VocabularyInterface } from './interfaces/flexible-table.interface';
 
+class DefaultStylerService implements StyleServiceInterface {
+	styleFor(location: StylePositionInterface){return ''}
+}
 @Component({
 	selector: 'lock-table',
 	templateUrl: './lock.table.component.html',
@@ -36,7 +38,9 @@ export class LockTableComponent implements OnInit, OnChanges, AfterViewInit {
 	indexing = true;
 	filteredItems = [];
 
-    @Input("vocabulary")
+	@Input() styler: StyleServiceInterface = new DefaultStylerService();
+
+	@Input("vocabulary")
     public vocabulary: VocabularyInterface = {
 		configureTable: "Configure Table",
 		configureColumns: "Configure Columns",

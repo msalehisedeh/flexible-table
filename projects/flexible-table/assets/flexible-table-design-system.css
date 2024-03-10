@@ -1,0 +1,36 @@
+:root {
+    --sedeh-text-color: black;
+    --sedeh-text-background-color: white;
+    --sedeh-marker-color: #fabdab;
+    --sedeh-disabled-color: #888;
+    --sedeh-margin: 0 5px;
+    --sedeh-margin-right: 5px;
+    --sedeh-margin-left: 5px;
+    --sedeh-margin-bottom: 5px;
+    --sedeh-padding: 5px;
+    --sedeh-padding-top: 5px;
+    --sedeh-padding-bottom: 5px;
+    --sedeh-min-width: 25px;
+    --sedeh-min-height: 25px;
+    --sedeh-shift-right: -2px;
+    --sedeh-focus-color: darkblue;
+    --sedeh-sected-color: green;
+    --sedeh-disapproved-color: red;
+    --sedeh-hover-opacity: 0.5;
+    --sedeh-box-shadow: 6px 8px 6px -6px #1b1b1b;
+    --sedeh-solid-border: 1px solid #999;
+    --sedeh-caption-color:  #fff;
+    --sedeh-caption-background-color:  cadetblue;
+    --sedeh-notice-color: white;
+    --sedeh-notice-background-color: rgb(4, 159, 255);
+    --sedeh-shim-color: rgba(255, 255, 255, 0.2);
+    --sedeh-table-header-color: #bbb;
+    --sedeh-table-header-border-color: #ccc;
+    --sedeh-table-header-background-color: #eee;
+    --sedeh-table-row-border-color: #ddd;
+    --sedeh-table-row-hover-background-color: #FFEED2;
+    --sedeh-table-cell-border-color: #B1B3B3;
+    --sedeh-table-cell-color: #254a5d;
+    --sedeh-alert-color: #8b0224;
+    --sedeh-alert-border-color: #fff;
+}

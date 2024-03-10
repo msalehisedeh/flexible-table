@@ -1,6 +1,6 @@
 {
   "name": "@sedeh/flexible-table",
-  "version": "3.2.4",
+  "version": "3.2.5",
   "peerDependencies": {
     "@angular/common": "^15.2.0",
     "@angular/core": "^15.2.0",
@@ -11,6 +11,21 @@
   "dependencies": {
     "tslib": "^2.3.0"
   },
+  "exports": {
+    ".": {
+      "assets": "./assets/flexible-table-design-system.css"
+    }
+  },
+  "files": [
+    "lib",
+    "index.d.ts",
+    "public-api.d.ts",
+    "package.json",
+    "README.md",
+    "esm2020",
+    "fesm2015",
+    "fesm2020"
+  ],
   "keywords": [
     "angular 6+",
     "table",

@@ -14,10 +14,13 @@ import {
 	EventEmitter
 } from '@angular/core';
 
-import { DropEvent } from '@sedeh/drag-enabled';
 import { TableHeadersGenerator } from './components/table-headers-generator';
 import { TableViewComponent } from './components/table.component';
-import { FlexibleTableHeader, PaginationInfo, PaginationType, VocabularyInterface } from './interfaces/flexible-table.interface';
+import { FlexibleTableHeader, PaginationInfo, PaginationType, StylePositionInterface, StyleServiceInterface, VocabularyInterface } from './interfaces/flexible-table.interface';
+
+class DefaultStylerService implements StyleServiceInterface {
+	styleFor(location: StylePositionInterface){return ''}
+}
 
 @Component({
 	selector: 'flexible-table',
@@ -29,7 +32,9 @@ export class FlexibleTableComponent implements OnInit, OnChanges {
 	subHeaders:any;
 	formeditems!: any[];
 
-    @Input("vocabulary")
+	@Input() styler: StyleServiceInterface = new DefaultStylerService();
+
+	@Input("vocabulary")
     public vocabulary: VocabularyInterface = {
 		printTable: "Print Table",
 		configureTable: "Configure Table",

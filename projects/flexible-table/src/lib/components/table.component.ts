@@ -15,9 +15,21 @@ import {
 	ElementRef
 } from '@angular/core';
 
-import { ActionEventInfo, CellEditInfo, ChangedtemsInfo, FilteredItemsInfo, FlexibleTableHeader, PaginationInfo, VocabularyInterface } from '../interfaces/flexible-table.interface';
+import { 
+	ActionEventInfo, 
+	CellEditInfo, 
+	ChangedtemsInfo, 
+	FilteredItemsInfo, 
+	FlexibleTableHeader, 
+	PaginationInfo, 
+	StylePositionInterface, 
+	StyleServiceInterface, 
+	VocabularyInterface 
+} from '../interfaces/flexible-table.interface';
 
-
+class DefaultStylerService implements StyleServiceInterface {
+	styleFor(location: StylePositionInterface){return ''}
+}
 
 @Component({
 	selector: 'table-view',
@@ -60,6 +72,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 	@Input() showActionable = true;
     @Input() expandable: any;
     @Input() filterwhiletyping!: boolean;
+	@Input() styler: StyleServiceInterface = new DefaultStylerService();
 	@Input() detailers: any;
 	
 	@Output() onaction = new EventEmitter<ActionEventInfo>();
@@ -487,10 +500,10 @@ export class TableViewComponent implements OnInit, OnChanges {
 		});
     }
 	onDragStart(event: any){
-//        this.dragging = true;
+       this.dragging = true;
 	}
 	onDragEnd(event: any){
- //       this.dragging = false;
+       this.dragging = false;
 	}
 	onDrop(event: any){
 		this.swapColumns(event.source, event.destination);

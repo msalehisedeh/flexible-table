@@ -37,18 +37,18 @@
         border-collapse: collapse;
 
         caption {
-            background-color: #c3e5e2;
+            background-color: var(--sedeh-caption-background-color, #c3e5e2);
             border-radius: 2px;
-            color: #1b1b1b;
+            color: var(--sedeh-caption-color,  #1b1b1b);
             caption-side: top;
             font-size: 14px;
-            padding: 5px 6px;
+            padding: var(--sedeh-padding, 5px);
             text-align: left;
         }
         thead {
-            border-top: 1px solid #bbb;
-            border-bottom: 1px solid #bbb;
-            background-color: #eee;
+            border-top: 1px solid var(--sedeh-table-header-color, #bbb);
+            border-bottom: 1px solid var(--sedeh-table-header-color, #bbb);
+            background-color: var(--sedeh-table-header-background-color, #eee);
         }
         tr {
             border: 0;
@@ -59,9 +59,9 @@
                 }
             }
             &.filters {
-                background-color: #eee;
+                background-color: var(--sedeh-table-header-background-color, #eee);
                 td {
-                    border: 1px solid #ccc;
+                    border: 1px solid var(--sedeh-table-header-border-color, #ccc);
                     &:first-child {
                         border-left: 0;
                     }
@@ -106,6 +106,12 @@
                         width: 93%;
                     }
                 }
+                link-component {
+                    a:focus {
+                        right: 0 !important;
+                        zoom: 1;
+                    }
+                }
             }
 			.off-screen {
 				display: block;
@@ -124,7 +130,7 @@
                     height: 22px;
                     border: 0;
                     width: 100%;
-                    color: #254A4D;
+                    color: var(--sedeh-table-cell-color, #254a5d);
                     margin: 0;
                 }
                 input {
@@ -132,14 +138,14 @@
                     height: 22px;
                     border: 0;
                     width: 100%;
-                    color: #254A4D;
+                    color: var(--sedeh-table-cell-color, #254a5d);
                     margin: 0;
                 }
                 .fa {
                     position: absolute;
                     top: 4px;
                     right: 2px;
-                    color: #bad;
+                    color: var(--sedeh-table-cell-color, #254a5d);
                 }
             }
                 
@@ -148,10 +154,10 @@
             }
         }
         td.index {
-            background-color: #eee;
-            border-right: 1px solid #bbb;
+            background-color: var(--sedeh-table-header-background-color, #eee);
+            border-right: 1px solid var(--sedeh-table-header-color, #bbb);
             span {
-                padding: 1px 0;
+                padding: 2px 0;
             }
         }
         th {
@@ -174,25 +180,19 @@
             .header-wrapper {
                 display: flex;
             }
-
-            &.drag-over {
-                background-color: #9b9b9b;
-
-                .title, .icon {
-                    color: #eee;
-                }
-            }
-
             &:first-child {
                 padding-left: 5px;
             }
-            &.distict {
-                border-right: 1px solid #ccc;
+            &.distinct {
+                border-right: 1px solid var(--sedeh-table-header-border-color, #ccc);
                 &:last-child {
                     border-right: 0;
                 }
             }
-
+            &.drag-over {
+                background-color: gray !important;
+                border: 2px solid inset;
+            }
             &.descending, &.ascending, &.sortable {
                 cursor: pointer;
                 min-height: 12px;
@@ -212,7 +212,6 @@
             }
 
             .title {
-                color: #254A4D;
                 display: inline-block;
                 height: 20px;
                 float: left;
@@ -234,7 +233,6 @@
                 width: 22px;
                 display: inline-block;
                 height: 20px;
-                color: #254A4D;
                 float: right;
             }
             .locker {
@@ -258,7 +256,12 @@ table tr.expanded td a.expanded {
     background-position: right 2px;
 }
 table tbody tr:hover, table tbody tr.hover {
-    background-color: #FFEED2;
+    background-color: var(--sedeh-table-row-hover-background-color, #FFEED2) !important;
+    color: inherit !important;
+    td {
+        color: inherit !important;
+        background-color: inherit !important;
+    }
 }
 table tbody tr.detail:hover,
 table tbody tr.detail.hover,
@@ -268,11 +271,18 @@ table tbody tr.detail.hover td table thead tr {
 }
 
 table tr td a.actionable {
-    color: #254A4D;
+    color: var(--sedeh-table-cell-color, #254a5d);
     display: flex;
     .icon {
         line-height: 22px;
         text-align: right;
+    }
+    &.actionable {
+        width: 24px;
+        &:focus{
+            outline: none;
+            .fa{zoom: 1.1;right: 0;position: relative;color: var(--sedeh-focus-color, darkblue);}
+        }
     }
 }
 table tbody tr.detail:hover td:last-child,
@@ -284,8 +294,8 @@ table tbody tr.detail.hover td:first-child{
     border-left: 0;
 }
 table tr td {
-    border-bottom: 1px solid #B1B3B3;
-    color: #254a5d;
+    border-bottom: 1px solid var(--sedeh-table-cell-border-color, #B1B3B3);
+    color: var(--sedeh-table-cell-color, #254a5d);
     font-size: 15px;
     text-transform: capitalize;
 }
@@ -337,7 +347,7 @@ table.alert-danger {
         width: 1px;
     }
     tr {
-        border: 2px solid #fff;
+        border: 2px solid var(--sedeh-alert-border-color, #fff);
         display: block;
         margin-bottom: .625em;
         padding: 5px;
@@ -382,6 +392,8 @@ table.alert-danger {
             border-bottom: 0;
             display: block;
             text-align: right;
+            display: flex;
+            justify-content: space-between;
             
             &.index {
                 display: none;
@@ -427,7 +439,7 @@ table.alert-danger {
             width: 1px;
         }
         tr {
-          border-bottom: 3px solid #ddd;
+          border-bottom: 3px solid var(--sedeh-table-row-border-color, #ddd);
           display: block;
           margin-bottom: .625em;
 

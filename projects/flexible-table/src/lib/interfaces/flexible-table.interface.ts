@@ -10,6 +10,14 @@ export interface VocabularyInterface {
     printTable?: string;
 }
 
+export interface StylePositionInterface {
+    type: string;
+    item?: any;
+    header?: FlexibleTableHeader;
+}
+export interface StyleServiceInterface {
+    styleFor(location: StylePositionInterface): string;
+}
 export interface PaginationInfo {
     defaultSize: number;
 	contentSize: number;
@@ -42,7 +50,8 @@ export interface FlexibleTableHeader {
     lockable?: boolean;
     active: boolean;
     disabled: boolean;
-    validate?: (tem: any, value: any) =>boolean;
+    validate?: (tem: any, value: any) => boolean;
+    style?: (tem: any) => string;
 
 }
 export enum PaginationType {

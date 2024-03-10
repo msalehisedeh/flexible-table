@@ -5,17 +5,18 @@ Have you ever looked for a simple way of flushing your data in a versatile table
 
 FlexibleTable and LockTable are Angular based code. LockTable will allow you to lock/unlock columns. Both tables are fully configurable with pagination and ability to re-order table columns through drag/drop operation.
 
-**NOTE** Current version 3.2.3
+**NOTE** Current version 3.2.5
 
 **NOTE:** If your project still is angular 2, 4, or 5; please luck-down your version reference to flexible table to 1.7.1 version by removing ^ from the version dependency in your package json. Otherwise for Angular 6+, please use 1.7.2 version or higher.
 
 **NOTE:** Starting with version 1.8.2 you need to import this library through @sedeh/flexible-table.
 
-Please send your requests or comments through the link provided below:
+Please send your requests or comments through [Comments/Requests](https://github.com/msalehisedeh/flexible-table/issues)
 
-[Live Demo](https://stackblitz.com/edit/flexible-table?file=app%2Fapp.component.ts)  | 
-[NPM](https://www.npmjs.com/package/@sedeh/flexible-table)  | 
-[Comments/Requests](https://github.com/msalehisedeh/flexible-table/issues)
+View it in action on [Live Demo](https://stackblitz.com/edit/flexible-table?file=app%2Fapp.component.ts)
+
+Get it from [NPM](https://www.npmjs.com/package/@sedeh/flexible-table)
+
 
 ## Features
 * Responsive
@@ -38,6 +39,8 @@ MODULE:
 
 EXPORTS:
 VocabularyInterface
+PipeServiceComponentInterface
+StyleServiceInterface
 PaginationInfo
 FlexibleTableHeader
 PaginationType
@@ -52,9 +55,53 @@ TableHeadersGenerator
 
 DEPENDENCIES: 
     "@sedeh/drag-enabled": "^4.3.3",
-    "@sedeh/into-pipes": "^4.4.4",
+    "@sedeh/into-pipes": "^4.5.3",
     "font-awesome": "^4.7.0"
 ```
+
+## Design system
+Create a css file with the following and modify its value to fit your application needs. Then include it in root of application css file.
+
+```javascript
+:root {
+    --sedeh-text-color: black;
+    --sedeh-text-background-color: white;
+    --sedeh-marker-color: #fabdab;
+    --sedeh-disabled-color: #888;
+    --sedeh-margin: 0 5px;
+    --sedeh-margin-right: 5px;
+    --sedeh-margin-left: 5px;
+    --sedeh-margin-bottom: 5px;
+    --sedeh-padding: 5px;
+    --sedeh-padding-top: 5px;
+    --sedeh-padding-bottom: 5px;
+    --sedeh-min-width: 25px;
+    --sedeh-min-height: 25px;
+    --sedeh-shift-right: -2px;
+    --sedeh-focus-color: darkblue;
+    --sedeh-sected-color: green;
+    --sedeh-disapproved-color: red;
+    --sedeh-hover-opacity: 0.5;
+    --sedeh-box-shadow: 6px 8px 6px -6px #1b1b1b;
+    --sedeh-solid-border: 1px solid #999;
+    --sedeh-caption-color:  #fff;
+    --sedeh-caption-background-color:  cadetblue;
+    --sedeh-notice-color: white;
+    --sedeh-notice-background-color: rgb(4, 159, 255);
+    --sedeh-shim-color: rgba(255, 255, 255, 0.2);
+    --sedeh-table-header-color: #bbb;
+    --sedeh-table-header-border-color: #ccc;
+    --sedeh-table-header-background-color: #eee;
+    --sedeh-table-row-border-color: #ddd;
+    --sedeh-table-row-hover-background-color: #FFEED2;
+    --sedeh-table-cell-border-color: #B1B3B3;
+    --sedeh-table-cell-color: #254a5d;
+    --sedeh-alert-color: #8b0224;
+    --sedeh-alert-border-color: #fff;
+}
+
+```
+
 ## How to do it?
 It is very simple. You have a JSON data to display and you want to allow user to configure columns, plus having ability to paginate, and sort/drag specific columns.
 All you will need is to add a header JSON and you are set to get the job done. That simple!!
@@ -198,6 +245,16 @@ You will also need to implement a few functions
 ## Interfaces
 
 ```javascript
+// service that controls specific cell in the table at a given location.
+export interface StylePositionInterface {
+    type: string;
+    item?: any;
+    header?: FlexibleTableHeader;
+}
+export interface StyleServiceInterface {
+    styleFor(location: StylePositionInterface): string;
+}
+
 export interface FlexibleTableHeader {
   key: string; // key to identify column
   value: string; // column label
@@ -374,6 +431,7 @@ Sample table tag in your HTML content:
       [headers]="usersHeader" 
       [items]="users" 
       [pageInfo]="userPageInfo"
+      [styler]="styler"
       [enableIndexing]="true"
       [showActionable]="showActionable"
       [enableFiltering]="true"
@@ -392,6 +450,7 @@ Sample table tag in your HTML content:
       action="View details of %name% where ID is %id%"
       actionKeys="%name%,%id%"
       tableInfo="lock users table"
+      [styler]="styler"
       [enableIndexing]="true"
       [enableFiltering]="true"
       [configurable]="true"
@@ -405,62 +464,71 @@ Sample table tag in your HTML content:
       (onconfigurationchange)="onconfigurationchange($event)"
       (onaction)="onaction($event)"></lock-table>
 ```
+And the styler could because
 
-And the header meta-data will be:
 ```javascript
-FlexibleTableHeader {
-	key: string,       // JSON path to a value
-	value: string,     // column textual representation of JSON attribute
-	present: boolean,  // If the column should be displayed or not
-	width?: string,    // column width
-	format?: string,   // formatting instruction
-	filter?: string,   // filter 
-	dragable?: boolean,// should be dragged or accept a dragged column
-	sortable?: boolean,// should sort
-	class?:string,     // CSS class representing the column
-	locked?:boolean    // If column is locked in a lock table.
+class StylerService implements StyleServiceInterface {
+	styleFor(location: StylePositionInterface) {
+    switch(location.type) {
+      case 'header': return location.header?.key === 'age' ? 'background-color: red;color: black' : 'background-color: #efefef;color: black';
+      case 'filters': return location.header?.key === 'age' ?  'background-color: red;color: black' : 'background-color: #efefef;color: black';
+      case 'row': return location.item ?
+        (location.item.age === 31 ? 
+            (location.header?.key === 'age' ? 'background-color: green;color: white' : 'background-color: red;color: white'): 
+            (location.header?.key === 'age' ? 'background-color: red;color: white' : '')) :
+        '';
+      case 'detail': return location.item?.age === 31 ? 'background-color: green;color: white': 'background-color: #eee;';
+    }
+    return '';
+  }
 }
 ```
 
+
+## TODO
+TODO:: add client side pagination
+TODO:: remove fontawsome dependency to allow for icon use of choice
+
 ## Revision History
 
-| Version | Description                                                                                              |
-|---------|----------------------------------------------------------------------------------------------------------|
-| 3.2.3   | Documentation update.                                                                                    |
-| 3.2.1   | fixed few issues reated to configuration of checkbox and add/remove of pagination.                       |
-| 3.2.0   | fixed few issues reated to configuration of columns                                                      |
-| 3.1.0   | fixed few issues reated to auto header generation and drag/drop of columns                               |
-| 3.0.0   | Updated to Angular 15 and added functionalities                                                          |
-| 2.0.1   | Fixed issue caused by upgarde to angular 8.                                                              |
-| 2.0.0   | Updated to Angular 8.                                                                                    |
+| Version | Description                                                                                                   |
+|---------|---------------------------------------------------------------------------------------------------------------|
+| 3.2.5   | Enhnced functionality to control row/column colors. Added Design system to chage style per application needs. |
+| 3.2.3   | Documentation update.                                                                                         |
+| 3.2.1   | fixed few issues reated to configuration of checkbox and add/remove of pagination.                            |
+| 3.2.0   | fixed few issues reated to configuration of columns                                                           |
+| 3.1.0   | fixed few issues reated to auto header generation and drag/drop of columns                                    |
+| 3.0.0   | Updated to Angular 15 and added functionalities                                                               |
+| 2.0.1   | Fixed issue caused by upgarde to angular 8.                                                                   |
+| 2.0.0   | Updated to Angular 8.                                                                                         |
 | 1.8.9   | Worked on table printing and improved mobile display. Added hideOnPrint option to have control over printing columns. |
-| 1.8.8   | Updated dependencies.                                                                                    |
-| 1.8.7   | Added fix for sorting if column is number, date, currency formatted.                                     |
-| 1.8.6   | fixed sorting numbers if given as strings. fixed pagination to keep sorting order when paginating table. |
-| 1.8.5   | made filtered event trigger after sort so the items sent would reflect the table row order.              |
-| 1.8.4   | Added onfilter event if there is a need to update some other parts of application when list is filtered. |
-| 1.8.3   | fixed display issues. upgraded into-pipes library to benefit hover effects over interactive cells.       |
-| 1.8.2   | Updated dependencies.                                                                                    |
+| 1.8.8   | Updated dependencies.                                                                                         |
+| 1.8.7   | Added fix for sorting if column is number, date, currency formatted.                                          |
+| 1.8.6   | fixed sorting numbers if given as strings. fixed pagination to keep sorting order when paginating table.      |
+| 1.8.5   | made filtered event trigger after sort so the items sent would reflect the table row order.                   |
+| 1.8.4   | Added onfilter event if there is a need to update some other parts of application when list is filtered.      |
+| 1.8.3   | fixed display issues. upgraded into-pipes library to benefit hover effects over interactive cells.            |
+| 1.8.2   | Updated dependencies.                                                                                         |
 | 1.8.0   | It was brought to my attention that some users have trouble using my components in their angular 6 environment. Since I had only updated few dependencies when moved to Angular 6, I am thinking dependencies are causing issues. So, for this release, I am updating all dependencies to what Angular 6 applications are expecting to have. Please let me know if this is fixing or not fixing any issues you are facing. |
-| 1.7.3   | Fixed problem with table. When pagination is not given to the table, an undefined exception was occurring. |
-| 1.7.2   | rolling to angular 6+ after fixing the dependency issue.                                                 |
+| 1.7.3   | Fixed problem with table. When pagination is not given to the table, an undefined exception was occurring.    |
+| 1.7.2   | rolling to angular 6+ after fixing the dependency issue.                                                      |
 | 1.7.1   | Temporary roll-back to angular 5. I forgot to luck-down the dependencies for angular 5 before upgrading to angular 6. this will cause problem if you are still using angular 5.   |
-| 1.7.0   | Updated libraries to become compatible with Angular 6+.                                                  |
+| 1.7.0   | Updated libraries to become compatible with Angular 6+.                                                       |
 | 1.6.0   | Fixed issue with filtering while using operational characters. If allowing filter while typing and if type an operation character like "*", "!","=","<", ">" we do not want to filter any row out of tabulating data.  Also, modified printing mechanism to print only the current page. In case of 4000 records in a table, we definitely do not want to print all rows to avoid performance degradation.   |
 | 1.5.6   | Made performance improvement for filtering. If there are more than 1000 records and you have set the filterWhileTyping, then there could be performance issues. As a result, removed case insensitivity to perform better. Also, introduced delay filtering for those who type fast!! |
-| 1.5.5   | Made performance improvements. Upgraded into-pipes version.                                              |
-| 1.5.2   | Upgraded into-pipes version.                                                                             |
+| 1.5.5   | Made performance improvements. Upgraded into-pipes version.                                                   |
+| 1.5.2   | Upgraded into-pipes version.                                                                                  |
 | 1.5.1   | Provided **configAddon** attribute to include additional control items along side the print and configuration buttons.  Consider a situation where you want to have a add row to a table inside a table expandable row. in such a case you would want to place the buttons in right place for each table. to make this happen, create a ng-template for the additional controls and pass a reference to it to the corresponding table thruogh **configAddon** attribute. For example, You can use the **configAddon** to give information about filtering operations and print policy or for any other reaon you see it fit. |
 | 1.4.7   | Upgraded to latest version of into-pipes and introduced **onCellContentEdit** event which will be triggered when cell content is edited. To make a cell editable, use format attribute of header meta-data. Look at documentation of into-pipes to decide if you want to format a field into a text, a checkbox, a select drop-down or any other formats.  If you want to format a cell in a special way that is not supported by into-pipes, you will need to create a custom component and register. For example, lets say you want to display a link and the link href should point to somewhere with other parameters in the road. You would need to import **ComponentPool**, create your format component, and register it. You will then have to register it and use the registered component name as a format rule. When a cell content is edited, you will receive onCellContentEdit event where you will have opportunity to save the changed cell content in your data source.   |
-| 1.4.6   | Added a flag for filtering lookup to filter while tying vs. filter after a hit return.                   |
-| 1.4.5   | Compiled with AOT option and resolved issues.                                                            |
+| 1.4.6   | Added a flag for filtering lookup to filter while tying vs. filter after a hit return.                        |
+| 1.4.5   | Compiled with AOT option and resolved issues.                                                                 |
 | 1.4.0   | Fixed few issues and added persistence to table configuration. As a result, if you enable persistence, you will need to give a version number through "persistenceKey". This is necessary for the persistence mechanism to decide if it has to take the stored data or override it because of difference in version number. "persistenceId" is necessary if you are using multiple persistent tables in your application. If persistence is enabled and you are not supplying headers meta-data and flexible table auto generates the headers for you, then auto generation will happen only once and future generations will be lost because persisted headers will override generation of new headers. If you are modifying the headers by adding, removing, or replacing header meta-data; then you have to change the "persistenceKey" as well. Also, an optional minwidth attribute is added to table headers meta-data. this can become handy if you are setting a width on some headers and not others. |
 | 1.3.0   | Fixed few issues and added ability to print the content of flexible table.. Did not do the same for lock table as it is not an easy thing to do. If you are making a flexible table configurable, you will be able to see two icons side by side.. one for printing and the other for configuring display columns. |
 | 1.2.0   | Flexible table is now getting more flexible... if you do not supply the headers meta-data, smart table will generate it for you. This will be a good way of flushing unknown JSON into the table and have it displayed. In addition, a filtering mechanism is added. If you enable filtering of a column, then you can filter rows based on what is typed in the filter for that columns. You will need to specifically add blank filter (filter: "") attribute in headers meta-data or enable filter for each header through configuration panel. If smart table is generating headers automatically, it will include filters attribute if filtering is enabled. When requesting to filter on a column, you have option of including the following operands: |
 | 1.1.0   | With this release you will be able to make table cells editable / intractable.. For more information read into-pipes documentation. |
-| 1.0.0   | Good news. With this release you will have access to lockable table!!                                    |
+| 1.0.0   | Good news. With this release you will have access to lockable table!!                                         |
 | 0.1.0   | This release is basically performance improvements and internal arrangement of components to make it possible to provide additional functionalities which will be released soon.  |
-| 0.0.1   | Initial release.                                                                                         |
+| 0.0.1   | Initial release.                                                                                              |
 
 
 ![alt text](https://raw.githubusercontent.com/msalehisedeh/flexible-table/master/flexible.png  "What you would see when a flexible table is used")
@@ -487,3 +555,4 @@ Locate the styles[] array and add font-awesome references directory. like:
         }
     ]
 ```
+

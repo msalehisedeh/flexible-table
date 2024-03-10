@@ -10,11 +10,33 @@ import {
   FilteredItemsInfo, 
   FlexibleTableHeader, 
   PaginationInfo, 
-  PaginationType,
+  PaginationType, 
+  StylePositionInterface, 
+  StyleServiceInterface, 
   TableHeadersGenerator 
 } from '@sedeh/flexible-table';
 
-
+class StylerService implements StyleServiceInterface {
+  private allowAltColor = false;
+  activate(flag: boolean) {
+    this.allowAltColor = flag;
+  }
+	styleFor(location: StylePositionInterface) {
+    if (this.allowAltColor) {
+      switch(location.type) {
+        case 'header': return location.header?.key === 'age' ? 'background-color: red;color: black' : 'background-color: #efefef;color: black';
+        case 'filters': return location.header?.key === 'age' ?  'background-color: red;color: black' : 'background-color: #efefef;color: black';
+        case 'row': return location.item ?
+          (location.item.age === 31 ? 
+              (location.header?.key === 'age' ? 'background-color: green;color: white' : 'background-color: red;color: white'): 
+              (location.header?.key === 'age' ? 'background-color: red;color: white' : '')) :
+          '';
+        case 'detail': return location.item?.age === 31 ? 'background-color: green;color: white': 'background-color: #eee;';
+      }
+    }
+    return '';
+  }
+}
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -22,6 +44,7 @@ import {
 })
 export class AppComponent implements OnInit {
   title = 'Flexible Table';
+  styler: any;
   enableRowCount = false;
   enableLockRowCount = true;
   enableFiltering = false;
@@ -31,6 +54,7 @@ export class AppComponent implements OnInit {
   filterTyping = false;
   filterLockTyping = false;
   showActionable = true;
+  showAltColor = false;
 
   selectedActivateOption = '';
   selectedDisableOption = '';
@@ -137,6 +161,9 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.styler = new StylerService();
+
+    this.styler.activate(this.showAltColor);
     this.service.usersList().subscribe(
       (users) => {
         this.users = users;//.json();
@@ -162,6 +189,9 @@ export class AppComponent implements OnInit {
     return showIcon;
   }
 
+  popAlert(message: string) {
+    alert(message);
+  }
   onaction(event: any) {
     this.events.push({
       time: new Date().getTime(),
@@ -231,14 +261,14 @@ export class AppComponent implements OnInit {
     this.users = undefined;
     this.selectedDisplayModeOption = event.target.value;
     if (event.target.selectedIndex === 0) {
-      this.usersHeader.map((h: FlexibleTableHeader) => this.updateFormat(h, 'input::false', 'input::false'));
-      this.usersHeader.map((h: FlexibleTableHeader) => this.updateFormat(h, 'select:', 'select:false'));
+      this.usersHeader.map((h: FlexibleTableHeader) => this.updateFormat(h, 'input:::true', 'input:::false'));
+      this.usersHeader.map((h: FlexibleTableHeader) => this.updateFormat(h, 'select:false:true', 'select:false'));
     } else if (event.target.selectedIndex === 1) {
-      this.usersHeader.map((h: FlexibleTableHeader) => this.updateFormat(h, 'input::false', 'input::false:locked'));
-      this.usersHeader.map((h: FlexibleTableHeader) => this.updateFormat(h, 'select:false', 'select:false:locked'));
+      this.usersHeader.map((h: FlexibleTableHeader) => this.updateFormat(h, 'input:::false', 'input:::true'));
+      this.usersHeader.map((h: FlexibleTableHeader) => this.updateFormat(h, 'select:false', 'select:false:true'));
     } else if (event.target.selectedIndex === 2) {
-      this.usersHeader.map((h: FlexibleTableHeader) => this.updateFormat(h, 'input::false', ((h.key === 'name') ? 'input::false:locked' : 'input::false')));
-      this.usersHeader.map((h: FlexibleTableHeader) => this.updateFormat(h, 'select:false', ((h.key === 'name') ? 'select:false:locked' : 'select:false')));
+      this.usersHeader.map((h: FlexibleTableHeader) => this.updateFormat(h, 'input:::false', ((h.key === 'name') ? 'input:::true' : 'input:::false')));
+      this.usersHeader.map((h: FlexibleTableHeader) => this.updateFormat(h, 'select:false', ((h.key === 'name') ? 'select:false:true' : 'select:false')));
     }
     setTimeout(() => this.users = t, 0);
   }
@@ -329,6 +359,10 @@ export class AppComponent implements OnInit {
       case 'lockConfigurable': this.lockConfigurable = checked; break;
       case 'filterTyping': this.filterTyping = checked; break;
       case 'filterLockTyping': this.filterLockTyping = checked; break;
+      case 'showAltColor': 
+        this.showAltColor = checked; 
+        this.styler.activate(this.showAltColor);
+        break;
     }
   }
 }

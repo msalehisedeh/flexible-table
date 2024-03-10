@@ -5,9 +5,9 @@
     .table-pagination {
         box-sizing: border-box;
         background-color: #fff;
-        border: 1px solid #254A5D;
+        border: var(--sedeh-solid-border, 1px solid #999);
         border-radius: 2px;
-        color: #254A5D;
+        color: var(--sedeh-text-color, black);
         clear: both;
         display: flex;
         font-size: 1em;
@@ -73,7 +73,7 @@
             }
         }
         .disabled {
-            opacity: 0.4;
+            opacity: var(--sedeh-hover-opacity, 0.5) !important;
         }
     }    
 }

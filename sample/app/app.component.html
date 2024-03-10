@@ -66,6 +66,17 @@
       (click)="click($event, 'showActionable')" /> 
     <span>Show row expand/collapse action icon</span>
   </label> 
+  <label for="showAltColor">
+    <input 
+      type="checkbox" 
+      id="showAltColor" 
+      name="showAltColor" 
+      [value]="showAltColor" 
+      [checked]="showAltColor ? true: null" 
+      (keyup)="keyup($event)"
+      (click)="click($event, 'showAltColor')" /> 
+    <span>Alternate color on age column and rows for users of 31 year old</span>
+  </label> 
 
   <br/>
   
@@ -129,6 +140,7 @@
       [filterwhiletyping]="filterTyping"
       [headers]="usersHeader" 
       [items]="users" 
+      [styler]="styler" 
       [pageInfo]="userPageInfo"
       tableInfo="users table"
       [enableIndexing]="enableRowCount"
@@ -147,7 +159,7 @@
       (onaction)="onaction($event)"></flexible-table>
 
 <ng-template #configAddon>
-  <a (click)="log('hay!!')"><span class="fa fa-flag"></span></a>
+  <a class="cutom-configuration" (click)="popAlert('Custom configuration can be done on this click!!')"><span class="fa fa-flag"></span></a>
 </ng-template>
 <ng-template #globalDetailer let-detail="data">
   <div class="custom-class">

@@ -83,6 +83,9 @@ ol {
     }
     float: left;
 }
+.cutom-configuration .fa {
+    color: var(--sedeh-caption-color, #fff);
+}
 .selection-wrapper {
     box-sizing: border-box;
     display: table;
@@ -103,4 +106,18 @@ flexible-table {
     margin: 30px auto 70px auto;
     width: 1111px;
     display: block !important;
+
+}
+@media screen and (max-width: 1200px) {
+    flexible-table {
+        width: auto;
+    }
+}
+@media screen and (max-width: 600px) {
+    flexible-table {
+        width: auto;
+    }
+    ::ng-deep .calendar-box {
+        min-width: auto;
+    }
 }

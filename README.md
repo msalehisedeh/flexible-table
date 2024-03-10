@@ -5,17 +5,17 @@ Have you ever looked for a simple way of flushing your data in a versatile table
 
 FlexibleTable and LockTable are Angular based code. LockTable will allow you to lock/unlock columns. Both tables are fully configurable with pagination and ability to re-order table columns through drag/drop operation.
 
-**NOTE** Current version 3.2.3
+**NOTE** Current version 3.2.5
 
 **NOTE:** If your project still is angular 2, 4, or 5; please luck-down your version reference to flexible table to 1.7.1 version by removing ^ from the version dependency in your package json. Otherwise for Angular 6+, please use 1.7.2 version or higher.
 
 **NOTE:** Starting with version 1.8.2 you need to import this library through @sedeh/flexible-table.
 
-Please send your requests or comments through the link provided below:
+Please send your requests or comments through [Comments/Requests](https://github.com/msalehisedeh/flexible-table/issues)
 
-[Live Demo](https://stackblitz.com/edit/flexible-table?file=app%2Fapp.component.ts)  | 
-[NPM](https://www.npmjs.com/package/@sedeh/flexible-table)  | 
-[Comments/Requests](https://github.com/msalehisedeh/flexible-table/issues)
+View it in action on [Live Demo](https://stackblitz.com/edit/flexible-table?file=app%2Fapp.component.ts)
+
+Get it from [NPM](https://www.npmjs.com/package/@sedeh/flexible-table)
 
 ## Features
 * Responsive
@@ -38,6 +38,7 @@ MODULE:
 
 EXPORTS:
 VocabularyInterface
+PipeServiceComponentInterface
 PaginationInfo
 FlexibleTableHeader
 PaginationType
@@ -52,7 +53,7 @@ TableHeadersGenerator
 
 DEPENDENCIES: 
     "@sedeh/drag-enabled": "^4.3.3",
-    "@sedeh/into-pipes": "^4.4.4",
+    "@sedeh/into-pipes": "^4.5.3",
     "font-awesome": "^4.7.0"
 ```
                                                                                     |
