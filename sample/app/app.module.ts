@@ -1,12 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from  '@angular/common/http';
 
-import {IntoPipeModule} from '@sedeh/into-pipes';
+import { HttpClientModule } from '@angular/common/http';
+import { IntoPipeModule } from '@sedeh/into-pipes';
 import { FlexibleTableModule } from '@sedeh/flexible-table';
 
 import { AppComponent } from './app.component';
-import { AppService } from './app.service';
 import { SelectService } from './select.service';
 
 @NgModule({
@@ -14,15 +13,9 @@ import { SelectService } from './select.service';
     BrowserModule,
     IntoPipeModule,
     HttpClientModule,
-    FlexibleTableModule
+    FlexibleTableModule,
   ],
-  declarations: [
-    AppComponent,
-    SelectService
-  ],
-  providers: [
-    AppService
-  ],
-  bootstrap: [AppComponent]
+  declarations: [AppComponent, SelectService],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
