@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 
 import { TableHeadersGenerator } from './components/table-headers-generator';
-import { TableViewComponent } from './components/table.component';
+import { TableViewComponent, defaultPageInfo } from './components/table.component';
 import { FlexibleTableHeader, PaginationInfo, PaginationType, StylePositionInterface, StyleServiceInterface, VocabularyInterface } from './interfaces/flexible-table.interface';
 
 class DefaultStylerService implements StyleServiceInterface {
@@ -75,7 +75,7 @@ export class FlexibleTableComponent implements OnInit, OnChanges {
 	public items!: any[];
 
 	@Input("pageInfo")
-	public pageInfo: PaginationInfo = {defaultSize:8, pageSize:8,currentPage:1,from:0,to: 8, pages: 1, maxWidth: '0', resetSize: true, contentSize: 0};
+	public pageInfo: PaginationInfo = defaultPageInfo;
 
 	@Input("tableInfo")
 	public tableInfo: any;
@@ -200,8 +200,7 @@ export class FlexibleTableComponent implements OnInit, OnChanges {
 				pages: 1,
 				from: 0,
 				to: 100000,
-				currentPage: 1,
-				maxWidth: "300"
+				currentPage: 1
 			};
 		}
 		this.updateLimits();

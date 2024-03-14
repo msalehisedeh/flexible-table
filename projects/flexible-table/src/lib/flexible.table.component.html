@@ -6,7 +6,6 @@
         [actionKeys]="actionKeys"
 		[tableClass]="tableClass"
 		[tableInfo]="tableInfo"
-		[caption]="caption" 
 		[headers]="subHeaders" 
         [items]="formeditems" 
         [styler]="styler"
@@ -24,7 +23,8 @@
 		(onCellContentEdit)="onCellEdit($event)"
         (onchange)="reconfigure($event)"
 		(onaction)="tableAction($event)">
-        <div class="wrapper">
+        <ng-content select="[topCaption]"></ng-content>
+        <div class="wrapper" *ngIf="(configurable && items && items.length) || showTopPagination()">
             <table-configuration
                 *ngIf="configurable && items && items.length"
                 class="table-configuration" 
@@ -45,16 +45,18 @@
                 (onpaginationchange)="onPaginationChange($event)">
             </table-pagination>
         </div>
-        
     </table-view>
-    <div class="caption">
-        <table-pagination 
-            *ngIf="showBottomPagination()"
-            [info]="pageInfo" 
-            [inline]="isInliner()" 
-            [vocabulary]="vocabulary"
-            (onpaginationchange)="onPaginationChange($event)">
-        </table-pagination>
+    <div  class="caption">
+        <ng-content select="[bottomCaption]"></ng-content>
+        <div class="wrapper">
+            <table-pagination 
+                *ngIf="showBottomPagination()"
+                [info]="pageInfo" 
+                [inline]="isInliner()" 
+                [vocabulary]="vocabulary"
+                (onpaginationchange)="onPaginationChange($event)">
+            </table-pagination>
+        </div>
     </div>
 </div>
 

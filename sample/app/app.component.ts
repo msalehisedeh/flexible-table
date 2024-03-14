@@ -12,8 +12,9 @@ import {
   PaginationInfo, 
   PaginationType, 
   StylePositionInterface, 
-  StyleServiceInterface, 
-  TableHeadersGenerator 
+  StyleServiceInterface,
+  TableHeadersGenerator, 
+  defaultPageInfo 
 } from '@sedeh/flexible-table';
 
 class StylerService implements StyleServiceInterface {
@@ -72,8 +73,8 @@ export class AppComponent implements OnInit {
   samplers = [PaginationType.none, PaginationType.floating, PaginationType.ontop, PaginationType.onbottom, PaginationType.topbottom];
   paginationOptions = ['No pagination', 'Floating pagination', 'Pagination on top', 'Pagination on bottom','Pagination on top and Bottom'];
 
-  userPageInfo: PaginationInfo = {defaultSize:8, pageSize:8,currentPage:1,from:0,to: 8, pages: 1, maxWidth: '100%', resetSize: true, contentSize: 0};
-  lockPageInfo: PaginationInfo = {defaultSize:8,pageSize:8,currentPage:1,from:0,to: 8, pages: 1, maxWidth: '100%', resetSize: true, contentSize: 0};
+  userPageInfo: PaginationInfo = defaultPageInfo;
+  lockPageInfo: PaginationInfo = defaultPageInfo;
 
   usersHeader:FlexibleTableHeader[] = [
 	  {
@@ -139,23 +140,27 @@ export class AppComponent implements OnInit {
 	  {key: "company", lockable: true, active: true, disabled: false, value: "Company",present: true, dragable:true, dropable:true, sortable: true, format: "select:false:true", filter: ""} 
   ];
 
-  activationOptions = ['Allow tab focus on all formatters', 'Disable tab focus on all formatters', 'Disable tab focus on Name column'];
-  disableEditOptions = ['Allow change/edit on all formatters', 'Disable change/edit on all formatters', 'Disable change/edit on Company column'];
-  displayModeOptions = ['Allow edit toggle on all formatters', 'Keep all formatters on edit mode','Keep name column on edit mode'];
-  validationOptions = ['No validation on all formatters', 'Validate change on all formatters', 'Validate change on company column'];
-  lockOptions = ['Allow lock on all columns', 'No lock on all columns', 'company and name columns and disable locking'];
+  activationOptions = ['Tab focus on all formatters', 'No tab focus on any formatter', 'Tab focus only on Name column'];
+  disableEditOptions = ['All formatters are editable', 'None of formatter are editable', 'Only Company column is editable'];
+  displayModeOptions = ['Click toggle on all formatters', 'All formatters on edit mode','Only name column on edit mode'];
+  validationOptions = ['Change any formatter without validation', 'Change any formatters if validates', 'Only company column should validate'];
+  lockOptions = ['Show lock on all columns', 'No lock on any column', 'Show lock on company and name columns'];
 
-  users: any[] | undefined;
-  lockUsers!: any[] | undefined;
+  users: any[] = [];
+  lockUsers: any[] = [];
+  usersService!: any;
+  lockService!: any;
+
   
   events: any[] = [];
 
   constructor(
     private client: HttpClient,
-    private service: AppService, 
     private generator: TableHeadersGenerator,
     private pool: ComponentPool
   ) {
+    this.usersService = new AppService();
+    this.lockService = new AppService();
     this.pool.registerServiceForComponent("select", new SelectService());
     this.usersHeader.map((h: FlexibleTableHeader) => h.validate = this.noValidationNeeded.bind(h))
   }
@@ -164,14 +169,18 @@ export class AppComponent implements OnInit {
     this.styler = new StylerService();
 
     this.styler.activate(this.showAltColor);
-    this.service.usersList().subscribe(
-      (users) => {
-        this.users = users;//.json();
-        this.lockUsers = JSON.parse(JSON.stringify(users));
+    this.usersService.getData(this.userPageInfo, this.usersHeader).subscribe(
+      (users: any[]) => {
+        this.users = users;
         this.userPageInfo.contentSize = this.users.length;
         this.userPageInfo.pages = this.users.length/this.userPageInfo.defaultSize;
+      }
+    );
+    this.lockService.getData(this.userPageInfo, this.usersHeader).subscribe(
+      (lockTableUsers: any[]) => {
+        this.lockUsers = lockTableUsers;
         this.lockPageInfo.contentSize = this.lockUsers ? this.lockUsers.length : 0;
-        this.lockPageInfo.pages = this.users.length/this.lockPageInfo.defaultSize;
+        this.lockPageInfo.pages = this.lockUsers.length/this.lockPageInfo.defaultSize;
       }
     )
   }
@@ -258,7 +267,7 @@ export class AppComponent implements OnInit {
   }
   displayModeSelection(event: any) {
     const t = this.users;
-    this.users = undefined;
+    this.users = [];
     this.selectedDisplayModeOption = event.target.value;
     if (event.target.selectedIndex === 0) {
       this.usersHeader.map((h: FlexibleTableHeader) => this.updateFormat(h, 'input:::true', 'input:::false'));
@@ -283,7 +292,7 @@ export class AppComponent implements OnInit {
       this.lockHeader.map((h: FlexibleTableHeader) => h.lockable = false)
       this.lockHeader.map((h: FlexibleTableHeader) => h.locked = (h.key === 'company') || (h.key === 'name'));
     }
-    this.lockUsers = undefined;
+    this.lockUsers = [];
     setTimeout(() => {
       this.lockUsers = users;
     }, 0);
@@ -336,11 +345,12 @@ export class AppComponent implements OnInit {
           } else {
             file = JSON.parse(result);
           }
-          this.users = undefined;
+          this.usersService = undefined;
+
           setTimeout(() => {
-            this.showActionable = false;
             this.usersHeader = this.generator.generateHeadersFor(file[0],"", 5, this.enableFiltering);
-            this.users = file;
+            this.showActionable = false;
+            this.usersService = new AppService(file);
           }, 666);
         }
       },

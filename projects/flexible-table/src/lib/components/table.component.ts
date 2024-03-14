@@ -22,14 +22,18 @@ import {
 	FilteredItemsInfo, 
 	FlexibleTableHeader, 
 	PaginationInfo, 
+	DataServiceInterface, 
 	StylePositionInterface, 
 	StyleServiceInterface, 
 	VocabularyInterface 
 } from '../interfaces/flexible-table.interface';
+import { DataService } from './data.service';
 
 class DefaultStylerService implements StyleServiceInterface {
 	styleFor(location: StylePositionInterface){return ''}
 }
+
+export const defaultPageInfo: PaginationInfo = {defaultSize:8, pageSize:8,currentPage:1,from:0,to: 8, pages: 1, resetSize: true, contentSize: 0};
 
 @Component({
 	selector: 'table-view',
@@ -61,7 +65,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 	@Input() headerSeparation = true;
 	@Input() caption!: string;
     @Input() action!: string;
-    @Input() pageInfo: PaginationInfo = {defaultSize:8, pageSize:8,currentPage:1,from:0,to: 8, pages: 1, maxWidth: '0', resetSize: true, contentSize: 0};
+    @Input() pageInfo: PaginationInfo = defaultPageInfo;
     @Input() actionKeys: any;
     @Input() tableClass = 'default-flexible-table';
 	@Input() headers!: FlexibleTableHeader[];
@@ -82,7 +86,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 
 	@ViewChild('flexible', {static: false}) private table: any;
 
-    constructor(public el:ElementRef) {}
+    constructor(public host:ElementRef) {}
 
 	private findColumnWithID(id: string) {
         const list = this.headerColumnElements();
@@ -310,8 +314,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 				pages: 1,
 				from: 0,
 				to: 100000,
-				currentPage: 1,
-				maxWidth: "300"
+				currentPage: 1
 			};
 		}
 		if (!this.headers) {
@@ -437,7 +440,7 @@ export class TableViewComponent implements OnInit, OnChanges {
 	print() {
 		this.printMode = true;
 		setTimeout(()=>{
-			const content = this.el.nativeElement.innerHTML;
+			const content = this.host.nativeElement.innerHTML;
 			const styles: any = document.getElementsByTagName('style');
 			this.printMode = false;
 			const popupWin: any = window.open('', '_blank', 'width=300,height=300');

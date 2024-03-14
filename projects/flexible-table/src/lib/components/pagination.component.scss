@@ -4,10 +4,9 @@
     
     .table-pagination {
         box-sizing: border-box;
-        background-color: #fff;
         border: var(--sedeh-solid-border, 1px solid #999);
         border-radius: 2px;
-        color: var(--sedeh-text-color, black);
+        color: var(--sedeh-pagination-color, white);
         clear: both;
         display: flex;
         font-size: 1em;
@@ -15,17 +14,21 @@
         max-width: 100%;
         &.inliner {
             width: 191px;
-            float: right;
         }
         &.floater {
             position: fixed;
             left: 40%;
             z-index: 55;
             bottom: 5px;
+            background-color: var(--sedeh-pagination-background-color, cadetblue);
         }
     
         .fa {
             padding: 4px 8px;
+            font-weight: bold;
+            &:focus {
+                color: blue;
+            }
         }
     
         .next,
@@ -34,9 +37,9 @@
         .first {
             background-repeat: no-repeat;
             cursor:pointer;
-            width:auto;
+            width: 0;
             display: block;
-            height: 40px;
+            height: 0;
             text-indent: -99999px;
             box-sizing: border-box;
         }
@@ -48,8 +51,10 @@
             input{
                 border: 0;
                 border-left: 1px solid #4c5854;
+                background-color: var(--sedeh-pagination-background-color, cadetblue);
                 height: 21px;
                 text-align: center;
+                font-weight: bold;
                 width: 22px;
                 margin-right: 2px;
                 margin-left: 8px;
@@ -57,13 +62,16 @@
         }
         .current {
             padding: 1px 5px;
+            font-weight: bold;
             display: flex;
             input {
                 padding: 0 3px;
                 width: 14px;
                 height: 23px;
+                font-weight: bold;
                 border: none;
                 text-align: center;
+                background-color: var(--sedeh-pagination-background-color, cadetblue);
                 display: inline-block;
             }
             span {

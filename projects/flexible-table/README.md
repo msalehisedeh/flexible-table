@@ -1,21 +1,25 @@
 
 # Welcome to Flexible table!
 
-Have you ever looked for a simple way of flushing your data in a versatile table by passing in a few meta-data instructions just to get your data displayed the way you wanted with interactive components inside? AND how about adding graphics into the resulting table with some nifty formatting rules just by mapping your JSON data into table column headers! AND not paying a dime for it? Ha? Say it again!! And all is done without writing much of any code!! On top of that, if you do not want to take time and write meta-data rules, FlexibleTable will generate the rules for you. You can feed any data to the table and see it tabulated!!
+Have you ever looked for a simple way of flushing your **JSON** data in a versatile table by passing in a few meta-data instructions just to get your data displayed the way you wanted with interactive components inside? AND how about adding graphics into the resulting table with some nifty formatting rules just by mapping your JSON data into table column headers! **AND not paying a dime for it?** Ha? Say it again!! 
 
-FlexibleTable and LockTable are Angular based code. LockTable will allow you to lock/unlock columns. Both tables are fully configurable with pagination and ability to re-order table columns through drag/drop operation.
+And all is done **without writing much of any code!!** On top of that, if you do not want to take time and write meta-data rules, FlexibleTable **will generate the rules for you!** You can feed any data to the table and see it tabulated!! without writing a single line of code!
 
-**NOTE** Current version 3.2.5
+FlexibleTable and LockTable are Angular based code. LockTable will allow you to lock/unlock columns. Both tables are fully configurable with pagination and ability to re-order table columns through drag/drop operation. You can insert a cusrtom content on top or bottom caption area in both tables usibng `topCaption` and `bottomCaption` as selectors.
 
-**NOTE:** If your project still is angular 2, 4, or 5; please luck-down your version reference to flexible table to 1.7.1 version by removing ^ from the version dependency in your package json. Otherwise for Angular 6+, please use 1.7.2 version or higher.
-
-**NOTE:** Starting with version 1.8.2 you need to import this library through @sedeh/flexible-table.
+**NOTE** Current version 3.2.6
 
 Please send your requests or comments through [Comments/Requests](https://github.com/msalehisedeh/flexible-table/issues)
 
 View it in action on [Live Demo](https://stackblitz.com/edit/flexible-table?file=app%2Fapp.component.ts)
 
 Get it from [NPM](https://www.npmjs.com/package/@sedeh/flexible-table)
+
+
+![alt text](https://raw.githubusercontent.com/msalehisedeh/flexible-table/master/flexible.png  "What you would see when a flexible table is used")
+
+
+![alt text](https://raw.githubusercontent.com/msalehisedeh/flexible-table/master/locked.png  "What you would see when a flexible table is used")
 
 
 ## Features
@@ -86,6 +90,8 @@ Create a css file with the following and modify its value to fit your applicatio
     --sedeh-solid-border: 1px solid #999;
     --sedeh-caption-color:  #fff;
     --sedeh-caption-background-color:  cadetblue;
+    --sedeh-pagination-color:  #fff;
+    --sedeh-pagination-background-color:  cadetblue;
     --sedeh-notice-color: white;
     --sedeh-notice-background-color: rgb(4, 159, 255);
     --sedeh-shim-color: rgba(255, 255, 255, 0.2);
@@ -99,6 +105,7 @@ Create a css file with the following and modify its value to fit your applicatio
     --sedeh-alert-color: #8b0224;
     --sedeh-alert-border-color: #fff;
 }
+
 
 ```
 
@@ -207,7 +214,10 @@ Now you need to set the table tag in your HTML content:
       configurable="true"
       [rowDetailer]="detailer"
       (onconfigurationchange)="onconfigurationchange($event)"
-      (onaction)="onaction($event)"></flexible-table>
+      (onaction)="onaction($event)">
+      <div #topCaption>This should be rendered in top cption area</div>
+      <div #bottomCaption>This should be rendered in bottom cption area</div>
+      </flexible-table>
 
 <ng-template #detailer let-detail="data">
   <div class="custom-class">
@@ -484,15 +494,11 @@ class StylerService implements StyleServiceInterface {
 }
 ```
 
-
-## TODO
-TODO:: add client side pagination
-TODO:: remove fontawsome dependency to allow for icon use of choice
-
 ## Revision History
 
 | Version | Description                                                                                                   |
 |---------|---------------------------------------------------------------------------------------------------------------|
+| 3.2.6   | fixed styling and few other logical issues. preparing for serverside pagination on next release.              |
 | 3.2.5   | Enhnced functionality to control row/column colors. Added Design system to chage style per application needs. |
 | 3.2.3   | Documentation update.                                                                                         |
 | 3.2.1   | fixed few issues reated to configuration of checkbox and add/remove of pagination.                            |
@@ -529,12 +535,6 @@ TODO:: remove fontawsome dependency to allow for icon use of choice
 | 1.0.0   | Good news. With this release you will have access to lockable table!!                                         |
 | 0.1.0   | This release is basically performance improvements and internal arrangement of components to make it possible to provide additional functionalities which will be released soon.  |
 | 0.0.1   | Initial release.                                                                                              |
-
-
-![alt text](https://raw.githubusercontent.com/msalehisedeh/flexible-table/master/flexible.png  "What you would see when a flexible table is used")
-
-
-![alt text](https://raw.githubusercontent.com/msalehisedeh/flexible-table/master/locked.png  "What you would see when a flexible table is used")
 
 
 ### How to include font-awesome in your project?

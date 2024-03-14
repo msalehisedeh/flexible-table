@@ -133,33 +133,39 @@
 
 
 <flexible-table 
-      *ngIf="users" 
-      caption="total records found {{users.length}}" 
-      action="View details of %name% where ID is %id%"
-      actionKeys="%name%,%id%"
-      [filterwhiletyping]="filterTyping"
-      [headers]="usersHeader" 
-      [items]="users" 
-      [styler]="styler" 
-      [pageInfo]="userPageInfo"
-      tableInfo="users table"
-      [enableIndexing]="enableRowCount"
-      [showActionable]="showActionable"
-      [enableFiltering]="enableFiltering"
-      [configurable]="configurable"
-      persistenceId="usersRecordsTable"
-      persistenceKey="users-headers-05012019"
-      [inlinePagination]="inlinePagination"
-      [configAddon]="configAddon"
-      [detailers]="{ global: globalDetailer, name: NameDetailer }"
-      [expandable]="allowExpanding"
-      (onfilter)="onfilter($event)"
-      (onCellContentEdit)="onCellEdit($event)"
-      (onconfigurationchange)="onconfigurationchange($event)"
-      (onaction)="onaction($event)"></flexible-table>
+  *ngIf="usersService"
+  action="View details of %name% where ID is %id%"
+  actionKeys="%name%,%id%"
+  [filterwhiletyping]="filterTyping"
+  [headers]="usersHeader" 
+  [items]="lockUsers" 
+  [styler]="styler" 
+  [pageInfo]="userPageInfo"
+  tableInfo="users table"
+  [enableIndexing]="enableRowCount"
+  [showActionable]="showActionable"
+  [enableFiltering]="enableFiltering"
+  [configurable]="configurable"
+  persistenceId="usersRecordsTable"
+  persistenceKey="users-headers-05012019"
+  [inlinePagination]="inlinePagination"
+  [configAddon]="configAddon"
+  [detailers]="{ global: globalDetailer, name: NameDetailer }"
+  [expandable]="allowExpanding"
+  (onfilter)="onfilter($event)"
+  (onCellContentEdit)="onCellEdit($event)"
+  (onconfigurationchange)="onconfigurationchange($event)"
+  (onaction)="onaction($event)">
+  <div topCaption>This should be rendered in top cption area</div>
+  <div bottomCaption>This should be rendered in bottom cption area</div>
+</flexible-table>
 
 <ng-template #configAddon>
-  <a class="cutom-configuration" (click)="popAlert('Custom configuration can be done on this click!!')"><span class="fa fa-flag"></span></a>
+  <a 
+    class="cutom-configuration" 
+    (click)="popAlert('You can include custom action in caption and use it on this click!!')">
+    <span class="fa fa-flag"></span>
+  </a>
 </ng-template>
 <ng-template #globalDetailer let-detail="data">
   <div class="custom-class">
@@ -250,23 +256,25 @@
 </fieldset>
 
 <lock-table 
-      *ngIf="lockUsers" 
-      caption="total records found {{lockUsers.length}}" 
-      action="View details of %name% where ID is %id%"
-      actionKeys="%name%,%id%"
-      tableInfo="lock users table"
-      [enableIndexing]="enableLockRowCount"
-      [enableFiltering]="enableLockFiltering"
-      [configurable]="lockConfigurable"
-      [filterwhiletyping]="filterLockTyping"
-      [inlinePagination]="inlineLockPagination"
-      [headers]="lockHeader" 
-      [items]="lockUsers" 
-      [pageInfo]="lockPageInfo"
-      (onfilter)="onfilter($event)"
-      (onCellContentEdit)="onCellEdit($event)"
-      (onconfigurationchange)="onconfigurationchange($event)"
-      (onaction)="onaction($event)"></lock-table>
+  *ngIf="lockUsers" 
+  action="View details of %name% where ID is %id%"
+  actionKeys="%name%,%id%"
+  tableInfo="lock users table"
+  [enableIndexing]="enableLockRowCount"
+  [enableFiltering]="enableLockFiltering"
+  [configurable]="lockConfigurable"
+  [filterwhiletyping]="filterLockTyping"
+  [inlinePagination]="inlineLockPagination"
+  [headers]="lockHeader" 
+  [items]="lockUsers" 
+  [pageInfo]="lockPageInfo"
+  (onfilter)="onfilter($event)"
+  (onCellContentEdit)="onCellEdit($event)"
+  (onconfigurationchange)="onconfigurationchange($event)"
+  (onaction)="onaction($event)">
+  <div topCaption>This should be rendered in top cption area</div>
+  <div bottomCaption>This should be rendered in bottom cption area</div>
+</lock-table>
 
 <div class="logger">
   <ul>

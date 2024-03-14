@@ -1,6 +1,6 @@
 <div class="caption">
-	<div *ngIf="caption" class="text" [textContent]="caption"></div>
-	<div class="wrapper">
+	<ng-content select="[topCaption]"></ng-content>
+	<div class="wrapper" *ngIf="(configurable && items && items.length) || showTopPagination()">
 		<table-configuration
 			*ngIf="configurable && items && items.length"
 			class="table-configuration" 
@@ -62,8 +62,8 @@
 		(onaction)="tableAction($event)"></table-view>
 	
 </div>
-<div *ngIf="showBottomPagination()" class="caption">
-	<div class="text"></div>
+<div  class="caption">
+	<ng-content select="[bottomCaption]"></ng-content>
 	<div class="wrapper">
 		<table-pagination 
 			*ngIf="showBottomPagination()"

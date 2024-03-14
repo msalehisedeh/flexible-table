@@ -16,7 +16,7 @@ import {
 	AfterViewInit
 } from '@angular/core';
 
-import { TableViewComponent } from './components/table.component';
+import { TableViewComponent, defaultPageInfo } from './components/table.component';
 import { TableHeadersGenerator } from './components/table-headers-generator';
 import { FlexibleTableHeader, PaginationInfo, PaginationType, StylePositionInterface, StyleServiceInterface, VocabularyInterface } from './interfaces/flexible-table.interface';
 
@@ -80,7 +80,7 @@ export class LockTableComponent implements OnInit, OnChanges, AfterViewInit {
     inlinePagination: PaginationType = PaginationType.none;
 
 	@Input("pageInfo")
-	public pageInfo: PaginationInfo = {defaultSize:8, pageSize:8,currentPage:1,from:0,to: 8, pages: 1, maxWidth: '100%', resetSize: true, contentSize: 0};
+	public pageInfo: PaginationInfo = defaultPageInfo;
 
 	@Input("tableInfo")
 	public tableInfo: any;
@@ -126,7 +126,7 @@ export class LockTableComponent implements OnInit, OnChanges, AfterViewInit {
 
     scroll(event: any) {
 		this.renderer.setStyle(
-				this.lockedTable.el.nativeElement,
+				this.lockedTable.host.nativeElement,
 				"left",
 				event.target.scrollLeft+"px");
 	}
@@ -138,7 +138,7 @@ export class LockTableComponent implements OnInit, OnChanges, AfterViewInit {
 
 	ngAfterViewInit() {
 		const width = this.lockedTable.offsetWidth() // + (this.indexing ? 40 : 0);
-		this.renderer.setStyle(this.unlockedTable.el.nativeElement,"margin-left", width+ "px");
+		this.renderer.setStyle(this.unlockedTable.host.nativeElement,"margin-left", width+ "px");
 	}
 	ngOnChanges(changes: any) {
 		if (changes.items) {
@@ -206,8 +206,7 @@ export class LockTableComponent implements OnInit, OnChanges, AfterViewInit {
 				pages: 1,
 				from: 0,
 				to: 100000,
-				currentPage: 1,
-				maxWidth: "300"
+				currentPage: 1
 			};
 		}
 		if (this.configurable && this.persistenceKey) {
@@ -231,8 +230,8 @@ export class LockTableComponent implements OnInit, OnChanges, AfterViewInit {
 	}
 
 	evaluatePositioning() {
-		if (this.unlockedTable?.el) {
-			this.renderer.setStyle(this.unlockedTable.el.nativeElement,"margin-left", this.lockedTable.offsetWidth()+ "px");
+		if (this.unlockedTable?.host) {
+			this.renderer.setStyle(this.unlockedTable.host.nativeElement,"margin-left", this.lockedTable.offsetWidth()+ "px");
 		}
 	}
 

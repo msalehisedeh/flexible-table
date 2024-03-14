@@ -79,7 +79,7 @@ ol {
     width: 100%;
     margin-top: 10px;
     input {
-        width: 62.5%
+        width: 60%
     }
     float: left;
 }
@@ -119,5 +119,13 @@ flexible-table {
     }
     ::ng-deep .calendar-box {
         min-width: auto;
+    }
+    .custom-class {
+        h3 {
+            width: 400px;
+        }
+        ul {
+            padding: 0;
+        }
     }
 }

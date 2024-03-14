@@ -25,7 +25,6 @@ export class PaginationComponent implements OnInit {
         defaultSize: 8,
         contentSize: 0,
         pageSize: 0,
-        maxWidth: '100%',
         pages: 0,
         from: 0,
         to: 0,
@@ -50,8 +49,7 @@ export class PaginationComponent implements OnInit {
                 pages: 1, 
                 from: 0, 
                 to: 1000, 
-                currentPage: 1, 
-                maxWidth: "300" 
+                currentPage: 1
             };
 		}
 		if (this.info.contentSize && this.info.pageSize) {
@@ -61,10 +59,6 @@ export class PaginationComponent implements OnInit {
 			this.info.currentPage = 1;
 		    setTimeout(() => this.ready(), 66);
 		}
-    }
-
-    public setWidth(width: number) {
-        this.info.maxWidth = width + "px";
     }
 
     ready() {
@@ -120,6 +114,12 @@ export class PaginationComponent implements OnInit {
         }
     }
 
+    keydown(event: any) {
+        const code = event.which;
+        if ((code === 13) || (code === 32)) {
+			event.target.click();
+		}
+    }
     changeSize(sizer: any) {
         const v = parseInt( sizer.value, 10 );
         if (this.info.contentSize >= v && v > 1) {

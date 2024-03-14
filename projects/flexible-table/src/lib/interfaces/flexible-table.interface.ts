@@ -1,3 +1,5 @@
+import { Observable } from "rxjs";
+
 export interface VocabularyInterface {
     configureTable?: string;
     configureColumns?: string;
@@ -15,14 +17,22 @@ export interface StylePositionInterface {
     item?: any;
     header?: FlexibleTableHeader;
 }
+export interface RequestParameterInterface {
+    key: string;
+    filterBy: string;
+    sortBy: string;
+}
 export interface StyleServiceInterface {
     styleFor(location: StylePositionInterface): string;
+}
+export interface DataServiceInterface {
+    evaluateData(items: any[], headers: FlexibleTableHeader[]):void;
+    getData(info: PaginationInfo, headers: FlexibleTableHeader[]): Observable<any[]>;
 }
 export interface PaginationInfo {
     defaultSize: number;
 	contentSize: number;
 	pageSize: number;
-    maxWidth: string;
 	pages: number;
 	from: number;
 	to: number;

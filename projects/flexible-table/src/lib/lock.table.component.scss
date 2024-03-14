@@ -14,8 +14,8 @@
         width: 0;
     }
     .wrapper {
-        float: right;
-        margin: -5px;
+        float: right !important;
+        margin: -5px 10px -5px 0;
     }
     .caption {
         background-color: var(--sedeh-caption-background-color, #c3e5e2);
@@ -23,13 +23,16 @@
         color: var(--sedeh-caption-color,  #1b1b1b);
         caption-side: top;
         font-size: 14px;
+        padding: var(--sedeh-padding, 5px);
         text-align: left;
-        justify-content: space-between;
-        display: flex;
-
-        padding: 5px 6px;
-        .text {
-            float: left;
+        display: table-caption;
+        ::ng-deep {
+            & > * {
+                display: inline-block;
+            }
+        }
+        &:empty {
+            display: none;
         }
     }
     

@@ -44,7 +44,16 @@
             font-size: 14px;
             padding: var(--sedeh-padding, 5px);
             text-align: left;
+            ::ng-deep {
+                & > * {
+                    display: inline-block;
+                }
+            }
+            &:empty {
+                display: none;
+            }
         }
+
         thead {
             border-top: 1px solid var(--sedeh-table-header-color, #bbb);
             border-bottom: 1px solid var(--sedeh-table-header-color, #bbb);
@@ -405,9 +414,6 @@ table.alert-danger {
               border-bottom: 0;
             }
             &.filter {
-                input {
-                    width: 50% !important;
-                }
                 .fa {
                     right: 7px !important;
                 }
@@ -439,15 +445,25 @@ table.alert-danger {
             width: 1px;
         }
         tr {
-          border-bottom: 3px solid var(--sedeh-table-row-border-color, #ddd);
-          display: block;
-          margin-bottom: .625em;
+            border-bottom: 3px solid var(--sedeh-table-row-border-color, #ddd);
+            display: block;
+            margin-bottom: .625em;
 
-          th.actionable {
-             width: inherit;
-          }
+            th.actionable {
+                width: inherit;
+            }
             td {
               border-bottom: 0;
+            }
+            &.detail {
+                td {
+                    justify-content: start;
+                    ::ng-deep {
+                        li {
+                            text-align: left !important;
+                        }
+                    }
+                }
             }
         }
     }

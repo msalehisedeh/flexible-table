@@ -1,8 +1,5 @@
 <table [class]="tableClass"  #flexible>
-    <caption *ngIf="caption">
-        {{caption}}
-        <ng-content></ng-content>
-    </caption>
+    <caption><ng-content></ng-content></caption>
     <thead>
         <tr [style]="styler.styleFor({type: 'header'})">
             <th scope="col" *ngIf="enableIndexing && !printMode" id="indexable-{{id}}" class="indexable hide-on-print"></th>
